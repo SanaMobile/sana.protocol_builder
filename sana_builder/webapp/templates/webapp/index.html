@@ -1,0 +1,74 @@
+{% load staticfiles %}
+{% load compress %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+    {% if debug %}
+        <link rel="stylesheet" type="text/less" media="all" href="{% static 'less/main.less' %}" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/1.7.5/less.min.js"></script>
+    {% else %}
+        {% compress css %}
+        <link rel="stylesheet" type="text/less" media="all" href="{% static 'less/main.less' %}" />
+        {% endcompress %}
+    {% endif %}
+</head>
+<body>
+
+<header id="header" class="container">
+    <div class="row">
+        <h1 class="col-md-3 logo">
+            <a href="/">Sana Protocol Builder</a>
+        </h1>
+        <nav class="col-md-6 menu">
+            <ul>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Documentation</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <nav class="col-md-3 account-access">
+            <ul>
+                <li><a href="#" class="login">Login</a></li>
+                <li><a href="#">Register</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="container-fluid">
+    <div id="cover" class="row">
+        <div class="preview"></div>
+        <div class="col-md-4 col-md-offset-4 hero">
+            <h1>Build medical procedures for the Sana Protocol</h1>
+            <h2>Easily build complex procedures that facilitates the capture of medical data and physiological signals through a fully programmable workflow interface.</h2>
+            <a href="#" class="btn btn-lg btn-primary">Get Started</a>
+        </div>
+    </div>
+</div>
+
+<footer id="footer" class="container">
+    <div class="row">
+        <nav class="col-md-6">
+            <ul>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Documentation</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="col-md-6 copyright">
+            <p>Released under BSD 2-Clause License. <a href="#">View source on Github</a>.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</body>
+</html>
