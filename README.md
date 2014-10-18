@@ -14,5 +14,5 @@ Inside the Postgres terminal enter:
 
 Once prompted for the password enter `sana_builder` again and then exit with `Ctrl+D`. Finally enter:
 ```
-createdb sana_builder
+sudo -u postgres createdb sana_builder
 ```
