@@ -1,6 +1,7 @@
 ![Travis Status](https://magnum.travis-ci.com/SanaMobile/sana.protocol_builder.svg?token=ZGEsLaeuqpxx3zs2nxUA&branch=master)
 
 Setting up database (dev)
+===
 
 After running the `dev_setup_*` scripts, enter these into the terminal:
 ```
