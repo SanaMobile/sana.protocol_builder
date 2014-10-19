@@ -12,8 +12,5 @@ sudo pip install -r ../requirements.txt
 sudo apt-get install -y postgresql
 sudo apt-get install -y python-psycopg2
 
-# Install npm
-sudo apt-get install -y npm
-
 # Install less compiler
-sudo npm install -g less
+sudo apt-get install -y node-less
