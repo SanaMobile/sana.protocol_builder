@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'cl=(qt*#rkhilys5cjtaldhxtfcj^kqt+sdi9j(!j+86$il2y@'
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -75,11 +75,11 @@ WSGI_APPLICATION = 'sana_builder.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE'    : 'django.db.backends.postgresql_psycopg2',
-        'NAME'      : 'sana_builder',
-        'USER'      : 'sana_builder',
-        'PASSWORD'  : 'sana_builder',
-        'HOST'      : 'localhost',
-        'PORT'      : '',
+        'NAME'      : os.environ['DJANGO_DB_NAME'],
+        'USER'      : os.environ['DJANGO_DB_USER'],
+        'PASSWORD'  : os.environ['DJANGO_DB_PASSWORD'],
+        'HOST'      : '127.0.0.1',
+        'PORT'      : '5432',
     }
 }
 
