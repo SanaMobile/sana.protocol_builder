@@ -1,0 +1,112 @@
+#header {
+    border-bottom: 1px solid darken(@light-grey, 10%);
+
+    h1.logo {
+        display: block;
+        margin: 10px 0;
+
+        a {
+            display: block;
+            font-weight: bold;
+            font-size: 21px;
+            line-height: 40px;
+            text-decoration: none;
+            transition: 0.5s;
+        }
+    }
+
+    nav {
+        ul {
+            list-style: none;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+
+            li {
+                a {
+                    font-size: 13px;
+                    line-height: 60px;
+                    display: block;
+                    padding: 0 10px;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    transition: 0.5s;
+
+                    &:hover {
+                        background: @light-grey;
+                    }
+                }
+            }
+        }
+
+        &.menu li {
+            float: left;
+        }
+
+        &.account-access li {
+            float: right;
+
+            a {
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+#cover {
+    background: #333 url(../img/homepage/hero.png) no-repeat center top;
+    height: 500px;
+    overflow: hidden;
+    text-align: center;
+
+    .hero {
+        color: #fff;
+        margin-top: 60px;
+
+        h1 {
+            font-weight: bold;
+            font-size: 36px;
+            line-height: 40px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 30px;
+            margin-bottom: 30px;
+        }
+
+        a {
+            transition: 0.5s;
+        }
+    }
+}
+
+#footer {
+    border-top: 1px solid darken(@light-grey, 10%);
+    font-size: 13px;
+    line-height: 20px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+
+    ul {
+        list-style: none;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+
+        li {
+            a {
+                display: block;
+                float: left;
+                padding: 0 10px;
+                text-transform: uppercase;
+            }
+        }
+    }
+
+    .copyright {
+        text-align: right;
+    }
+}
