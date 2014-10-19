@@ -24,7 +24,7 @@ Once prompted for the password enter `sana_builder` again and then exit with `Ct
 sudo -u postgres createdb sana_builder
 ```
 
-##OSX
+##O SX
 
 
 After running the `dev_setup_osx.bash` script, start the postgres server in a terminal by entering:
