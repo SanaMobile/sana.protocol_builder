@@ -7,4 +7,4 @@ script:
   - nosetests
 notifications:
   slack:
-    secure: KHKY3EZZ5vd54eg5CBZjV3vOESt22lrKHxC83RJNHx+undhWa2IgB+At2T5HegbT+89cFVUkPo+Clk/kwviGqCuKRralzWX9hfHOJOI7BksItVnk6mO0/ts1V4nNOxmwAhkN/Fm7mk8EFAaES4OQZYDzrIbSAN70c+0+oL7MeE8=
+    secure: Vpd93/xnmLYdQRtTCzNpOciquIVtJrn2WGEC7XKQfKw1w+i8ZM0A4MNNndENVxBgUX60aSB2c0pK5jKKciQ9lGeveN8BYJ0JXJUGpGw04i+0PLlSUV5Ly6vopCt9fQ4cnz8XgHadvCA4VBuOjrA3NeoxB4tzB/R09TxOoKYkyLw=
