@@ -1,4 +1,4 @@
-![Travis Status](https://magnum.travis-ci.com/SanaMobile/sana.protocol_builder.svg?token=ZGEsLaeuqpxx3zs2nxUA&branch=master)
+[![Travis Status](https://travis-ci.org/SanaMobile/sana.protocol_builder.svg?branch=master)](https://travis-ci.org/SanaMobile/sana.protocol_builder)
 
 Setting up database (dev)
 ===
