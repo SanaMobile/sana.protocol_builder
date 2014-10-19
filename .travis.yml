@@ -1,10 +1,20 @@
 language: python
 python:
   - '2.7'
+env:
+  - "DJANGO_DB_NAME='sana_test' DJANGO_DB_USER='test_db_user' DJANGO_DB_PASSWORD='test_db_password'"
+services:
+  - postgresql
+addons:
+  postgresql: '9.3'
 install:
   - pip install -r requirements.txt
+before_script:
+  - createuser --superuser test_db_user -U postgres
+  - psql -c "ALTER USER test_db_user WITH PASSWORD 'test_db_password';" -U postgres
+  - psql -c 'create database sana_test;' -U postgres
 script:
-  - nosetests
+  - python sana_builder/manage.py test sana_builder/webapp
 notifications:
   slack:
-    secure: KHKY3EZZ5vd54eg5CBZjV3vOESt22lrKHxC83RJNHx+undhWa2IgB+At2T5HegbT+89cFVUkPo+Clk/kwviGqCuKRralzWX9hfHOJOI7BksItVnk6mO0/ts1V4nNOxmwAhkN/Fm7mk8EFAaES4OQZYDzrIbSAN70c+0+oL7MeE8=
+    secure: "KHKY3EZZ5vd54eg5CBZjV3vOESt22lrKHxC83RJNHx+undhWa2IgB+At2T5HegbT+89cFVUkPo+Clk/kwviGqCuKRralzWX9hfHOJOI7BksItVnk6mO0/ts1V4nNOxmwAhkN/Fm7mk8EFAaES4OQZYDzrIbSAN70c+0+oL7MeE8="
