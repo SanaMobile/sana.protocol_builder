@@ -1,10 +1,10 @@
 language: python
 python:
-- '2.7'
+  - '2.7'
 install:
-- pip install -r requirements.txt
+  - pip install -r requirements.txt
 script:
-- nosetests
+  - nosetests
 notifications:
   slack:
     secure: KHKY3EZZ5vd54eg5CBZjV3vOESt22lrKHxC83RJNHx+undhWa2IgB+At2T5HegbT+89cFVUkPo+Clk/kwviGqCuKRralzWX9hfHOJOI7BksItVnk6mO0/ts1V4nNOxmwAhkN/Fm7mk8EFAaES4OQZYDzrIbSAN70c+0+oL7MeE8=
