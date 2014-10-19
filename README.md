@@ -1,3 +1,5 @@
+![Travis Status](https://magnum.travis-ci.com/SanaMobile/sana.protocol_builder.svg?token=ZGEsLaeuqpxx3zs2nxUA&branch=master)
+
 Setting up database (dev)
 ===
 
@@ -16,3 +18,4 @@ Once prompted for the password enter `sana_builder` again and then exit with `Ct
 ```
 sudo -u postgres createdb sana_builder
 ```
+
