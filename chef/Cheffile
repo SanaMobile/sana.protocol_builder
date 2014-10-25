@@ -1,1 +1,12 @@
-site 'http://community.opscode.com/api/v1'
+#!/usr/bin/env ruby
+#^syntax detection
+
+site 'https://supermarket.getchef.com/api/v1'
+
+cookbook 'apt'
+cookbook 'build-essential'
+cookbook 'openssl'
+cookbook 'git'
+cookbook 'postgresql'
+cookbook 'nginx'
+cookbook 'python'
