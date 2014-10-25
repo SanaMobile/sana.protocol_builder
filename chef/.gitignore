@@ -1,2 +1,4 @@
 /cookbooks/
 /tmp/librarian/
+.kitchen/
+.kitchen.local.yml
