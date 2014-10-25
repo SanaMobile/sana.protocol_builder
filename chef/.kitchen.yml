@@ -11,4 +11,11 @@ platforms:
 suites:
   - name: default
     run_list:
+      - recipe[apt]
+      - recipe[build-essential]
+      - recipe[openssl]
+      - recipe[git]
+      - recipe[postgresql]
+      - recipe[nginx]
+      - recipe[python]
     attributes:
