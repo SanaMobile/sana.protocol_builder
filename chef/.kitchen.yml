@@ -18,4 +18,6 @@ suites:
       - recipe[postgresql]
       - recipe[nginx]
       - recipe[python]
+      - recipe[supervisor]
+      - recipe[sana-protocol-builder]
     attributes:

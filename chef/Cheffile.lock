@@ -37,11 +37,18 @@ SITE
       build-essential (>= 0.0.0)
       yum (~> 3.0)
       yum-epel (>= 0.0.0)
+    supervisor (0.4.12)
+      python (>= 0.0.0)
     windows (1.34.6)
       chef_handler (>= 0.0.0)
     yum (3.4.0)
     yum-epel (0.5.1)
       yum (~> 3.0)
+
+PATH
+  remote: site-cookbooks/sana-protocol-builder
+  specs:
+    sana-protocol-builder (0.1.0)
 
 DEPENDENCIES
   apt (>= 0)
@@ -51,4 +58,6 @@ DEPENDENCIES
   openssl (>= 0)
   postgresql (>= 0)
   python (>= 0)
+  sana-protocol-builder (>= 0)
+  supervisor (>= 0)
 

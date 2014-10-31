@@ -6,6 +6,8 @@
     "recipe[git]",
     "recipe[postgresql]",
     "recipe[nginx]",
-    "recipe[python]"
+    "recipe[python]",
+    "recipe[supervisor]",
+    "recipe[sana-protocol-builder]"
   ]
 }
