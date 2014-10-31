@@ -28,7 +28,7 @@ supervisor_service 'gunicorn' do
 
   command '/root/.virtualenvs/sana_protocol_builder/bin/gunicorn sana_builder.wsgi:application -c config/gunicorn.conf.py'
   directory '/opt/sana.protocol_builder'
-  environment 'PATH="/root/.virtualenvs/sana_protocol_builder/bin"'
+  environment 'PATH=\"/root/.virtualenvs/sana_protocol_builder/bin\"'
 
   redirect_stderr true
 end
