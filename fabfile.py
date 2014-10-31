@@ -12,6 +12,8 @@ def prepare_deploy():
     local('git push')
 
 def deploy():
+    prepare_deploy()
+
     with cd(env.project_root), prefix('workon sana_protocol_builder'):
         print(green('Pulling latest revision...'))
         run('git pull')
