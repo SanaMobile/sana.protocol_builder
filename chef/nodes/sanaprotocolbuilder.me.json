@@ -9,5 +9,10 @@
     "recipe[python]",
     "recipe[supervisor]",
     "recipe[sana-protocol-builder]"
-  ]
+  ],
+  "default_attributes": {
+    "nginx": {
+      "default_site_enabled": false
+    }
+  }
 }
