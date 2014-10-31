@@ -21,8 +21,11 @@ def deploy():
         print(green('Installing dependencies...'))
         run('pip install -qr requirements.txt')
 
-        print(green('Migrating database...'))
-        run('python sana_builder/manage.py syncdb')
+        print(green('Creating database tables...'))
+        run('python sana_builder/manage.py syncdb --noinput')
+
+        print(green('Collecting static files...'))
+        run('python sana_builder/manage.py collectstatic --noinput')
 
         print(green('Restarting gunicorn...'))
         run('supervisorctl restart gunicorn')
