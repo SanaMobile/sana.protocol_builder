@@ -11,21 +11,33 @@ include_recipe 'virtualenvwrapper'
 
 cookbook_file '/root/.ssh/id_rsa' do
   source 'id_rsa'
+  owner 'root'
+  group 'root'
+  mode '0600'
   action :create_if_missing
 end
 
 cookbook_file '/root/.ssh/id_rsa.pub' do
   source 'id_rsa.pub'
+  owner 'root'
+  group 'root'
+  mode '0644'
   action :create_if_missing
 end
 
 cookbook_file '/etc/ssl/private/sana_protocol_builder.key' do
   source 'sana_protocol_builder.key'
+  owner 'root'
+  group 'root'
+  mode '0600'
   action :create_if_missing
 end
 
 cookbook_file '/etc/ssl/certs/sana_protocol_builder.crt' do
   source 'sana_protocol_builder.crt'
+  owner 'root'
+  group 'root'
+  mode '0644'
   action :create_if_missing
 end
 
