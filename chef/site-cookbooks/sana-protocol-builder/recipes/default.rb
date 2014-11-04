@@ -46,6 +46,7 @@ ssh_known_hosts_entry 'github.com'
 git '/opt/sana.protocol_builder' do
   repository 'git@github.com:SanaMobile/sana.protocol_builder.git'
   revision 'master'
+  checkout_branch 'master'
   action :sync
 end
 
