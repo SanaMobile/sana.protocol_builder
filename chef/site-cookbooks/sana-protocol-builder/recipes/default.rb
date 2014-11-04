@@ -27,9 +27,14 @@ service 'nginx' do
   action [:enable, :start, :reload]
 end
 
-bash 'mkvirtualenv sana_protocol_builder' do
+bash 'create sana_protocol_builder virtualenv' do
   user 'root'
   group 'root'
+  code <<-EOH
+    source /root/.bashrc
+    source /usr/local/bin/virtualenvwrapper.sh
+    mkvirtualenv sana_protocol_builder
+  EOH
 end
 
 supervisor_service 'gunicorn' do
