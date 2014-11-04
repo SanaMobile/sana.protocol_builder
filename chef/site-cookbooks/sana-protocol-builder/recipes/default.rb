@@ -73,6 +73,14 @@ bash 'create sana_protocol_builder virtualenv' do
   creates '/root/.virtualenvs/sana_protocol_builder'
 end
 
+cookbook_file '/root/.virtualenvs/postactivate' do
+  source 'postactivate'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  action :create
+end
+
 supervisor_service 'gunicorn' do
   autostart true
   autorestart true
