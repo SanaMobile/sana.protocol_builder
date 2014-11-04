@@ -15,6 +15,7 @@ suites:
       - recipe[build-essential]
       - recipe[openssl]
       - recipe[git]
+      - recipe[ssh_known_hosts]
       - recipe[postgresql]
       - recipe[nginx]
       - recipe[python]

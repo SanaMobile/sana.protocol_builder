@@ -4,9 +4,12 @@
 #
 
 include_recipe 'git'
+include_recipe 'ssh_known_hosts'
 include_recipe 'nginx'
 include_recipe 'supervisor'
 include_recipe 'virtualenvwrapper'
+
+ssh_known_hosts_entry 'github.com'
 
 git '/opt/' do
   repository 'git@github.com:SanaMobile/sana.protocol_builder.git'
