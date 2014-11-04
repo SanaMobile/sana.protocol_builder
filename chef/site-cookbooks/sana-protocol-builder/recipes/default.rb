@@ -3,6 +3,10 @@
 # Recipe:: default
 #
 
+include_recipe 'git'
+include_recipe 'nginx'
+include_recipe 'supervisor'
+
 git '/opt/' do
   repository 'git@github.com:SanaMobile/sana.protocol_builder.git'
   revision 'master'
