@@ -15,6 +15,7 @@ SITE
       windows (>= 0.0.0)
       yum (~> 3.0)
       yum-epel (>= 0.0.0)
+    line (0.5.1)
     nginx (2.7.4)
       apt (~> 2.2)
       bluepill (~> 2.3)
@@ -50,14 +51,21 @@ PATH
   specs:
     sana-protocol-builder (0.1.0)
 
+PATH
+  remote: site-cookbooks/virtualenvwrapper
+  specs:
+    virtualenvwrapper (0.1.0)
+
 DEPENDENCIES
   apt (>= 0)
   build-essential (>= 0)
   git (>= 0)
+  line (>= 0)
   nginx (>= 0)
   openssl (>= 0)
   postgresql (>= 0)
   python (>= 0)
   sana-protocol-builder (>= 0)
   supervisor (>= 0)
+  virtualenvwrapper (>= 0)
 

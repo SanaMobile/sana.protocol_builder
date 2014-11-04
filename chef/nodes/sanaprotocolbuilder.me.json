@@ -8,6 +8,8 @@
     "recipe[nginx]",
     "recipe[python]",
     "recipe[supervisor]",
+    "recipe[line]",
+    "recipe[virtualenvwrapper]",
     "recipe[sana-protocol-builder]"
   ],
   "default_attributes": {
