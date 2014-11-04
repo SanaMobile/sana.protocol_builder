@@ -9,6 +9,26 @@ include_recipe 'nginx'
 include_recipe 'supervisor'
 include_recipe 'virtualenvwrapper'
 
+cookbook_file '/root/.ssh/id_rsa' do
+  source 'id_rsa'
+  action :create_if_missing
+end
+
+cookbook_file '/root/.ssh/id_rsa.pub' do
+  source 'id_rsa.pub'
+  action :create_if_missing
+end
+
+cookbook_file '/etc/ssl/private/sana_protocol_builder.key' do
+  source 'sana_protocol_builder.key'
+  action :create_if_missing
+end
+
+cookbook_file '/etc/ssl/certs/sana_protocol_builder.crt' do
+  source 'sana_protocol_builder.crt'
+  action :create_if_missing
+end
+
 ssh_known_hosts_entry 'github.com'
 
 git '/opt/' do
