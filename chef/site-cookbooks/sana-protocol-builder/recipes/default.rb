@@ -6,6 +6,7 @@
 include_recipe 'git'
 include_recipe 'nginx'
 include_recipe 'supervisor'
+include_recipe 'virtualenvwrapper'
 
 git '/opt/' do
   repository 'git@github.com:SanaMobile/sana.protocol_builder.git'
