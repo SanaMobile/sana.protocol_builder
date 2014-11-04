@@ -27,6 +27,11 @@ service 'nginx' do
   action [:enable, :start, :reload]
 end
 
+bash 'mkvirtualenv sana_protocol_builder' do
+  user 'root'
+  group 'root'
+end
+
 supervisor_service 'gunicorn' do
   autostart true
   autorestart true
