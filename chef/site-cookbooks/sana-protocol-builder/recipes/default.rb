@@ -35,6 +35,7 @@ bash 'create sana_protocol_builder virtualenv' do
     source /usr/local/bin/virtualenvwrapper.sh
     mkvirtualenv sana_protocol_builder
   EOH
+  creates '/root/.virtualenvs/sana_protocol_builder'
 end
 
 supervisor_service 'gunicorn' do
