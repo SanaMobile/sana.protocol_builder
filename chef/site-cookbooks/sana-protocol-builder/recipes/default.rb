@@ -43,7 +43,7 @@ end
 
 ssh_known_hosts_entry 'github.com'
 
-git '/opt/' do
+git '/opt/sana.protocol_builder' do
   repository 'git@github.com:SanaMobile/sana.protocol_builder.git'
   revision 'master'
   action :sync
