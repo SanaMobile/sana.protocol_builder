@@ -39,7 +39,7 @@ end
 
 cookbook_file '/etc/nginx/sites-available/sanaprotocolbuilder.me.conf' do
   source 'sanaprotocolbuilder.me.conf'
-  action :create
+  action :create_if_missing
 end
 
 link '/etc/nginx/sites-enabled/sanaprotocolbuilder.me.conf' do
