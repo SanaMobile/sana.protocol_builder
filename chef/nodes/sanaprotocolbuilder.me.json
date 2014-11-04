@@ -12,9 +12,7 @@
     "recipe[virtualenvwrapper]",
     "recipe[sana-protocol-builder]"
   ],
-  "default_attributes": {
-    "nginx": {
-      "default_site_enabled": false
-    }
+  "nginx": {
+    "default_site_enabled": false
   }
 }
