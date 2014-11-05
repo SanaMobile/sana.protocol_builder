@@ -18,6 +18,7 @@ suites:
       - recipe[ssh_known_hosts]
       - recipe[postgresql::client]
       - recipe[postgresql::server]
+      - recipe[database::postgresql]
       - recipe[nginx]
       - recipe[python]
       - recipe[supervisor]

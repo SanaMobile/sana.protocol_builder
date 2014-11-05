@@ -5,9 +5,8 @@
 
 include_recipe 'git'
 include_recipe 'ssh_known_hosts'
-include_recipe 'nginx'
 include_recipe 'supervisor'
-include_recipe 'virtualenvwrapper'
+include_recipe "database::postgresql"
 
 cookbook_file '/root/.ssh/id_rsa' do
   source 'id_rsa'
