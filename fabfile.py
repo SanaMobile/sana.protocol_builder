@@ -12,11 +12,11 @@ def test():
     local('python sana_builder/manage.py test')
 
 def deploy():
-    local('git push')
+    local('git push origin master')
 
     with cd(env.project_root), prefix(env.virtualenv), prefix('workon sana_protocol_builder'):
         print(green('Pulling latest revision...'))
-        run('git pull')
+        run('git pull origin master')
 
         print(green('Installing dependencies...'))
         run('pip install -qr requirements.txt')
