@@ -8,32 +8,34 @@ include_recipe 'ssh_known_hosts'
 include_recipe 'supervisor'
 include_recipe "database::postgresql"
 
-cookbook_file '/root/.ssh/id_rsa' do
-  source 'id_rsa'
+secrets = Chef::EncryptedDataBagItem.load("secrets", "sana_protocol_builder")
+
+file '/root/.ssh/id_rsa' do
+  content secrets['ssh_private_key']
   owner 'root'
   group 'root'
   mode '0600'
   action :create_if_missing
 end
 
-cookbook_file '/root/.ssh/id_rsa.pub' do
-  source 'id_rsa.pub'
+file '/root/.ssh/id_rsa.pub' do
+  content secrets['ssh_public_key']
   owner 'root'
   group 'root'
   mode '0644'
   action :create_if_missing
 end
 
-cookbook_file '/etc/ssl/private/sana_protocol_builder.key' do
-  source 'sana_protocol_builder.key'
+file '/etc/ssl/private/sana_protocol_builder.key' do
+  content secrets['ssl_key']
   owner 'root'
   group 'root'
   mode '0600'
   action :create_if_missing
 end
 
-cookbook_file '/etc/ssl/certs/sana_protocol_builder.crt' do
-  source 'sana_protocol_builder.crt'
+file '/etc/ssl/certs/sana_protocol_builder.crt' do
+  content secrets['ssl_crt']
   owner 'root'
   group 'root'
   mode '0644'
@@ -73,12 +75,43 @@ bash 'create sana_protocol_builder virtualenv' do
   creates '/root/.virtualenvs/sana_protocol_builder'
 end
 
-cookbook_file '/root/.virtualenvs/postactivate' do
-  source 'postactivate'
+template '/root/.virtualenvs/postactivate' do
+  source 'postactivate.erb'
   owner 'root'
   group 'root'
   mode '0644'
+  variables(
+    :django_secret_key => secrets['django_secret_key'],
+    :django_db_name => secrets['django_db_name'],
+    :django_db_user => secrets['django_db_user'],
+    :django_db_password => secrets['django_db_password']
+  )
   action :create
+end
+
+postgres_connection_info = {
+  :host      => '127.0.0.1',
+  :port      => 5432,
+  :username  => 'postgres',
+  :password  => secrets['postgres_password']
+}
+
+postgresql_database secrets['django_db_name'] do
+  connection postgres_connection_info
+  action :create
+end
+
+postgresql_database_user secrets['django_db_user'] do
+  connection postgres_connection_info
+  password secrets['django_db_password']
+  action :create
+end
+
+postgresql_database_user 'sana_protocol_builder' do
+  connection postgres_connection_info
+  database_name secrets['django_db_name']
+  privileges [:all]
+  action :grant
 end
 
 supervisor_service 'gunicorn' do
