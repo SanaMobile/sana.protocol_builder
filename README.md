@@ -7,9 +7,11 @@ Configuration with Chef
 
 On your local machine, you will need the following packages to configure a server with Chef:
 
-- git
-- bundler
-- fabric
+- Git
+- Ruby
+- Bundler
+- Python
+- Fabric
 
 This will vary depending on your OS, but here's an example using Ubuntu:
 
