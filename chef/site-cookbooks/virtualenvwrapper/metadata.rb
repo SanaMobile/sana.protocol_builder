@@ -1,0 +1,6 @@
+name             'virtualenvwrapper'
+maintainer       'Sana Protocol Builder'
+description      'Installs/Configures virtualenvwrapper'
+version          '1.0'
+depends          'python'
+depends          'line'

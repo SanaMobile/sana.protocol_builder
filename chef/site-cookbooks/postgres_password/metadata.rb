@@ -1,0 +1,5 @@
+name             'postgres_password'
+maintainer       'Sana Protocol Builder'
+maintainer_email 'sanaprotocolbuilder@gmail.com'
+description      'Installs/Configures postgres_password'
+version          '1.0.0'
