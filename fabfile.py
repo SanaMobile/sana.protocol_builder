@@ -4,6 +4,7 @@ from fabric.colors import *
 env.colorize_errors = True
 env.hosts           = ['sanaprotocolbuilder.me']
 env.user            = 'root'
+env.virtualenv      = 'source /usr/local/bin/virtualenvwrapper.sh'
 env.project_root    = '/opt/sana.protocol_builder'
 
 def prepare_deploy():
@@ -14,7 +15,7 @@ def prepare_deploy():
 def deploy():
     prepare_deploy()
 
-    with cd(env.project_root), prefix('source /usr/local/bin/virtualenvwrapper.sh'), prefix('workon sana_protocol_builder'):
+    with cd(env.project_root), prefix(env.virtualenv), prefix('workon sana_protocol_builder'):
         print(green('Pulling latest revision...'))
         run('git pull')
 
