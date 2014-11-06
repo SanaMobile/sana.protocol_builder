@@ -1,7 +1,0 @@
-#!/bin/bash
-# This hook is sourced after every virtualenv is activated.
-
-export DJANGO_SECRET_KEY='secret'
-export DJANGO_DB_NAME='name'
-export DJANGO_DB_USER='user'
-export DJANGO_DB_PASSWORD='password'
