@@ -37,7 +37,7 @@ This will install Chef as well as Librarian, a cookbook manager (Chef's equivale
 
 Before proceeding, make sure your machine's public SSH key is in the server's `authorized_keys` file. It should also be authorized for this repository on GitHub.
 
-In order to decrypt the secrets stored in `data_bags/secrets/sana_protocol_builder.json`, you will need to place the data bag key in `chef/.chef/data_bag_key`.
+In order to decrypt the secrets stored in `data_bags/secrets/sana_protocol_builder.json`, you will need to place the data bag key in `chef/.chef/data_bag_key`. If you are unable to acquire this key from one of the project maintainers, you can generate new secrets and encrypt the data bag with your own key.
 
 Now, we can install Chef on the server and fully configure it. The `knife solo` command will follow the steps defined in `chef/nodes/sanaprotocolbuilder.me.json`, resolving the cookbook dependencies and uploading them to the server for us.
 
