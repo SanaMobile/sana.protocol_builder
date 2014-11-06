@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+#^syntax detection
+
+site 'https://supermarket.getchef.com/api/v1'
+
+cookbook 'apt'
+cookbook 'build-essential'
+cookbook 'openssl'
+cookbook 'git'
+cookbook 'ssh_known_hosts'
+cookbook 'postgres_password', :path => 'site-cookbooks/postgres_password'
+cookbook 'postgresql'
+cookbook 'database'
+cookbook 'nginx'
+cookbook 'python'
+cookbook 'supervisor'
+cookbook 'line'
+cookbook 'virtualenvwrapper', :path => 'site-cookbooks/virtualenvwrapper'
+cookbook 'sana-protocol-builder', :path => 'site-cookbooks/sana-protocol-builder'

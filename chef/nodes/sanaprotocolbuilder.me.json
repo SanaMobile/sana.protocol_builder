@@ -1,0 +1,24 @@
+{
+  "run_list": [
+    "recipe[apt]",
+    "recipe[build-essential]",
+    "recipe[openssl]",
+    "recipe[git]",
+    "recipe[ssh_known_hosts]",
+    "recipe[postgres_password]",
+    "recipe[postgresql::client]",
+    "recipe[postgresql::server]",
+    "recipe[nginx]",
+    "recipe[python]",
+    "recipe[supervisor]",
+    "recipe[line]",
+    "recipe[virtualenvwrapper]",
+    "recipe[sana-protocol-builder]"
+  ],
+  "build_essential": {
+    "compile_time": true
+  },
+  "nginx": {
+    "default_site_enabled": false
+  }
+}

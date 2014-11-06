@@ -1,0 +1,28 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+  - name: default
+    run_list:
+      - recipe[apt]
+      - recipe[build-essential]
+      - recipe[openssl]
+      - recipe[git]
+      - recipe[ssh_known_hosts]
+      - recipe[postgres_password]
+      - recipe[postgresql::client]
+      - recipe[postgresql::server]
+      - recipe[nginx]
+      - recipe[python]
+      - recipe[supervisor]
+      - recipe[line]
+      - recipe[virtualenvwrapper]
+      - recipe[sana-protocol-builder]
+    attributes:
