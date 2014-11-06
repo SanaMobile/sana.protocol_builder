@@ -7,13 +7,12 @@ env.user            = 'root'
 env.virtualenv      = 'source /usr/local/bin/virtualenvwrapper.sh'
 env.project_root    = '/opt/sana.protocol_builder'
 
-def prepare_deploy():
+def test():
     local('python sana_builder/manage.py syncdb')
     local('python sana_builder/manage.py test')
-    local('git push')
 
 def deploy():
-    prepare_deploy()
+    local('git push')
 
     with cd(env.project_root), prefix(env.virtualenv), prefix('workon sana_protocol_builder'):
         print(green('Pulling latest revision...'))
