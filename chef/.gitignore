@@ -2,3 +2,5 @@
 /tmp/librarian/
 .kitchen/
 .kitchen.local.yml
+.chef/data_bag_key
+.DS_Store
