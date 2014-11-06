@@ -15,6 +15,9 @@
     "recipe[virtualenvwrapper]",
     "recipe[sana-protocol-builder]"
   ],
+  "build_essential": {
+    "compile_time": true
+  },
   "nginx": {
     "default_site_enabled": false
   }
