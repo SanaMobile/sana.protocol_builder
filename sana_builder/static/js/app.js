@@ -5,7 +5,7 @@ requirejs.config({
         'jquery': 'jquery-v1.10.2',
         'ember': 'ember-v1.8.0',
         'handlebars': 'handlebars-v1.3.0',
-        'bootstrap': 'bootstrap-v3.2.0.min',
+        'bootstrap': 'bootstrap-v3.3.0',
     },
     shim: {
         'ember': {
@@ -17,7 +17,6 @@ requirejs.config({
         },
         'bootstrap': {
             'deps': ['jquery'],
-            'export': 'bootstrap',
         },
     },
 });
