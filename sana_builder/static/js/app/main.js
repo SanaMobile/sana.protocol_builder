@@ -1,4 +1,4 @@
-require(['jquery', 'ember', 'bootstrap'], function($, Em, _bs) {
+define(['jquery', 'ember', 'bootstrap/collapse'], function($, Ember, bsCollapse) {
     App = Ember.Application.create();
 
     App.Router.map(function() {
