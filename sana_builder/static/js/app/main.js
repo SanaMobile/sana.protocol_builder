@@ -1,13 +1,7 @@
-define(['jquery', 'ember', 'bootstrap/collapse'], function($, Ember, bsCollapse) {
+define(['jquery', 'ember', 'bootstrap/transition', 'bootstrap/collapse'], function($, Ember) {
     App = Ember.Application.create();
 
     App.Router.map(function() {
         //
     });
-
-    // App.IndexRoute = Ember.Route.extend({
-    //   model: function() {
-    //     return ['red', 'yellow', 'blue'];
-    //   }
-    // });
 });

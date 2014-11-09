@@ -16,22 +16,21 @@ define(function() {
             'handlebars': {
                 'exports': 'Handlebars',
             },
-            'bootstrap/affix':      { deps: ['jquery'], exports: '$.fn.affix'      },
-            'bootstrap/alert':      { deps: ['jquery'], exports: '$.fn.alert'      },
-            'bootstrap/button':     { deps: ['jquery'], exports: '$.fn.button'     },
-            'bootstrap/carousel':   { deps: ['jquery'], exports: '$.fn.carousel'   },
-            'bootstrap/collapse':   { deps: ['jquery'], exports: '$.fn.collapse'   },
-            'bootstrap/dropdown':   { deps: ['jquery'], exports: '$.fn.dropdown'   },
-            'bootstrap/modal':      { deps: ['jquery'], exports: '$.fn.modal'      },
-            'bootstrap/popover':    { deps: ['jquery'], exports: '$.fn.popover'    },
-            'bootstrap/scrollspy':  { deps: ['jquery'], exports: '$.fn.scrollspy'  },
-            'bootstrap/tab':        { deps: ['jquery'], exports: '$.fn.tab'        },
-            'bootstrap/tooltip':    { deps: ['jquery'], exports: '$.fn.tooltip'    },
-            'bootstrap/transition': { deps: ['jquery'], exports: '$.fn.transition' },
+            'bootstrap/affix':      { deps: ['jquery'], exports: 'jQuery.fn.affix'           },
+            'bootstrap/alert':      { deps: ['jquery'], exports: 'jQuery.fn.alert'           },
+            'bootstrap/button':     { deps: ['jquery'], exports: 'jQuery.fn.button'          },
+            'bootstrap/carousel':   { deps: ['jquery'], exports: 'jQuery.fn.carousel'        },
+            'bootstrap/collapse':   { deps: ['jquery'], exports: 'jQuery.fn.collapse'        },
+            'bootstrap/dropdown':   { deps: ['jquery'], exports: 'jQuery.fn.dropdown'        },
+            'bootstrap/modal':      { deps: ['jquery'], exports: 'jQuery.fn.modal'           },
+            'bootstrap/popover':    { deps: ['jquery'], exports: 'jQuery.fn.popover'         },
+            'bootstrap/scrollspy':  { deps: ['jquery'], exports: 'jQuery.fn.scrollspy'       },
+            'bootstrap/tab':        { deps: ['jquery'], exports: 'jQuery.fn.tab'             },
+            'bootstrap/tooltip':    { deps: ['jquery'], exports: 'jQuery.fn.tooltip'         },
+            'bootstrap/transition': { deps: ['jquery'], exports: 'jQuery.support.transition' },
         },
         enforceDefine: true,
     });
 
     requirejs(['app/main']);
 });
-
