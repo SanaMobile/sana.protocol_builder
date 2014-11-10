@@ -119,8 +119,14 @@ supervisor_service 'gunicorn' do
   autorestart true
 
   command '/root/.virtualenvs/sana_protocol_builder/bin/gunicorn sana_builder.wsgi:application --bind 127.0.0.1:8001'
-  directory '/opt/sana.protocol_builder'
-  environment 'PATH' => '/root/.virtualenvs/sana_protocol_builder/bin'
+  directory '/opt/sana.protocol_builder/sana_builder'
+  environment(
+    'PATH' => '/root/.virtualenvs/sana_protocol_builder/bin',
+    'DJANGO_SECRET_KEY' => secrets['django_secret_key'],
+    'DJANGO_DB_NAME' => secrets['django_db_name'],
+    'DJANGO_DB_USER' => secrets['django_db_user'],
+    'DJANGO_DB_PASSWORD' => secrets['django_db_password']
+  )
 
   redirect_stderr true
 end
