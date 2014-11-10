@@ -47,8 +47,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Dependencies
-    'compressor',
+    # 3rd party apps
+    'compressor',                   # Compressing static files
+    'guardian',                     # Object-level permissions
+    'rest_framework',               # RESTful endpoint support
+    'rest_framework.authtoken',     # Token based authentication
 
     # Our apps
     'webapp'
@@ -81,6 +84,26 @@ DATABASES = {
         'HOST'      : '127.0.0.1',
         'PORT'      : '5432',
     }
+}
+
+#------------------------------------------------------------------------------
+# RESTful Endpoint
+# https://github.com/lukaszb/django-guardian
+# http://www.django-rest-framework.org/
+#------------------------------------------------------------------------------
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # default
+    'guardian.backends.ObjectPermissionBackend',
+)
+ANONYMOUS_USER_ID = -1
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissions'
+    ]
 }
 
 #------------------------------------------------------------------------------
