@@ -1,10 +1,11 @@
-@import "bootstrap-3.3.0/variables.less";
+@import "colors.less";
+@import "bootstrap-v3.3.0/variables.less";
 
 @grid-float-breakpoint: @screen-md;
 
 body {
-  padding-top: 60px;
-  padding-bottom: 20px;
+    padding-top: 60px;
+    padding-bottom: 20px;
 }
 
 #cover {
@@ -47,10 +48,10 @@ body {
     }
 
     a {
-        color: #428bca;
-    }
+        color: @footer-link;
 
-    a:hover {
-        text-decoration: underline;
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
