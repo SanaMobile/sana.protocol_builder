@@ -1,56 +1,11 @@
-#header {
-    border-bottom: 1px solid darken(@light-grey, 10%);
+@import "colors.less";
+@import "bootstrap-v3.3.0/variables.less";
 
-    h1.logo {
-        display: block;
-        margin: 10px 0;
+@grid-float-breakpoint: @screen-md;
 
-        a {
-            display: block;
-            font-weight: bold;
-            font-size: 21px;
-            line-height: 40px;
-            text-decoration: none;
-            transition: 0.5s;
-        }
-    }
-
-    nav {
-        ul {
-            list-style: none;
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
-
-            li {
-                a {
-                    font-size: 13px;
-                    line-height: 60px;
-                    display: block;
-                    padding: 0 10px;
-                    text-transform: uppercase;
-                    text-decoration: none;
-                    transition: 0.5s;
-
-                    &:hover {
-                        background: @light-grey;
-                    }
-                }
-            }
-        }
-
-        &.menu li {
-            float: left;
-        }
-
-        &.account-access li {
-            float: right;
-
-            a {
-                font-weight: bold;
-            }
-        }
-    }
+body {
+    padding-top: 60px;
+    padding-bottom: 20px;
 }
 
 #cover {
@@ -84,29 +39,19 @@
 }
 
 #footer {
-    border-top: 1px solid darken(@light-grey, 10%);
-    font-size: 13px;
-    line-height: 20px;
-    padding-top: 40px;
-    padding-bottom: 40px;
+    padding-top: 20px;
+    text-align: center;
 
-    ul {
-        list-style: none;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-
-        li {
-            a {
-                display: block;
-                float: left;
-                padding: 0 10px;
-                text-transform: uppercase;
-            }
-        }
+    nav {
+        background-color: white;
+        border-color: white;
     }
 
-    .copyright {
-        text-align: right;
+    a {
+        color: @footer-link;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
