@@ -2,11 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Procedure(models.Model):
-    title = models.CharField(max_length=50)
-    author = models.CharField(max_length=50)
-    uuid = models.IntegerField(null=True, unique=True)
-    version = models.CharField(max_length=50, null=True)
+    title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
+    version = models.CharField(max_length=255)
     owner = models.ForeignKey(User, unique=True)
+
+    def __str__(self):
+        fmt = "<Procedure title=\"%s\" author=\"%s\" version=\"%s\">\n</Procedure>"
+        return fmt % (self.title, self.author, self.version)
 
 class Page(models.Model):
     procedure = models.ForeignKey(Procedure)
