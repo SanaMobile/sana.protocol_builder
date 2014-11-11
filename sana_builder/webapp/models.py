@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 class Procedure(models.Model):
     title = models.CharField(max_length=50)
     author = models.CharField(max_length=50)
-    uuid = models.IntegerField(null=True)
+    uuid = models.IntegerField(null=True, unique=True)
     version = models.CharField(max_length=50, null=True)
     owner = models.ForeignKey(User, unique=True)
 
