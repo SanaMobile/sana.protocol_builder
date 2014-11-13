@@ -14,7 +14,7 @@ before_script:
   - psql -c "ALTER USER test_db_user WITH PASSWORD 'test_db_password';" -U postgres
   - psql -c 'create database sana_test;' -U postgres
 script:
-  - python sana_builder/manage.py test sana_builder/webapp/tests/ sana_builder/webapp/tests/models/
+  - python sana_builder/manage.py test webapp/tests/
 notifications:
   slack:
     secure: KHKY3EZZ5vd54eg5CBZjV3vOESt22lrKHxC83RJNHx+undhWa2IgB+At2T5HegbT+89cFVUkPo+Clk/kwviGqCuKRralzWX9hfHOJOI7BksItVnk6mO0/ts1V4nNOxmwAhkN/Fm7mk8EFAaES4OQZYDzrIbSAN70c+0+oL7MeE8=

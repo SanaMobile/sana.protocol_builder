@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from webapp.models import Procedure
 
-class ProcedureTestCase(TestCase):
+class ProcedureTest(TestCase):
     def setUp(self):
         test_user = User.objects.create_user('TestUser', 'test@sanaprotocolbuilder.me', 'testpassword')
         test_user.save()
