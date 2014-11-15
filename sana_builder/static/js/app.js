@@ -1,12 +1,14 @@
 define(function () {
+    var JS_LIB_DIR = '../libs/'
+
     requirejs.config({
         baseUrl: '/static/js/app',
         paths: {
-            'jquery'     : '../libs/jquery-v1.10.2',
-            'ember'      : '../libs/ember-v1.8.0',
-            'handlebars' : '../libs/handlebars-v1.3.0',
-            'bootstrap'  : '../libs/bootstrap-v3.3.0',
-            'text'       : '../libs/requiretext-v2.0.12',
+            'jquery'     : JS_LIB_DIR + 'jquery-v1.10.2',
+            'ember'      : JS_LIB_DIR + 'ember-v1.8.0',
+            'handlebars' : JS_LIB_DIR + 'handlebars-v1.3.0',
+            'bootstrap'  : JS_LIB_DIR + 'bootstrap-v3.3.0',
+            'text'       : JS_LIB_DIR + 'requiretext-v2.0.12',
         },
         shim: {
             'ember': {
