@@ -1,0 +1,40 @@
+[
+{
+    "pk": 1, 
+    "model": "sites.site", 
+    "fields": {
+        "domain": "sanaprotocolbuilder.me", 
+        "name": "Sana Protocol Builder"
+    }
+},
+{
+    "pk": 1, 
+    "model": "flatpages.flatpage", 
+    "fields": {
+        "registration_required": false, 
+        "title": "About", 
+        "url": "/about/", 
+        "template_name": "webapp/default.html", 
+        "sites": [
+            1
+        ], 
+        "content": "", 
+        "enable_comments": false
+    }
+},
+{
+    "pk": 2, 
+    "model": "flatpages.flatpage", 
+    "fields": {
+        "registration_required": false, 
+        "title": "Documentation", 
+        "url": "/documentation/", 
+        "template_name": "webapp/default.html", 
+        "sites": [
+            1
+        ], 
+        "content": "", 
+        "enable_comments": false
+    }
+}
+]

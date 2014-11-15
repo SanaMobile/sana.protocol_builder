@@ -1,0 +1,23 @@
+<footer class="container" id="footer">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div id="navbar">
+                {% load flatpages %}
+                {% get_flatpages as pages %}
+                <ul class="nav navbar-nav">
+                {% for page in pages %}
+                    <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+                {% endfor %}
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><p class="navbar-text">Released under BSD 2-Clause License.</p></li>
+                    <li><p class="navbar-text"><a href="https://github.com/SanaMobile/sana.protocol_builder/">View source on GitHub</a>.</p></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</footer>
+{% load staticfiles %}
+<script src="{% static 'js/libs/require-v2.1.15.js' %}" data-main="{% static 'js/app.js' %}"></script>
+</body>
+</html>

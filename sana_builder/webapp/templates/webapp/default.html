@@ -1,0 +1,13 @@
+{% include 'common/header.html' with title=flatpage.title %}
+{% include 'common/nav.html' %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>{{ flatpage.title }}</h1>
+            {{ flatpage.content }}
+        </div>
+    </div>
+</div>
+
+{% include 'common/footer.html' %}
