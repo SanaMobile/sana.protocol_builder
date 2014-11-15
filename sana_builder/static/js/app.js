@@ -1,16 +1,18 @@
-define(function() {
+define(function () {
+    var JS_LIB_DIR = '../libs/'
+
     requirejs.config({
-        baseUrl: '/static/js/libs',
+        baseUrl: '/static/js/app',
         paths: {
-            'app'        : '/static/js/app',
-            'jquery'     : 'jquery-v1.10.2',
-            'ember'      : 'ember-v1.8.0',
-            'handlebars' : 'handlebars-v1.3.0',
-            'bootstrap'  : 'bootstrap-v3.3.0',
+            'jquery'     : JS_LIB_DIR + 'jquery-v1.10.2',
+            'ember'      : JS_LIB_DIR + 'ember-v1.8.0',
+            'handlebars' : JS_LIB_DIR + 'handlebars-v1.3.0',
+            'bootstrap'  : JS_LIB_DIR + 'bootstrap-v3.3.0',
+            'text'       : JS_LIB_DIR + 'requiretext-v2.0.12',
         },
         shim: {
             'ember': {
-                'deps'   : ['handlebars'],
+                'deps'   : ['jquery', 'handlebars'],
                 'exports': 'Ember',
             },
             'handlebars': {
@@ -32,5 +34,6 @@ define(function() {
         enforceDefine: true,
     });
 
-    requirejs(['app/main']);
+    // Every page on this website needs these 3 modules
+    require(['jquery', 'bootstrap/transition', 'bootstrap/collapse']);
 });

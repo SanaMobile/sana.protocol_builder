@@ -1,7 +1,12 @@
-define(['jquery', 'ember', 'bootstrap/transition', 'bootstrap/collapse'], function($, Ember) {
-    App = Ember.Application.create();
+define(['../app'], function() {
+    require(['SanaBuilder', 'templates'], function (SanaBuilder) {
+        SanaBuilder.deferReadiness(); // Avoid auto-initialization while setting up dependencies
 
-    App.Router.map(function() {
-        //
+        require(['router'], function (SetupRouter) {
+            SetupRouter();
+
+            // After everything setup, init app
+            SanaBuilder.advanceReadiness();
+        });
     });
 });

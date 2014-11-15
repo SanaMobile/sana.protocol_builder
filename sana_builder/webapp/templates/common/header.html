@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% if title %}
+        <title>{{ title }} | {{ SITE_NAME }}</title>
+    {% else %}
+        <title>{{ SITE_NAME }}</title>
+    {% endif %}
+
+    {% load staticfiles %}
+    {% load compress %}
+    {% if debug %}
+        <link rel="stylesheet" type="text/less" media="all" href="{% static 'less/main.less' %}" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/1.7.5/less.min.js"></script>
+    {% else %}
+        {% compress css %}
+        <link rel="stylesheet" type="text/less" media="all" href="{% static 'less/main.less' %}" />
+        {% endcompress %}
+    {% endif %}
+</head>
+<body>

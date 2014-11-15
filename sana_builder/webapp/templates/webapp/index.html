@@ -1,79 +1,14 @@
-{% load staticfiles %}
-{% load compress %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ title }}</title>
-
-    {% if debug %}
-        <link rel="stylesheet" type="text/less" media="all" href="{% static 'less/main.less' %}" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/1.7.5/less.min.js"></script>
-    {% else %}
-        {% compress css %}
-        <link rel="stylesheet" type="text/less" media="all" href="{% static 'less/main.less' %}" />
-        {% endcompress %}
-    {% endif %}
-</head>
-<body>
-<div class="container">
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
-                    <span class="sr-only">Toggle Navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">Sana Protocol Builder</a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="navbar">
-                <ul class="nav navbar-nav">
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Features</a></li>
-                    <li><a href="#">Documentation</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#">Register</a></li>
-                    <li><a href="#">Login</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</div>
+{% include 'common/header.html' %}
+{% include 'common/nav.html' %}
 
 <div class="container">
     <div id="cover" class="row">
         <div class="col-md-6 col-md-offset-3 hero">
             <h1>Build medical procedures for the Sana Protocol</h1>
             <h2>Easily build complex procedures that facilitate the capture of medical data and physiological signals through a fully programmable workflow interface.</h2>
-            <a href="#" class="btn btn-lg btn-primary">Get Started</a>
+            <a href="/signup" class="btn btn-lg btn-primary">Get Started</a>
         </div>
     </div>
 </div>
 
-<footer class="container" id="footer">
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-            <div id="navbar">
-                <ul class="nav navbar-nav">
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Features</a></li>
-                    <li><a href="#">Documentation</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><p class="navbar-text">Released under BSD 2-Clause License.</p></li>
-                    <li><p class="navbar-text"><a href="#">View source on GitHub</a>.</p></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</footer>
-<script src="{% static 'js/libs/require-v2.1.15.js' %}" data-main="{% static 'js/app.js' %}"></script>
-</body>
-</html>
+{% include 'common/footer.html' %}
