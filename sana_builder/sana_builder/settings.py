@@ -46,6 +46,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
 
     # 3rd party apps
     'compressor',                   # Compressing static files
@@ -85,6 +87,27 @@ DATABASES = {
         'PORT'      : '5432',
     }
 }
+
+#------------------------------------------------------------------------------
+# Flatpages / Sites
+#------------------------------------------------------------------------------
+
+# Tells django_site (flatpage management) which website's database to use
+# (in case our database hosts multiple sites)
+SITE_ID = 1
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    # Django apps
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+
+    # Our apps
+    'webapp.context_processors.site'
+)
 
 #------------------------------------------------------------------------------
 # RESTful Endpoint
