@@ -7,3 +7,4 @@ django-guardian==1.2.4
 djangorestframework==2.4.4
 gunicorn==19.1.1
 psycopg2==2.5.4
+bcrypt==1.0.2
