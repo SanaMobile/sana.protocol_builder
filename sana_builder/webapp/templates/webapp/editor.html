@@ -1,0 +1,12 @@
+{% include 'common/header.html' %}
+
+<script type="text/x-handlebars" data-template-name="body">
+    {% verbatim %}
+    {{ outlet }}
+    {% endverbatim %}
+</script>
+
+{% load staticfiles %}
+<script src="{% static 'js/libs/require-v2.1.15.js' %}" data-main="{% static 'js/app/main.js' %}"></script>
+</body>
+</html>
