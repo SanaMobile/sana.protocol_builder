@@ -1,3 +1,5 @@
+/* @flow */
+
 define(function () {
     var JS_LIB_DIR = '../libs/'
 
