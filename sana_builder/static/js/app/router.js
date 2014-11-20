@@ -1,3 +1,5 @@
+/* @flow */
+
 define(['ember', 'SanaBuilder'], function (Ember, SanaBuilder) {
     return function () {
         SanaBuilder.Router.map(function () {

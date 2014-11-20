@@ -1,3 +1,5 @@
+/* @flow */
+
 define(['ember', 'SanaBuilder',
     'text!templates/procedureListing.hbs',
     'text!templates/settings.hbs'
