@@ -7,6 +7,9 @@ services:
   - postgresql
 addons:
   postgresql: '9.3'
+branches:
+  only:
+    - master
 install:
   - pip install -r requirements.txt
 before_script:
