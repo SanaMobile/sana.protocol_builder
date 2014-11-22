@@ -2,7 +2,7 @@ language: python
 python:
   - '2.7'
 env:
-  - "DJANGO_DB_NAME='sana_test' DJANGO_DB_USER='test_db_user' DJANGO_DB_PASSWORD='test_db_password'"
+  - DJANGO_DB_NAME='sana_test' DJANGO_DB_USER='test_db_user' DJANGO_DB_PASSWORD='test_db_password'
 services:
   - postgresql
 addons:
@@ -21,4 +21,4 @@ script:
   - python sana_builder/manage.py test sana_builder/webapp/tests/
 notifications:
   slack:
-    secure: KHKY3EZZ5vd54eg5CBZjV3vOESt22lrKHxC83RJNHx+undhWa2IgB+At2T5HegbT+89cFVUkPo+Clk/kwviGqCuKRralzWX9hfHOJOI7BksItVnk6mO0/ts1V4nNOxmwAhkN/Fm7mk8EFAaES4OQZYDzrIbSAN70c+0+oL7MeE8=
+    secure: a1bQgFl5K8+T6q89xg2hQI2ltsDeDQK8Xh09vCHcpM88bRtjcFkPBYB51GVuRQOuvLGVzFMFSHJrHNsZULo5qwRo7sgSyMkGiJ1kwF59SBZvKVEEdqPcQryLZaS7MLSN3bQfb48uRV17xwhbJCbVy/i9pIXIgzuFBEM1+Vd8H84=
