@@ -54,6 +54,7 @@ INSTALLED_APPS = (
     'guardian',                     # Object-level permissions
     'rest_framework',               # RESTful endpoint support
     'rest_framework.authtoken',     # Token based authentication
+    'django_nose',                  # Better test framework/runner
 
     # Our apps
     'webapp'
@@ -175,3 +176,9 @@ COMPRESS_PRECOMPILERS = (
 STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
+
+#------------------------------------------------------------------------------
+# Test Configuration
+#------------------------------------------------------------------------------
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
