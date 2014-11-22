@@ -10,6 +10,7 @@ addons:
 branches:
   only:
     - master
+    - connor/travis-deploy
 install:
   - pip install -r requirements.txt
 before_script:
