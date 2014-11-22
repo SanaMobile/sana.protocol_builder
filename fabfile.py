@@ -8,8 +8,8 @@ env.virtualenv      = 'source /usr/local/bin/virtualenvwrapper.sh'
 env.project_root    = '/opt/sana.protocol_builder'
 
 def test():
-    local('python sana_builder/manage.py syncdb')
-    local('python sana_builder/manage.py test webapp')
+    local('python sana_builder/manage.py syncdb --noinput')
+    local('python sana_builder/manage.py test webapp --noinput')
 
 def update_host():
     with cd(env.project_root), prefix(env.virtualenv), prefix('workon sana_protocol_builder'):
