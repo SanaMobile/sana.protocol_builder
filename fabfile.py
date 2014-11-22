@@ -11,9 +11,7 @@ def test():
     local('python sana_builder/manage.py syncdb')
     local('python sana_builder/manage.py test')
 
-def deploy():
-    local('git push origin master')
-
+def update_host():
     with cd(env.project_root), prefix(env.virtualenv), prefix('workon sana_protocol_builder'):
         print(green('Pulling latest revision...'))
         run('git pull origin master')
@@ -32,3 +30,10 @@ def deploy():
 
         print(green('Restarting gunicorn...'))
         run('supervisorctl restart gunicorn')
+
+def travis_deploy():
+    update_host()
+
+def local_deploy():
+    local('git push origin master')
+    update_host()

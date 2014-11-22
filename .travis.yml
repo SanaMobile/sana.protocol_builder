@@ -19,6 +19,12 @@ before_script:
 script:
   - ./tools/flow check --lib sana_builder/static/js/libs/flow/
   - python sana_builder/manage.py test sana_builder/webapp/tests/
+after_success:
+  - openssl aes-256-cbc -K $encrypted_a0fbdc5ae723_key -iv $encrypted_a0fbdc5ae723_iv -in .travis/deploy_key.pem.enc -out .travis/deploy_key.pem -d
+  - chmod 600 .travis/deploy_key.pem
+  - eval "$(ssh-agent)"
+  - ssh-add .travis/deploy_key.pem
+  - fab travis_deploy
 notifications:
   slack:
     secure: a1bQgFl5K8+T6q89xg2hQI2ltsDeDQK8Xh09vCHcpM88bRtjcFkPBYB51GVuRQOuvLGVzFMFSHJrHNsZULo5qwRo7sgSyMkGiJ1kwF59SBZvKVEEdqPcQryLZaS7MLSN3bQfb48uRV17xwhbJCbVy/i9pIXIgzuFBEM1+Vd8H84=
