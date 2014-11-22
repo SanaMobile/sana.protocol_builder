@@ -25,7 +25,7 @@ def deploy():
         run('python sana_builder/manage.py syncdb --noinput')
 
         print(green('Importing fixtures...'))
-        run('python sana_builder/manage.py loaddata sana_builder/fixtures/pages.json --noinput')
+        run('python sana_builder/manage.py loaddata sana_builder/fixtures/pages.json')
 
         print(green('Collecting static files...'))
         run('python sana_builder/manage.py collectstatic --noinput')
