@@ -130,18 +130,24 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # http://www.django-rest-framework.org/
 #------------------------------------------------------------------------------
 
+ANONYMOUS_USER_ID = -1 # For Django guardian
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend', # default
     'guardian.backends.ObjectPermissionBackend',
 )
-ANONYMOUS_USER_ID = -1
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissions'
-    ]
+        'rest_framework.permissions.DjangoModelPermissions',
+    ],
+
+    # Set token authentication as global authentication method (can be overwritten per view)
+    # http://www.django-rest-framework.org/api-guide/authentication#setting-the-authentication-scheme
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
 }
 
 #------------------------------------------------------------------------------
