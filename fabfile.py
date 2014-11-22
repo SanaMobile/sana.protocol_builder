@@ -9,7 +9,7 @@ env.project_root    = '/opt/sana.protocol_builder'
 
 def test():
     local('python sana_builder/manage.py syncdb')
-    local('python sana_builder/manage.py test')
+    local('python sana_builder/manage.py test webapp')
 
 def update_host():
     with cd(env.project_root), prefix(env.virtualenv), prefix('workon sana_protocol_builder'):
