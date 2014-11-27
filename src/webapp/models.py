@@ -14,12 +14,12 @@ class Procedure(models.Model):
         return fmt % (self.title, self.author, self.version)
 
 class Page(models.Model):
-    page_order = models.IntegerField()
+    page_id = models.IntegerField()
     procedure = models.ForeignKey(Procedure, related_name='pages')
 
     class Meta:
         unique_together = (
-                ('page_order', 'procedure')
+                ('page_id', 'procedure')
             )
 
 class Element(models.Model):
