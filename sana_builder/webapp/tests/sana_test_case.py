@@ -10,4 +10,4 @@ class SanaTestCase(TestCase):
         self.test_procedure = Procedure.objects.create(author='tester', title='test procedure', owner=self.test_user)
         self.test_procedure.save()
 
-        self.test_page = Page.objects.create(page_order=0, procedure=self.test_procedure)
+        self.test_page = Page.objects.create(page_id=0, procedure=self.test_procedure)
