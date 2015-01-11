@@ -12,5 +12,9 @@ sudo pip install -r ../requirements.txt
 sudo apt-get install -y postgresql
 sudo apt-get install -y python-psycopg2
 
-# Install less compiler
+# Install less compiler (for django compressor)
 sudo apt-get install -y node-less
+
+# Install node, grunt
+sudo apt-get install -y npm
+npm install -g grunt-cli
