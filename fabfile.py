@@ -16,8 +16,14 @@ def update_host():
         print(green('Pulling latest revision...'))
         run('git pull origin master')
 
-        print(green('Installing dependencies...'))
+        print(green('Installing python dependencies...'))
         run('pip install -qr requirements.txt')
+
+        print(green('Installing node dependencies...'))
+        run('npm install')
+
+        print(green('Running grunt...'))
+        run('grunt')
 
         print(green('Creating database tables...'))
         run('python sana_builder/manage.py syncdb --noinput')

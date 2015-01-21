@@ -21,3 +21,6 @@ brew install npm
 
 # Install less compiler
 sudo npm install -g less
+
+# Install grunt for automating tasks
+sudo npm install -g grunt-cli

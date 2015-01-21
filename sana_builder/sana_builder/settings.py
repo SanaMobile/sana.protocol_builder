@@ -176,7 +176,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Compile less
 COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc {infile} {outfile}'),
+    ('text/less', 'lessc -x {infile} {outfile}'),
 )
 # Use 'compressor' as a static file finder
 STATICFILES_FINDERS = (
