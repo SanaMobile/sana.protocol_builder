@@ -1,4 +1,4 @@
 #!/bin/bash
 
-./sana_builder/manage.py dumpdata sites flatpages --indent=4 > ./sana_builder/fixtures/pages.json
+./src/manage.py dumpdata sites flatpages --indent=4 > ./src/fixtures/pages.json
 

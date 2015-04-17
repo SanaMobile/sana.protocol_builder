@@ -8,8 +8,8 @@ env.virtualenv      = 'source /usr/local/bin/virtualenvwrapper.sh'
 env.project_root    = '/opt/sana.protocol_builder'
 
 def test():
-    local('python sana_builder/manage.py syncdb --noinput')
-    local('python sana_builder/manage.py test webapp --noinput')
+    local('python src/manage.py syncdb --noinput')
+    local('python src/manage.py test webapp --noinput')
 
 def update_host():
     with cd(env.project_root), prefix(env.virtualenv), prefix('workon sana_protocol_builder'):
@@ -26,13 +26,13 @@ def update_host():
         run('grunt')
 
         print(green('Creating database tables...'))
-        run('python sana_builder/manage.py syncdb --noinput')
+        run('python src/manage.py syncdb --noinput')
 
         print(green('Importing fixtures...'))
-        run('python sana_builder/manage.py loaddata sana_builder/fixtures/pages.json')
+        run('python src/manage.py loaddata src/fixtures/pages.json')
 
         print(green('Collecting static files...'))
-        run('python sana_builder/manage.py collectstatic --noinput')
+        run('python src/manage.py collectstatic --noinput')
 
         print(green('Restarting gunicorn...'))
         run('supervisorctl restart gunicorn')
