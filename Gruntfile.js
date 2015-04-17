@@ -5,11 +5,11 @@ module.exports = function(grunt) {
         less: {
             debug: {
                 options: {
-                    paths: ['sana_builder/static/less/bootstrap-v3.3.0'],
+                    paths: ['src/static/less/bootstrap-v3.3.0'],
                     compress: true
                 },
                 files: {
-                    'sana_builder/static/less/bootstrap.css': 'sana_builder/static/less/bootstrap-v3.3.0/bootstrap.less'
+                    'src/static/less/bootstrap.css': 'src/static/less/bootstrap-v3.3.0/bootstrap.less'
                 }
             }
         }

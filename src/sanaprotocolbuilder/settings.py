@@ -1,5 +1,5 @@
 """
-Django settings for sana_builder project.
+Django settings for sanaprotocolbuilder project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -69,9 +69,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'sana_builder.urls'
+ROOT_URLCONF = 'sanaprotocolbuilder.urls'
 
-WSGI_APPLICATION = 'sana_builder.wsgi.application'
+WSGI_APPLICATION = 'sanaprotocolbuilder.wsgi.application'
 
 #------------------------------------------------------------------------------
 # Database
