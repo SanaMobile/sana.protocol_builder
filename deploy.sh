@@ -6,6 +6,7 @@ if [ "$TRAVIS_BRANCH" == "master" ] &&
     chmod 600 .travis/deploy_key.pem
     eval "$(ssh-agent)"
     ssh-add .travis/deploy_key.pem
+    fab travis_deploy
 else
     echo "Pull-Request. Will not deploy."
 fi

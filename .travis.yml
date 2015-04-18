@@ -20,7 +20,7 @@ script:
   - ./tools/flow check --lib src/static/js/libs/flow/
   - fab test
 after_success:
-  - fab travis_deploy
+  - sh deploy.sh
 notifications:
   slack:
     secure: a1bQgFl5K8+T6q89xg2hQI2ltsDeDQK8Xh09vCHcpM88bRtjcFkPBYB51GVuRQOuvLGVzFMFSHJrHNsZULo5qwRo7sgSyMkGiJ1kwF59SBZvKVEEdqPcQryLZaS7MLSN3bQfb48uRV17xwhbJCbVy/i9pIXIgzuFBEM1+Vd8H84=

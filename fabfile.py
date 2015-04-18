@@ -38,7 +38,6 @@ def update_host():
         run('supervisorctl restart gunicorn')
 
 def travis_deploy():
-    local('sh deploy.sh')
     update_host()
 
 def local_deploy():
