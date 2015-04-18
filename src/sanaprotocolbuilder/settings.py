@@ -142,8 +142,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissions',
     ],
 
-    # Set token authentication as global authentication method
-    # (can be overwritten per view)
+    # Set token authentication as global authentication method (can be overwritten per view)
     # http://www.django-rest-framework.org/api-guide/authentication#setting-the-authentication-scheme
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',

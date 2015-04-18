@@ -26,6 +26,5 @@ class ProcedureTest(TestCase):
 
     def test_str(self):
         proc = Procedure.objects.get(author='tester')
-        expected = """<Procedure title="test procedure" author="tester" version="">
-</Procedure>"""
+        expected = '<Procedure title="test procedure" author="tester" version="">\n</Procedure>'
         self.assertEquals(str(proc), expected)
