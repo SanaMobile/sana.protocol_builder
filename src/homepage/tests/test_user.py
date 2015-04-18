@@ -15,6 +15,7 @@ class UserTest(TestCase):
 
     def test_user_has_token(self):
         try:
-            Token.objects.get(user=self.test_user)
+            token = Token.objects.get(user=self.test_user)
+            self.assertFalse(token is None)
         except ObjectDoesNotExist:
             self.assertTrue(False)
