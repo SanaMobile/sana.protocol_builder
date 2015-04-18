@@ -5,4 +5,3 @@ def test_that_always_passes():
 
     assert val1 == val2
     assert val1 != val3
-

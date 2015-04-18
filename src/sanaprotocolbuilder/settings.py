@@ -12,9 +12,9 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Flags
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -34,9 +34,9 @@ INTERNAL_IPS = (
     '127.0.0.1',
 )
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Application definition
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 INSTALLED_APPS = (
     # Django apps
@@ -73,26 +73,26 @@ ROOT_URLCONF = 'sanaprotocolbuilder.urls'
 
 WSGI_APPLICATION = 'sanaprotocolbuilder.wsgi.application'
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 DATABASES = {
     'default': {
-        'ENGINE'    : 'django.db.backends.postgresql_psycopg2',
-        'NAME'      : os.environ['DJANGO_DB_NAME'],
-        'USER'      : os.environ['DJANGO_DB_USER'],
-        'PASSWORD'  : os.environ['DJANGO_DB_PASSWORD'],
-        'HOST'      : '127.0.0.1',
-        'PORT'      : '5432',
+        'ENGINE':   'django.db.backends.postgresql_psycopg2',
+        'NAME':     os.environ['DJANGO_DB_NAME'],
+        'USER':     os.environ['DJANGO_DB_USER'],
+        'PASSWORD': os.environ['DJANGO_DB_PASSWORD'],
+        'HOST':     '127.0.0.1',
+        'PORT':     '5432',
     }
 }
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Password Hash
 # https://docs.djangoproject.com/en/1.6/topics/auth/passwords/
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
@@ -104,9 +104,9 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.CryptPasswordHasher',
 )
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Flatpages / Sites
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Tells django_site (flatpage management) which website's database to use
 # (in case our database hosts multiple sites)
@@ -125,11 +125,11 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'homepage.context_processors.site',
 )
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # RESTful Endpoint
 # https://github.com/lukaszb/django-guardian
 # http://www.django-rest-framework.org/
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend', # default
@@ -142,17 +142,18 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissions',
     ],
 
-    # Set token authentication as global authentication method (can be overwritten per view)
+    # Set token authentication as global authentication method
+    # (can be overwritten per view)
     # http://www.django-rest-framework.org/api-guide/authentication#setting-the-authentication-scheme
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     )
 }
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 LANGUAGE_CODE = 'en-us'
 
@@ -164,12 +165,12 @@ USE_L10N = True
 
 USE_TZ = True
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
-STATIC_URL  = '/static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Compile less
@@ -181,8 +182,8 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Test Configuration
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'

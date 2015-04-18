@@ -8,8 +8,10 @@ class Procedure(models.Model):
     owner = models.ForeignKey(User, unique=True)
 
     def __str__(self):
-        fmt = "<Procedure title=\"%s\" author=\"%s\" version=\"%s\">\n</Procedure>"
+        fmt = '<Procedure title=\"%s\" author=\"%s\" version=\"%s\">\n \
+            </Procedure>'
         return fmt % (self.title, self.author, self.version)
+
 
 class Page(models.Model):
     procedure = models.ForeignKey(Procedure)
