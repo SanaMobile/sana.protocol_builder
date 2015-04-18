@@ -17,9 +17,7 @@ before_script:
   - psql -c "ALTER USER test_db_user WITH PASSWORD 'test_db_password';" -U postgres
   - psql -c 'create database sana_test;' -U postgres
 script:
-  - ./tools/flow check --lib src/static/js/libs/flow/
-  - flake8 src
-  - fab test
+  - fab verify
 after_success:
   - bash -x ./scripts/deploy.sh
 notifications:

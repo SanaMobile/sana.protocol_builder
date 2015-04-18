@@ -12,6 +12,14 @@ def test():
     local('python src/manage.py test homepage --noinput')
     local('python src/manage.py test editor --noinput')
 
+def lint():
+    local('flake8 src')
+    local('./tools/flow check --lib src/static/js/libs/flow/')
+
+def verify():
+    lint()
+    test()
+
 def update_host():
     with cd(env.project_root), prefix(env.virtualenv), prefix('workon sana_protocol_builder'):
         print(green('Pulling latest revision...'))
