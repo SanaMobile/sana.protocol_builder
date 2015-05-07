@@ -13,6 +13,7 @@
     "recipe[supervisor]",
     "recipe[line]",
     "recipe[nodejs]",
+    "recipe[grunt_cookbook]",
     "recipe[virtualenvwrapper]",
     "recipe[sana-protocol-builder]"
   ],

@@ -61,6 +61,14 @@ SITE
     yum-epel (0.6.0)
       yum (~> 3.0)
 
+GIT
+  remote: git://github.com/MattSurabian/grunt_cookbook.git
+  ref: master
+  sha: b3f543346cfbb99d83baff6604dcef595254e777
+  specs:
+    grunt_cookbook (1.0.0)
+      nodejs (>= 0.0.0)
+
 PATH
   remote: site-cookbooks/postgres_password
   specs:
@@ -90,6 +98,7 @@ DEPENDENCIES
   build-essential (>= 0)
   database (>= 0)
   git (>= 0)
+  grunt_cookbook (>= 0)
   line (>= 0)
   nginx (>= 0)
   nodejs (>= 0)
