@@ -62,9 +62,9 @@ SITE
       yum (~> 3.0)
 
 GIT
-  remote: git://github.com/MattSurabian/grunt_cookbook.git
+  remote: git://github.com/ConnorCimowsky/grunt_cookbook.git
   ref: master
-  sha: b3f543346cfbb99d83baff6604dcef595254e777
+  sha: 334265be329f52d94dd5501972f7bd71e02240cd
   specs:
     grunt_cookbook (1.0.0)
       nodejs (>= 0.0.0)
