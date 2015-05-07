@@ -51,7 +51,7 @@ Deploying
 Now that the server is fully configured, we are ready to deploy our application.
 
 ```shell
-fab deploy
+fab local_deploy
 ```
 
 Setting up database (dev)
