@@ -12,6 +12,7 @@
     "recipe[python]",
     "recipe[supervisor]",
     "recipe[line]",
+    "recipe[nodejs]",
     "recipe[virtualenvwrapper]",
     "recipe[sana-protocol-builder]"
   ],
