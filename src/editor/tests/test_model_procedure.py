@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from webapp.models import Procedure
+from editor.models import Procedure
 
 class ProcedureTest(TestCase):
     def setUp(self):

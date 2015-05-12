@@ -57,7 +57,8 @@ INSTALLED_APPS = (
     'django_nose',                  # Better test framework/runner
 
     # Our apps
-    'webapp'
+    'homepage',
+    'editor',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -122,7 +123,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.tz",
 
     # Our apps
-    'webapp.context_processors.site',
+    'homepage.context_processors.site',
 )
 
 #------------------------------------------------------------------------------
