@@ -8,6 +8,10 @@ include_recipe 'ssh_known_hosts'
 include_recipe 'supervisor'
 include_recipe "database::postgresql"
 
+package 'libffi-dev' do
+  action :install
+end
+
 secrets = Chef::EncryptedDataBagItem.load("secrets", "sana_protocol_builder")
 
 file '/root/.ssh/id_rsa' do
