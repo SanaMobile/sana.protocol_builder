@@ -7,10 +7,8 @@ from homepage import views as homepageViews
 from editor import views as editorViews
 from rest_framework.authtoken import views as restViews
 
-urlpatterns = patterns(
-    '',
-
-    url(r'^admin/',     include(admin.site.urls)),
+urlpatterns = patterns('',
+    url(r'^admin/',     include(admin.site.urls)),  # noqa
 
     url(r'^$',          homepageViews.index),
     url(r'^login/$',    homepageViews.login),
