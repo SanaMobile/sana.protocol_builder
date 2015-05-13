@@ -1,24 +1,28 @@
-from fabric.api import *
-from fabric.colors import *
+from fabric.api import *  # noqa
+from fabric.colors import *  # noqa
 
 env.colorize_errors = True
-env.hosts           = ['sanaprotocolbuilder.me']
-env.user            = 'root'
-env.virtualenv      = 'source /usr/local/bin/virtualenvwrapper.sh'
-env.project_root    = '/opt/sana.protocol_builder'
+env.hosts = ['sanaprotocolbuilder.me']
+env.user = 'root'
+env.virtualenv = 'source /usr/local/bin/virtualenvwrapper.sh'
+env.project_root = '/opt/sana.protocol_builder'
+
 
 def test():
     local('python src/manage.py syncdb --noinput')
     local('python src/manage.py test homepage --noinput')
     local('python src/manage.py test editor --noinput')
 
+
 def lint():
     local('flake8 src')
     local('./tools/flow check --lib src/static/js/libs/flow/')
 
+
 def verify():
     lint()
     test()
+
 
 def update_host():
     with cd(env.project_root), prefix(env.virtualenv), prefix('workon sana_protocol_builder'):
@@ -46,8 +50,10 @@ def update_host():
         print(green('Restarting gunicorn...'))
         run('supervisorctl restart gunicorn')
 
+
 def travis_deploy():
     update_host()
+
 
 def local_deploy():
     local('git push origin master')

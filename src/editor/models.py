@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from signals import user_post_save  # noqa
+
 
 class Procedure(models.Model):
     title = models.CharField(max_length=255)
