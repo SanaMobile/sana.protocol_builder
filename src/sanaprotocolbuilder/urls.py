@@ -4,6 +4,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 from homepage import views as homepageViews
+from editor import views as editorViews
 from rest_framework.authtoken import views as restViews
 
 urlpatterns = patterns('',
@@ -12,7 +13,8 @@ urlpatterns = patterns('',
     url(r'^$',          homepageViews.index),
     url(r'^login/$',    homepageViews.login),
     url(r'^signup/$',   homepageViews.signup),
-    url(r'^editor/$',   homepageViews.editor),
+
+    url(r'^editor/$',   editorViews.editor),
 
     url(r'^authenticate/$', restViews.obtain_auth_token)
 )
