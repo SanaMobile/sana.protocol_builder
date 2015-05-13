@@ -12,4 +12,4 @@ class UserTest(TestCase):
         try:
             token = Token.objects.get(user=self.test_user)
         except ObjectDoesNotExist:
-            assertTrue(False)
+            self.assertTrue(False)
