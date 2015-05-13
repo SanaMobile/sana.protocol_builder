@@ -9,6 +9,7 @@ env.project_root    = '/opt/sana.protocol_builder'
 
 def test():
     local('python src/manage.py syncdb --noinput')
+    local('python src/manage.py test homepage --noinput')
     local('python src/manage.py test editor --noinput')
 
 def update_host():
