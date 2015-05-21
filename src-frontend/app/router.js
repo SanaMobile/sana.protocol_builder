@@ -6,6 +6,7 @@ var Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('procedure', { path: '/procedures/:procedure_id' });
 });
 
 export default Router;
