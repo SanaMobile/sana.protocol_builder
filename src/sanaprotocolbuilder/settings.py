@@ -51,7 +51,6 @@ INSTALLED_APPS = (
 
     # 3rd party apps
     'compressor',                   # Compressing static files
-    'guardian',                     # Object-level permissions
     'rest_framework',               # RESTful endpoint support
     'rest_framework.authtoken',     # Token based authentication
     'django_nose',                  # Better test framework/runner
@@ -132,10 +131,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # http://www.django-rest-framework.org/
 #------------------------------------------------------------------------------
 
-ANONYMOUS_USER_ID = -1 # For Django guardian
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend', # default
-    'guardian.backends.ObjectPermissionBackend',
 )
 
 REST_FRAMEWORK = {
