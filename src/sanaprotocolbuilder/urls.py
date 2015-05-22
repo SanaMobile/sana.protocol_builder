@@ -1,11 +1,11 @@
 from django.conf.urls import patterns, include, url
-
 from django.contrib import admin
-admin.autodiscover()
-
 from homepage import views as homepageViews
 from editor import views as editorViews
 from rest_framework.authtoken import views as restViews
+
+
+admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^admin/',     include(admin.site.urls)),  # noqa

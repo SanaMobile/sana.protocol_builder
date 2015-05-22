@@ -132,7 +132,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # ------------------------------------------------------------------------------
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend', # default
+    'django.contrib.auth.backends.ModelBackend',  # default
 )
 
 REST_FRAMEWORK = {
