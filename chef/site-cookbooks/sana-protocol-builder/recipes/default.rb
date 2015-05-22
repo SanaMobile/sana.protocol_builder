@@ -123,7 +123,7 @@ supervisor_service 'gunicorn' do
   autorestart true
 
   command '/root/.virtualenvs/sana_protocol_builder/bin/gunicorn sanaprotocolbuilder.wsgi:application --bind 127.0.0.1:8001'
-  directory '/opt/sana.protocol_builder/src'
+  directory '/opt/sana.protocol_builder/src-backend'
   environment(
     'PATH' => '/root/.virtualenvs/sana_protocol_builder/bin',
     'DJANGO_SECRET_KEY' => secrets['django_secret_key'],

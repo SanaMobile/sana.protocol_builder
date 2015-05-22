@@ -9,14 +9,14 @@ env.project_root = '/opt/sana.protocol_builder'
 
 
 def test():
-    local('python src/manage.py syncdb --noinput')
-    local('python src/manage.py test homepage --noinput')
-    local('python src/manage.py test editor --noinput')
+    local('python src-backend/manage.py syncdb --noinput')
+    local('python src-backend/manage.py test homepage --noinput')
+    local('python src-backend/manage.py test editor --noinput')
 
 
 def lint():
-    local('flake8 src')
-    local('./tools/flow check --lib src/static/js/libs/flow/')
+    local('flake8 src-backend')
+    local('./tools/flow check --lib src-backend/static/js/libs/flow/')
 
 
 def verify():
@@ -39,13 +39,13 @@ def update_host():
         run('grunt')
 
         print(green('Creating database tables...'))
-        run('python src/manage.py syncdb --noinput')
+        run('python src-backend/manage.py syncdb --noinput')
 
         print(green('Importing fixtures...'))
-        run('python src/manage.py loaddata src/fixtures/pages.json')
+        run('python src-backend/manage.py loaddata src-backend/fixtures/pages.json')
 
         print(green('Collecting static files...'))
-        run('python src/manage.py collectstatic --noinput')
+        run('python src-backend/manage.py collectstatic --noinput')
 
         print(green('Restarting gunicorn...'))
         run('supervisorctl restart gunicorn')
