@@ -26,17 +26,13 @@ def verify():
 def update_host():
     with cd(env.project_root), prefix(env.virtualenv), prefix('workon sana_protocol_builder'):
         print(green('Pulling latest revision...'))
+        run('git checkout master')
+        run('git reset --hard HEAD')
         run('git pull origin master')
         run('git clean -fd')
 
         print(green('Installing python dependencies...'))
         run('pip install -qr requirements.txt')
-
-        print(green('Installing node dependencies...'))
-        run('npm install')
-
-        print(green('Running grunt...'))
-        run('grunt')
 
         print(green('Creating database tables...'))
         run('python src-backend/manage.py syncdb --noinput')
