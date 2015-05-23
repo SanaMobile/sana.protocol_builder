@@ -40,24 +40,17 @@ INTERNAL_IPS = (
 
 INSTALLED_APPS = (
     # Django apps
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.flatpages',
-    'django.contrib.messages',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.staticfiles',
+    'django.contrib.admin',         # Admin system
+    'django.contrib.auth',          # User auth system
+    'django.contrib.contenttypes',  # Track all of the models installed and provide high level interface
 
     # 3rd party apps
-    'compressor',                   # Compressing static files
     'rest_framework',               # RESTful endpoint support
     'rest_framework.authtoken',     # Token based authentication
     'django_nose',                  # Better test framework/runner
 
     # Our apps
-    'homepage',
-    'editor',
+    'api',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -108,21 +101,15 @@ PASSWORD_HASHERS = (
 # Flatpages / Sites
 # ------------------------------------------------------------------------------
 
-# Tells django_site (flatpage management) which website's database to use
-# (in case our database hosts multiple sites)
-SITE_ID = 1
-
 TEMPLATE_CONTEXT_PROCESSORS = (
-    # Django apps
+    # Django processors
     "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-
-    # Our apps
-    'homepage.context_processors.site',
+    "django.template.context_processors.debug",
+    "django.template.context_processors.i18n",
+    "django.template.context_processors.media",
+    "django.template.context_processors.static",
+    "django.template.context_processors.tz",
+    "django.contrib.messages.context_processors.messages"
 )
 
 # ------------------------------------------------------------------------------
@@ -163,23 +150,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-# ------------------------------------------------------------------------------
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
-# ------------------------------------------------------------------------------
-
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-# Compile less
-COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc -x {infile} {outfile}'),
-)
-# Use 'compressor' as a static file finder
-STATICFILES_FINDERS = (
-    'compressor.finders.CompressorFinder',
-)
 
 # ------------------------------------------------------------------------------
 # Test Configuration
