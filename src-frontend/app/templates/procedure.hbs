@@ -3,10 +3,11 @@
     <div class="col-md-7">
       <h1>{{model.title}}</h1>
       <ul class="page-list">
-        <button class="add-page" {{action 'addPage' 0}}>Add Page</button>
+        <button class="btn btn-default add-page" {{action 'addPage' 0}}>Add Page</button>
         {{#each pages as |page index|}}
           <h3>Page {{page.id}}</h3>
           <li class="page">
+          <button class="btn btn-default add-element">Add Element</button>
           {{#each element in page.elements}}
             <h4>{{element.question}}</h4>
             <h5>Choices:</h5>
@@ -15,9 +16,10 @@
             <input type="checkbox"> {{choice}}<br>
             {{/each}}
             </ul>
+            <button class="btn btn-default add-page">Add Element</button>
           {{/each}}
           </li>
-          <button class="add-page" {{action 'addPage' page.index}}>Add Page</button>
+          <button class="btn btn-default add-page" {{action 'addPage' page.index}}>Add Page</button>
         {{/each}}
       </ul>
     </div>
