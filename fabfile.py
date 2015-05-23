@@ -10,13 +10,12 @@ env.project_root = '/opt/sana.protocol_builder'
 
 def test():
     local('python src-backend/manage.py syncdb --noinput')
-    local('python src-backend/manage.py test homepage --noinput')
-    local('python src-backend/manage.py test editor --noinput')
+    local('python src-backend/manage.py test api --noinput')
 
 
 def lint():
     local('flake8 src-backend')
-    local('./tools/flow check --lib src-backend/static/js/libs/flow/')
+    local('./tools/flow check')
 
 
 def verify():
