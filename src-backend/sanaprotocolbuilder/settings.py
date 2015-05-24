@@ -154,6 +154,50 @@ REST_EMBER_FORMAT_KEYS = True
 REST_EMBER_PLURALIZE_KEYS = True
 
 # ------------------------------------------------------------------------------
+# Logging
+# https://docs.djangoproject.com/en/1.8/topics/logging/
+# ------------------------------------------------------------------------------
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[%(levelname)s] [%(asctime)s] [%(module)s] %(message)s'
+        },
+        'simple': {
+            'format': '[%(levelname)s] %(message)s'
+        },
+        'box': {
+            'format': '[%(levelname)s]\n' + ('-' * 80) + '\n%(message)s\n' + ('-' * 80) + '\n'
+        }
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'info.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'console-debug': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'box',
+        },
+    },
+    'loggers': {
+        'debugger': {
+            'handlers': ['console-debug'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+# ------------------------------------------------------------------------------
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 # ------------------------------------------------------------------------------
