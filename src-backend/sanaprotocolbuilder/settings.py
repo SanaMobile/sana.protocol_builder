@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'rest_framework',               # RESTful endpoint support
     'rest_framework.authtoken',     # Token based authentication
     'django_nose',                  # Better test framework/runner
+    'corsheaders',                  # Cross-origin resource sharing
 
     # Our apps
     'api',
@@ -55,6 +56,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -156,3 +158,9 @@ USE_TZ = True
 # ------------------------------------------------------------------------------
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# ------------------------------------------------------------------------------
+# Cross-origin request handling
+# ------------------------------------------------------------------------------
+
+CORS_ORIGIN_ALLOW_ALL = True  # Temporary
