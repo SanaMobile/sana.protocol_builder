@@ -11,7 +11,7 @@ class Procedure(models.Model):
 
 
 class Page(models.Model):
-    display_index = models.IntegerField()
+    display_index = models.PositiveIntegerField()
     procedure = models.ForeignKey(Procedure, related_name='pages')
 
     class Meta:
@@ -22,7 +22,7 @@ class Page(models.Model):
 
 
 class Element(models.Model):
-    display_index = models.IntegerField()
+    display_index = models.PositiveIntegerField()
     eid = models.CharField(max_length=255)
     concept = models.TextField()
     question = models.TextField()
@@ -33,6 +33,7 @@ class Element(models.Model):
         unique_together = (
             ('display_index', 'page')
         )
+        ordering = ['page', 'display_index']
 
 
 class EntryElement(models.Model):
