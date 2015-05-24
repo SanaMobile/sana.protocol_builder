@@ -2,10 +2,11 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   actions: {
-    showModal: function(name) {
+    showModal: function(name, model) {
       this.render(name, {
         into: 'application',
-        outlet: 'modal'
+        outlet: 'modal',
+        model: model
       });
     },
     hideModal: function() {
