@@ -11,5 +11,6 @@ class ProcedureSerializer(serializers.ModelSerializer):
             'author',
             'version',
             'uuid',
-            'owner'
+            'owner',
+            'pages'
         )

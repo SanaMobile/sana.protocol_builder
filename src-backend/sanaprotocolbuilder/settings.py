@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     # 3rd party apps
     'rest_framework',               # RESTful endpoint support
     'rest_framework.authtoken',     # Token based authentication
+    'rest_framework_ember',         # Make django play nice with Ember
     'django_nose',                  # Better test framework/runner
     'corsheaders',                  # Cross-origin resource sharing
 
@@ -126,9 +127,18 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',  # default
 )
 
+
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework_ember.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser'
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework_ember.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissions',
     ],
@@ -139,6 +149,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     )
 }
+
+REST_EMBER_FORMAT_KEYS = True
+REST_EMBER_PLURALIZE_KEYS = True
 
 # ------------------------------------------------------------------------------
 # Internationalization
