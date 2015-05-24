@@ -1,17 +1,8 @@
-from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
 import models
 import serializer
-
-
-def __parseVersion(versionString):
-    return int(versionString[1:])
-
-
-def versionTestView(request, version):
-    return JsonResponse({'version': __parseVersion(version)})
 
 
 class ProcedureViewSet(viewsets.ModelViewSet):
