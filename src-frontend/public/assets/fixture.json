@@ -1,0 +1,108 @@
+{
+  "procedure": {
+    "id": 1,
+    "title": "Surgery Follow-Up",
+    "pages": [1, 2, 3, 4, 5]
+  },
+
+  "pages": [
+    {
+      "id": 2,
+      "prev": 1,
+      "next": 3,
+      "elements": [2]
+    },
+    {
+      "id": 5,
+      "prev": 4,
+      "next": null,
+      "elements": [5]
+    },
+    {
+      "id": 3,
+      "prev": 2,
+      "next": 4,
+      "elements": [3]
+    },
+    {
+      "id": 1,
+      "prev": null,
+      "next": 2,
+      "elements": [1]
+    },
+    {
+      "id": 4,
+      "prev": 3,
+      "next": 5,
+      "elements": [4]
+    }
+  ],
+
+  "elements": [
+    {
+      "id": 1,
+      "type": "SELECT",
+      "concept": "SURGERY SITE",
+      "question": "Site of surgery",
+      "answer": null,
+      "choices": [
+        "Head and Neck",
+        "Chest",
+        "Abdomen",
+        "Pelvis",
+        "Extremities",
+        "Others"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "SELECT",
+      "concept": "ORGAN",
+      "question": "Organ",
+      "answer": null,
+      "choices": [
+        "Stomach",
+        "Intestines",
+        "Gallbladder",
+        "Appendix",
+        "Liver",
+        "Kidney",
+        "Spleen",
+        "Pancreas"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "MULTI_SELECT",
+      "concept": "SYMPTOMS",
+      "question": "Check all that apply:",
+      "answer": null,
+      "choices": [
+        "Fever",
+        "Diarrhea",
+        "Constipation",
+        "Wound drainage",
+        "Pain surrounding wound"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "RADIO",
+      "concept": "WOUND DRAINAGE",
+      "question": "Is the wound drainage:",
+      "answer": null,
+      "choices": [
+        "Clear",
+        "Pus",
+        "Bloody"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "ENTRY",
+      "concept": "COMMENTS",
+      "question": "Other comments:",
+      "answer": null
+    }
+  ]
+}
