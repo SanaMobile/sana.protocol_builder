@@ -18,6 +18,7 @@ class Page(models.Model):
         unique_together = (
             ('display_index', 'procedure')
         )
+        ordering = ['procedure', 'display_index']
 
 
 class Element(models.Model):
