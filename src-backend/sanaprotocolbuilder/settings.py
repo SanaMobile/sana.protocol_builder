@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # ------------------------------------------------------------------------------
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
@@ -43,8 +43,9 @@ APPEND_SLASH = False
 INSTALLED_APPS = (
     # Django apps
     'django.contrib.admin',         # Admin system
+    'django.contrib.sessions',      # Dependency of django.contrib.auth
+    'django.contrib.contenttypes',  # Track all of the models installed and provide object level permissions
     'django.contrib.auth',          # User auth system
-    'django.contrib.contenttypes',  # Track all of the models installed and provide high level interface
 
     # 3rd party apps
     'rest_framework',               # RESTful endpoint support
@@ -73,7 +74,7 @@ WSGI_APPLICATION = 'sanaprotocolbuilder.wsgi.application'
 
 # ------------------------------------------------------------------------------
 # Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 # ------------------------------------------------------------------------------
 
 DATABASES = {
@@ -89,7 +90,7 @@ DATABASES = {
 
 # ------------------------------------------------------------------------------
 # Password Hash
-# https://docs.djangoproject.com/en/1.6/topics/auth/passwords/
+# https://docs.djangoproject.com/en/1.8/topics/auth/passwords/
 # ------------------------------------------------------------------------------
 
 PASSWORD_HASHERS = (
@@ -100,21 +101,6 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.SHA1PasswordHasher',
     'django.contrib.auth.hashers.MD5PasswordHasher',
     'django.contrib.auth.hashers.CryptPasswordHasher',
-)
-
-# ------------------------------------------------------------------------------
-# Flatpages / Sites
-# ------------------------------------------------------------------------------
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    # Django processors
-    "django.contrib.auth.context_processors.auth",
-    "django.template.context_processors.debug",
-    "django.template.context_processors.i18n",
-    "django.template.context_processors.media",
-    "django.template.context_processors.static",
-    "django.template.context_processors.tz",
-    "django.contrib.messages.context_processors.messages"
 )
 
 # ------------------------------------------------------------------------------
