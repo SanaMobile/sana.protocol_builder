@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('numeric', models.CharField(max_length=255, null=True)),
                 ('concept', models.TextField()),
                 ('question', models.TextField()),
-                ('default_answer', models.TextField()),
+                ('answer', models.TextField(blank=True)),
             ],
             options={
                 'ordering': ['page', 'display_index'],
