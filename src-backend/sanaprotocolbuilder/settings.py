@@ -56,6 +56,7 @@ INSTALLED_APPS = (
 
     # Our apps
     'api',
+    'registration',
 )
 
 MIDDLEWARE_CLASSES = (
