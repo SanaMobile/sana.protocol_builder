@@ -5,13 +5,13 @@ from models import Procedure
 
 class ProcedureSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.PrimaryKeyRelatedField(
-        write_only=True,
         queryset=User.objects.all()
     )
 
     class Meta:
         model = Procedure
         fields = (
+            'id',
             'title',
             'author',
             'version',

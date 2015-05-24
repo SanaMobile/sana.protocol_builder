@@ -7,7 +7,7 @@ class Procedure(models.Model):
     author = models.CharField(max_length=255)
     version = models.CharField(max_length=255, null=True)
     uuid = models.CharField(max_length=36, null=True)
-    owner = models.OneToOneField(User)
+    owner = models.ForeignKey(User)
 
 
 class Page(models.Model):
