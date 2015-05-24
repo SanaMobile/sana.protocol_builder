@@ -40,9 +40,6 @@ def update_host():
         print(green('Importing fixtures...'))
         run('python src-backend/manage.py loaddata src-backend/fixtures/pages.json')
 
-        print(green('Collecting static files...'))
-        run('python src-backend/manage.py collectstatic --noinput')
-
         print(green('Restarting gunicorn...'))
         run('supervisorctl restart gunicorn')
 
