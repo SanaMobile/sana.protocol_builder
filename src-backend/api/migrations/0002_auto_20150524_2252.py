@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-from django.conf import settings
 
 
 class Migration(migrations.Migration):
@@ -12,9 +11,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='procedure',
-            name='owner',
-            field=models.OneToOneField(to=settings.AUTH_USER_MODEL),
+        migrations.RenameField(
+            model_name='element',
+            old_name='default_answer',
+            new_name='answer',
         ),
     ]

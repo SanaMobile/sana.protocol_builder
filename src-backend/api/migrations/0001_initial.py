@@ -13,10 +13,31 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='Element',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('display_index', models.PositiveIntegerField()),
+                ('eid', models.CharField(max_length=255)),
+                ('element_type', models.CharField(max_length=12, choices=[(b'SELECT', b'SELECT'), (b'MULTI_SELECT', b'MULTI_SELECT'), (b'RADIO', b'RADIO'), (b'GPS', b'GPS'), (b'SOUND', b'SOUND'), (b'PICTURE', b'PICTURE'), (b'ENTRY', b'ENTRY')])),
+                ('choices', models.TextField(null=True)),
+                ('numeric', models.CharField(max_length=255, null=True)),
+                ('concept', models.TextField()),
+                ('question', models.TextField()),
+                ('default_answer', models.TextField()),
+            ],
+            options={
+                'ordering': ['page', 'display_index'],
+            },
+        ),
+        migrations.CreateModel(
             name='Page',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('display_index', models.PositiveIntegerField()),
             ],
+            options={
+                'ordering': ['procedure', 'display_index'],
+            },
         ),
         migrations.CreateModel(
             name='Procedure',
@@ -24,13 +45,27 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=255)),
                 ('author', models.CharField(max_length=255)),
-                ('version', models.CharField(max_length=255)),
-                ('owner', models.ForeignKey(to=settings.AUTH_USER_MODEL, unique=True)),
+                ('version', models.CharField(max_length=255, null=True)),
+                ('uuid', models.CharField(max_length=36, null=True)),
+                ('owner', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.AddField(
             model_name='page',
             name='procedure',
-            field=models.ForeignKey(to='api.Procedure'),
+            field=models.ForeignKey(related_name='pages', to='api.Procedure'),
+        ),
+        migrations.AddField(
+            model_name='element',
+            name='page',
+            field=models.ForeignKey(related_name='elements', to='api.Page'),
+        ),
+        migrations.AlterUniqueTogether(
+            name='page',
+            unique_together=set([('display_index', 'procedure')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='element',
+            unique_together=set([('display_index', 'page')]),
         ),
     ]

@@ -22,11 +22,24 @@ class Page(models.Model):
 
 
 class Element(models.Model):
+    TYPES = (
+        ('SELECT', 'SELECT'),
+        ('MULTI_SELECT', 'MULTI_SELECT'),
+        ('RADIO', 'RADIO'),
+        ('GPS', 'GPS'),
+        ('SOUND', 'SOUND'),
+        ('PICTURE', 'PICTURE'),
+        ('ENTRY', 'ENTRY')
+    )
+
     display_index = models.PositiveIntegerField()
     eid = models.CharField(max_length=255)
+    element_type = models.CharField(max_length=12, choices=TYPES)
+    choices = models.TextField(null=True)
+    numeric = models.CharField(max_length=255, null=True)
     concept = models.TextField()
     question = models.TextField()
-    default_answer = models.TextField()
+    answer = models.TextField(blank=True)
     page = models.ForeignKey(Page, related_name='elements')
 
     class Meta:
@@ -34,26 +47,3 @@ class Element(models.Model):
             ('display_index', 'page')
         )
         ordering = ['page', 'display_index']
-
-
-class EntryElement(models.Model):
-    numeric = models.CharField(max_length=255, null=True)
-
-
-class ChoiceElement(Element):
-    TYPES = (
-        ('SELECT', 'SELECT'),
-        ('MULTI_SELECT', 'MULTI_SELECT'),
-        ('RADIO', 'RADIO')
-    )
-    element_type = models.CharField(max_length=12, choices=TYPES)
-    choices = models.TextField()
-
-
-class SingleValueElement(Element):
-    TYPES = (
-        ('GPS', 'GPS'),
-        ('SOUND', 'SOUND'),
-        ('PICTURE', 'PICTURE')
-    )
-    element_type = models.CharField(max_length=12, choices=TYPES)

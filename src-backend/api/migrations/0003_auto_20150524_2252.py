@@ -2,19 +2,18 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0003_auto_20150523_1952'),
+        ('api', '0002_auto_20150524_2252'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='procedure',
-            name='owner',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
+            model_name='element',
+            name='answer',
+            field=models.TextField(blank=True),
         ),
     ]
