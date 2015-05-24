@@ -10,13 +10,15 @@ class ProcedureViewSet(viewsets.ModelViewSet):
     model = models.Procedure
 
     def get_queryset(self):
-        self.resource_name = 'procedure'
+        self.resource_name = 'procedure'  # ensures that unless we override resource_name it will exist
+
         user = self.request.user
         return models.Procedure.objects.filter(owner=user)
 
     def retrieve(self, request, pk=None):
         queryset = self.get_queryset()
-        self.resource_name = False
+
+        self.resource_name = False  # doesn't display the tag 'procedure' or 'procedures'
 
         procedure = get_object_or_404(queryset, pk=pk)
         serial_proc = serializer.ProcedureSerializer(procedure)
