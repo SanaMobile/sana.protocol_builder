@@ -13,5 +13,9 @@ def versionTestView(request, version):
 
 
 class ProcedureViewSet(viewsets.ModelViewSet):
-    queryset = Procedure.objects.all()
     serializer_class = ProcedureSerializer
+    model = Procedure
+
+    def get_queryset(self):
+        user = self.request.user
+        return Procedure.objects.filter(owner=user)

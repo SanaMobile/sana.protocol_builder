@@ -4,7 +4,7 @@ from rest_framework import routers
 
 router = routers.SimpleRouter(trailing_slash=False)
 
-router.register(r'procedures', ProcedureViewSet)
+router.register(r'procedures', ProcedureViewSet, base_name='procedure')
 
 urlpatterns = [
     url(r'^', include(router.urls))
