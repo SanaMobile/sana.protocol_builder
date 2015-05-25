@@ -5,11 +5,14 @@ import models
 
 
 class ElementSerializer(serializers.ModelSerializer):
+    etype = serializers.CharField(source='element_type')
+    displayIndex = serializers.IntegerField(source='display_index')
+
     class Meta:
         model = models.Element
         fields = (
             'id',
-            'display_index',
+            'displayIndex',
             'eid',
             'concept',
             'question',
@@ -17,7 +20,7 @@ class ElementSerializer(serializers.ModelSerializer):
             'page',
             'choices',
             'numeric',
-            'element_type'
+            'etype'
         )
 
     def to_representation(self, instance):
@@ -40,11 +43,13 @@ class ElementSerializer(serializers.ModelSerializer):
 
 
 class PageSerializer(serializers.ModelSerializer):
+    displayIndex = serializers.IntegerField(source='display_index')
+
     class Meta:
         model = models.Page
         fields = (
             'id',
-            'display_index',
+            'displayIndex',
             'procedure',
             'elements'
         )
