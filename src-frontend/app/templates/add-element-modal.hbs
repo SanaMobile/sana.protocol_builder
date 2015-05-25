@@ -1,8 +1,30 @@
-{{#modal-dialog title='Add Element' confirm='save' close='hideModal'}}
-  <form>
+{{#modal-dialog title='Add Element' save='save' cancel='hideModal'}}
+<form>
+  <div class="form-group">
+    <label for="elementType">Type</label>
+    {{view 'select' class="form-control" content=types value=elementType}}
+  </div>
+  <div class="form-group">
+    <label for="eid">Identifier</label>
+    {{input type="text" id="eid" class="form-control" value=eid}}
+  </div>
+  <div class="form-group">
+    <label for="concept">Concept</label>
+    {{input type="text" id="concept" class="form-control" value=concept}}
+  </div>
+  <div class="form-group">
+    <label for="question">Question</label>
+    {{input type="text" id="question" class="form-control" value=question}}
+  </div>
+  <div class="form-group">
+    <label for="answer">Answer</label>
+    {{input type="text" id="answer" class="form-control" value=answer}}
+  </div>
+  {{#if shouldShowChoices}}
     <div class="form-group">
-      <label>Name</label>
-      {{input class="form-control" value=name}}
+      <label for="choices">Choices</label>
+      {{input type="text" id="choices" class="form-control" value=choices}}
     </div>
-  </form>
+  {{/if}}
+</form>
 {{/modal-dialog}}
