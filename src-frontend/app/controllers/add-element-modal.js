@@ -23,8 +23,9 @@ export default Ember.ObjectController.extend({
         answer: this.get('answer')
       });
 
+      // TODO: Use an actual array
       var choices = this.get('choices');
-      if (choices !== "") {
+      if (choices) {
         element.set('choices', choices);
       }
 

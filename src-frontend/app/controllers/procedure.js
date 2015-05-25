@@ -15,6 +15,7 @@ export default Ember.ObjectController.extend({
 
       elementsToBePushed.forEach(function(element) {
         element.incrementProperty('displayIndex');
+        // TODO: Find a way to batch these updates
         element.save();
       });
 
@@ -34,6 +35,7 @@ export default Ember.ObjectController.extend({
 
       pagesToBePushed.forEach(function(page) {
         page.incrementProperty('displayIndex');
+        // TODO: Find a way to batch these updates
         page.save();
       });
 

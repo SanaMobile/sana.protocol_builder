@@ -4,7 +4,7 @@ export default DS.RESTSerializer.extend({
   serialize: function(snapshot, options) {
     var json = this._super(snapshot, options);
 
-    if (json.elements === undefined) {
+    if (!json.elements) {
       json.elements = [];
     }
 
