@@ -1,10 +1,9 @@
 from django.conf.urls import url
-from rest_framework.authtoken import views as authTokenViews
 
-from views import signup
+from views import signup, login
 
 
 urlpatterns = [
-    url(r'^login', authTokenViews.obtain_auth_token),
+    url(r'^login', login),
     url(r'^signup', signup),
 ]
