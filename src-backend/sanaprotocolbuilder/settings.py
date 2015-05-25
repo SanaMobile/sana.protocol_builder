@@ -56,6 +56,7 @@ INSTALLED_APPS = (
 
     # Our apps
     'api',
+    'registration',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -181,6 +182,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'auth': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': True,
+        }
     },
 }
 

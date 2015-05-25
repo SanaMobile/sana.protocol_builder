@@ -11,6 +11,7 @@ env.project_root = '/opt/sana.protocol_builder'
 def test():
     local('python src-backend/manage.py syncdb --noinput')
     local('python src-backend/manage.py test api --noinput')
+    local('python src-backend/manage.py test registration --noinput')
 
 
 def lint():
