@@ -25,12 +25,14 @@ class ProcedureViewSet(viewsets.ModelViewSet):
         elements = [element for page in pages for element in page.elements.all()]
         serial_proc = serializer.ProcedureSerializer(procedure)
         page_serial = serializer.PageSerializer(pages, many=True)
-        elem_serial = serializer.ElementSerializer(elements, many=True)
         data = {
             'procedure': serial_proc.data,
-            'pages': page_serial.data,
-            'elements': elem_serial.data,
+            'pages': page_serial.data
         }
+
+        if elements:
+            elem_serial = serializer.ElementSerializer(elements, many=True)
+            data['elements'] = elem_serial.data
 
         return Response(data)
 
