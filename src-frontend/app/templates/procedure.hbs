@@ -1,25 +1,25 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-7">
-      <h1>{{model.title}}</h1>
+      <h1>{{title}}</h1>
       <ul class="page-list">
         <button class="btn btn-default add-page" {{action 'addPage' 0}}>Add Page</button>
-        {{#each pages as |page index|}}
-          <h3>Page {{page.id}}</h3>
-          <li class="page">
-          <button class="btn btn-default add-element" {{action 'showModal' 'add-element-modal' index}}>Add Element</button>
-          {{#each element in page.elements}}
-            <h4>{{element.question}}</h4>
-            <h5>Choices:</h5>
-            <ul>
-            {{#each choice in element.choices}}
-            <input type="checkbox"> {{choice}}<br>
-            {{/each}}
-            </ul>
-            <button class="btn btn-default add-element" {{action 'showModal' 'add-element-modal' index}}>Add Element</button>
-          {{/each}}
+        {{#each page in pages}}
+          <li>
+            <h3>Page {{page.displayIndex}}</h3>
+            <div class="page-content">
+              <button class="btn btn-default add-element" {{action 'addElement' page 0}}>Add Element</button>
+              {{#each element in page.elements}}
+                <div class="element">
+                  <h4>{{element.question}}</h4>
+                  <h5>Choices:</h5>
+                  <p>{{element.choices}}</p>
+                </div>
+                <button class="btn btn-default add-element" {{action 'addElement' page element.displayIndex}}>Add Element</button>
+              {{/each}}
+            </div>
           </li>
-          <button class="btn btn-default add-page" {{action 'addPage' page.index}}>Add Page</button>
+          <button class="btn btn-default add-page" {{action 'addPage' page.displayIndex}}>Add Page</button>
         {{/each}}
       </ul>
     </div>
