@@ -1,5 +1,8 @@
-<ul>
-{{#each procedure in model}}
-  <li>{{#link-to 'procedure' procedure}}{{procedure.title}}{{/link-to}}</li>
-{{/each}}
-</ul>
+<div class="procedure-list">
+  <h1>Your Procedures</h1>
+  <ul class="procedure-list">
+  {{#each procedure in model}}
+    <li>{{#link-to 'procedure' procedure}}{{procedure.title}}{{/link-to}}</li>
+  {{/each}}
+  </ul>
+</div>
