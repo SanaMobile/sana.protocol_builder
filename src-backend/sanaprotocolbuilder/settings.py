@@ -122,7 +122,6 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.MultiPartParser'
     ),
     'DEFAULT_RENDERER_CLASSES': (
-        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
         'rest_framework_ember.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
