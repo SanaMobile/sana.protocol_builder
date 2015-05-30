@@ -1,0 +1,47 @@
+@import url(base.less);
+
+ul.procedure{
+    li{
+        span{
+            cursor: pointer;
+
+            &.add-condition,
+            &.remove-condition{
+                border-radius: (@action-button-size + 4px) / 2;
+                position: absolute;
+                display: block;
+                top: 0; left: @sanapage-size - @action-button-size;
+                width: @action-button-size; height: @action-button-size;
+
+                color: #fff;
+                font-size: 18px;
+                font-weight: bold;
+                line-height: @action-button-size;
+                text-decoration: none;
+                text-align: center;
+
+                transition: 0.5s;
+            }
+
+            &.add-condition{
+                background: @add-condition-action-color;
+                border: 2px solid lighten(@add-condition-action-color, 5%);
+
+                &:hover{
+                    background: lighten(@add-condition-action-color, 20%);
+                    border: 2px solid lighten(@add-condition-action-color, 25%);
+                }
+            }
+
+            &.remove-condition{
+                background: @remove-condition-action-color;
+                border: 2px solid lighten(@remove-condition-action-color, 5%);
+
+                &:hover{
+                    background: lighten(@remove-condition-action-color, 20%);
+                    border: 2px solid lighten(@remove-condition-action-color, 25%);
+                }
+            }
+        }
+    }
+}

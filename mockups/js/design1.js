@@ -1,6 +1,5 @@
 $(document).ready(function () {
     var $procedureList = $('ul.procedure');
-    var numNewPages = 1;
 
     $procedureList.on('click', 'a.open-page', function (ev) {
         console.log('Hello World');
@@ -24,14 +23,6 @@ $(document).ready(function () {
 
         $button.toggleClass('add-condition');
         $button.toggleClass('remove-condition');
-        ev.preventDefault();
-    });
-
-    $procedureList.on('click', 'a.add-page', function (ev) {
-        var $parent = $(this).parent();
-        $parent.after($parent.clone());
-        $parent.after('<li><a href="#" class="open-page">New Page ' + numNewPages + '</a></li>');
-        numNewPages++;
         ev.preventDefault();
     });
 });
