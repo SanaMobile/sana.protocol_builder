@@ -24,13 +24,15 @@ $(document).ready(function () {
         $procedureList.on('click', 'a.add-page', function (ev) {
             var $newPageContainer = $pageTemplate.clone();
             $newPageContainer.find('a.open-page span.label').text('New Page ' + pageCounter++);
+            $newPageContainer.hide();
             $(this).parents('li').after($newPageContainer);
+            $newPageContainer.slideDown(500);
             ev.preventDefault();
         });
 
         $procedureList.on('click', 'span.delete-page', function (ev) {
             var $page = $(this).parents('li');
-            $page.fadeOut(500, function () {
+            $page.slideUp(500, function () {
                 $page.remove();
             });
 
