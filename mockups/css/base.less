@@ -1,5 +1,6 @@
 @import url(normalize.less);
 @import url(constants.less);
+@import url(octicons.less);
 
 //------------------------------------------------------------------------------
 // General
@@ -12,16 +13,14 @@ body{
 
 .action-button{
     color: #fff;
-    font-size: 30px;
-    font-weight: bold;
     line-height: @action-button-size;
     text-align: center;
     text-decoration: none;
     outline: none;
     
-    border-radius: @action-button-size / 2;
+    border: @action-button-border-size solid;
+    border-radius: (@action-button-size + @action-button-border-size * 2) / 2;
     display: block;
-    position: relative;
     width: @action-button-size; height: @action-button-size;
 
     transition: 0.5s;
@@ -48,17 +47,23 @@ ul.procedure{
     }
 
     li{
-        position: relative;
-        z-index: 0;
+        width: @sanapage-size;
 
-        div.condition{
-            margin-left: @condition-page-offset + @sanapage-size;
-            position: relative;
-            z-index: 0;
+        &.ui-state-highlight{
+            box-sizing: border-box;
+            width: @sanapage-size; height: 100px;
+            padding: 0;
+            margin-bottom: @gap-between-pages * 2 + @action-button-size + @action-button-border-size * 2;
+        }
+
+        &.ui-sortable-helper{
+            a.add-page{
+                display: none;
+            }
         }
         
         a{
-            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
 
             &.open-page {
                 background: #fff;
@@ -66,30 +71,66 @@ ul.procedure{
                 text-decoration: none;
                 font-size: 18px;
                 font-weight: bold;
+                line-height: 20px;
 
                 box-sizing: border-box;
                 border: 1px solid @border-color;
                 display: block;
                 outline: none;
-                padding: 40px;
+                padding: 39px 40px 39px 60px;
+                position: relative;
                 width: @sanapage-size;
 
                 transition: 0.2s;
 
                 &:hover{
-                    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+                    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+                }
+
+                &.has-condition{
+                    margin-left: @sanapage-size + @condition-page-offset;
+                }
+
+                span:not(.label){
+                    cursor: pointer;
+                    line-height: 100px;
+                    position: absolute;
+                    top: 0;
+                    width: 40px; height: 100px;
+                    text-align: center;
+
+                    opacity: 0.25;
+                    transition: 0.5s;
+
+                    &:hover{
+                        opacity: 1;
+                    }
+                
+                    &.drag-handle{
+                        text-align: right;
+                        left: 0;
+                    }
+
+                    &.delete-page{
+                        right: 20px;
+                    }
+
+                    &.add-condition,
+                    &.delete-condition{
+                        right: -60px;
+                    }
                 }
             }
 
             &.add-page{
                 .action-button;
                 
-                background: @add-page-action-color;
+                background-color: @add-page-action-color;
                 margin: @gap-between-pages 0;
-                margin-left: @sanapage-size / 2 - @action-button-size / 2;
+                margin-left: @sanapage-size / 2 - (@action-button-size + @action-button-border-size * 2) / 2;
 
                 &:hover{
-                    background: lighten(@add-page-action-color, 10%);
+                    background-color: lighten(@add-page-action-color, 5%);
                 }
             }
         }
