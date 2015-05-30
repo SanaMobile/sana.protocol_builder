@@ -6,5 +6,5 @@ export default DS.Model.extend({
   version: DS.attr('string'),
   uuid: DS.attr('string'),
   owner: DS.attr('number'),
-  pages: DS.hasMany('page')
+  pages: DS.hasMany('page', { async: true })
 });

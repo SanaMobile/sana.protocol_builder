@@ -1,6 +1,6 @@
-import DS from 'ember-data';
+import DRFSerializer from './drf';
 
-export default DS.RESTSerializer.extend({
+export default DRFSerializer.extend({
   serialize: function(snapshot, options) {
     var json = this._super(snapshot, options);
 
