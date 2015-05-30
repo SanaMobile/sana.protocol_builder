@@ -1,30 +1,19 @@
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-md-7">
-      <h1>{{title}}</h1>
-      <ul class="page-list">
-        <button class="btn btn-default add-page" {{action 'addPage' 0}}>Add Page</button>
+    <div class="row">
+    <h1>{{title}}</h1>
+    <ul class="procedure">
+        <li><a class="add-page" {{action 'addPage' 0}}>+</a></li>
         {{#each page in pages}}
-          <li>
-            <h3>Page {{page.displayIndex}}</h3>
-            <div class="page-content">
-              <button class="btn btn-default add-element" {{action 'addElement' page 0}}>Add Element</button>
-              {{#each element in page.elements}}
-                <div class="element">
-                  <h4>{{element.question}}</h4>
-                  <h5>Choices:</h5>
-                  <p>{{element.choices}}</p>
-                </div>
-                <button class="btn btn-default add-element" {{action 'addElement' page element.displayIndex}}>Add Element</button>
-              {{/each}}
-            </div>
-          </li>
-          <button class="btn btn-default add-page" {{action 'addPage' page.displayIndex}}>Add Page</button>
+            <li class="page-template">
+                <a class="open-page" {{action 'editPage' page}}>
+                    <span class="drag-handle octicon octicon-three-bars"></span>
+                    <span class="page-label">Page {{page.displayIndex}}</span>
+                    <span class="add-condition mega-octicon octicon-squirrel"></span>
+                    <span class="delete-page mega-octicon octicon-trashcan" {{action 'deletePage' page}}></span>
+                </a>
+                <a class="add-page" {{action 'addPage' page.displayIndex}}>+</a>
+            </li>
         {{/each}}
-      </ul>
-    </div>
-    <div class="col-md-5 preview">
-      <h1>Preview</h1>
-    </div>
+    </ul>
   </div>
 </div>
