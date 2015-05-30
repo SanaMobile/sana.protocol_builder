@@ -15,28 +15,6 @@ class ProcedureViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return models.Procedure.objects.filter(owner=user)
 
-    def retrieve(self, request, pk=None):
-        queryset = self.get_queryset()
-
-        self.resource_name = False  # doesn't display the tag 'procedure' or 'procedures'
-
-        procedure = get_object_or_404(queryset, pk=pk)
-        pages = procedure.pages.all()
-        elements = [element for page in pages for element in page.elements.all()]
-        serial_proc = serializer.ProcedureSerializer(procedure)
-        page_serial = serializer.PageSerializer(pages, many=True)
-        data = {
-            'procedure': serial_proc.data,
-            'pages': page_serial.data
-        }
-
-        if elements:
-            elem_serial = serializer.ElementSerializer(elements, many=True)
-            data['elements'] = elem_serial.data
-
-        return Response(data)
-
-
 class PageViewSet(viewsets.ModelViewSet):
     serializer_class = serializer.PageSerializer
     model = models.Page
