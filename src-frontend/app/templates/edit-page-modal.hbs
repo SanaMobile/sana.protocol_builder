@@ -6,12 +6,15 @@
                 <li class="element-template">
                     <a class="element">
                         <span class="drag-handle octicon octicon-three-bars"></span>
-                        {{input type="text" class="form-control" placeholder="Element ID" value=element.eid}}
-                        {{input type="text" class="form-control" placeholder="Type" value=element.elementType}}
+
+                        {{view 'select' class="form-control" content=types value=element.elementType}}
                         {{input type="text" class="form-control" placeholder="Concept" value=element.concept}}
                         {{input type="text" class="form-control" placeholder="Question" value=element.question}}
                         {{input type="text" class="form-control" placeholder="Answer" value=element.answer}}
-                        {{input type="text" class="form-control" placeholder="Choices" value=element.choices}}
+                        {{#if element.hasChoices}}
+                            {{input type="text" class="form-control" placeholder="Choices" value=element.choices}}
+                        {{/if}}
+
                         <span class="delete-element mega-octicon octicon-trashcan" {{action 'deleteElement' element}}></span>
                     </a>
                     <a class="add-element" {{action 'addElement' element.displayIndex}}>+</a>

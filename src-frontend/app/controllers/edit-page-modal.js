@@ -1,6 +1,11 @@
 import Ember from 'ember';
+import SanaElement from '../models/element';
 
 export default Ember.Controller.extend({
+    types: function() {
+      return SanaElement.TYPES;
+    }.property(SanaElement.TYPES),
+
     actions: {
         addElement: function(selectedIndex) {
             var targetIndex = selectedIndex + 1;
@@ -27,10 +32,8 @@ export default Ember.Controller.extend({
             element.save();
         },
         save: function() {
-            this.get('model.elements').then(function(elements) {
-                elements.forEach(function(element) {
-                    element.save();
-                });
+            this.get('model.elements').forEach(function(element) {
+                element.save();
             });
         }
     }

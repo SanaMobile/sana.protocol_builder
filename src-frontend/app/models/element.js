@@ -8,7 +8,12 @@ let SanaElement = DS.Model.extend({
   concept: DS.attr('string'),
   question: DS.attr('string'),
   answer: DS.attr('string'),
-  choices: DS.attr()
+  choices: DS.attr(),
+
+  hasChoices: function() {
+    var type = this.get('elementType');
+    return SanaElement.TYPES_WITH_CHOICES.indexOf(type) !== -1;
+  }.property('elementType')
 });
 
 SanaElement.reopenClass({

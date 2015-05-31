@@ -1,6 +1,9 @@
 import DRFSerializer from './drf';
 
-export default DRFSerializer.extend({
+export default DRFSerializer.extend(DS.EmbeddedRecordsMixin, {
+  attrs: {
+    elements: { embedded: 'always' }
+  },
   serialize: function(snapshot, options) {
     var json = this._super(snapshot, options);
 
