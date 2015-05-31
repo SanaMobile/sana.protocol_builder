@@ -1,0 +1,245 @@
+@import url(octicons.less);
+@import url(normalize.less);
+@import url(constants.less);
+
+//------------------------------------------------------------------------------
+// General
+//------------------------------------------------------------------------------
+
+body{
+    background: #ececec;
+    color: @font-color;
+}
+
+.action-button{
+    color: #fff;
+    line-height: @action-button-size;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    
+    border-radius: (@action-button-size + @action-button-border-size * 2) / 2;
+    display: block;
+    width: @action-button-size; height: @action-button-size;
+
+    transition: 0.5s;
+}
+
+//------------------------------------------------------------------------------
+// Procedure
+//------------------------------------------------------------------------------
+
+ul.procedure{
+    list-style: none;
+    margin: 0 40px;
+    padding: 0;
+    position: relative;
+
+    &:after{
+        content: '';
+        background: @border-color;
+        position: absolute;
+        top: 0; left: @sanapage-size / 2;
+        margin-left: -1px;
+        width: 2px; height: 100%;
+        z-index: -1;
+    }
+
+    li{
+        width: @sanapage-size;
+
+        &.ui-state-highlight{
+            box-sizing: border-box;
+            width: @sanapage-size; height: 100px;
+            padding: 0;
+            margin-bottom: @gap-between-pages * 2 + @action-button-size + @action-button-border-size * 2;
+        }
+
+        &.ui-sortable-helper{
+            a.add-page{
+                display: none;
+            }
+        }
+        
+        a{
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+
+            &:hover{
+                box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+            }
+
+            &.open-page {
+                cursor: pointer;
+                background: #fff;
+                color: @font-color;
+                text-decoration: none;
+                font-size: 18px;
+                line-height: 20px;
+
+                box-sizing: border-box;
+                border-radius: 2px;
+                display: block;
+                outline: none;
+                padding: 39px 40px 39px 60px;
+                position: relative;
+                width: @sanapage-size;
+
+                transition: 0.2s;
+
+                &.has-condition{
+                    margin-left: @sanapage-size + @condition-page-offset;
+                }
+
+                span:not(.page-label){
+                    cursor: pointer;
+                    line-height: 100px;
+                    position: absolute;
+                    top: 0;
+                    width: 40px; height: 100px;
+                    text-align: center;
+
+                    opacity: 0.25;
+                    transition: 0.5s;
+
+                    &:hover{
+                        opacity: 1;
+                    }
+                
+                    &.drag-handle{
+                        cursor: move;
+                        text-align: right;
+                        left: 0;
+                    }
+
+                    &.delete-page{
+                        right: 20px;
+                    }
+
+                    &.add-condition,
+                    &.delete-condition{
+                        right: -60px;
+                    }
+                }
+            }
+
+            &.add-page{
+                .action-button;
+                
+                background-color: @add-page-action-color;
+                margin: @gap-between-pages 0;
+                margin-left: @sanapage-size / 2 - (@action-button-size + @action-button-border-size * 2) / 2;
+            }
+        }
+    }
+}
+
+ul.element{
+    list-style: none;
+    margin: 0 40px;
+    padding: 0;
+    position: relative;
+
+    &:after{
+        content: '';
+        background: @border-color;
+        position: absolute;
+        top: 0; left: @sanapage-size / 2;
+        margin-left: -1px;
+        width: 2px; height: 100%;
+        z-index: -1;
+    }
+
+    li{
+        width: 100%;
+
+        &.ui-state-highlight{
+            box-sizing: border-box;
+            width: @sanapage-size; height: 100px;
+            padding: 0;
+            margin-bottom: @gap-between-pages * 2 + @action-button-size + @action-button-border-size * 2;
+        }
+
+        &.ui-sortable-helper{
+            a.add-page{
+                display: none;
+            }
+        }
+        
+        a{
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+
+            &:hover{
+                box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+            }
+
+            &.element {
+                cursor: pointer;
+                background: #fff;
+                color: @font-color;
+                text-decoration: none;
+                font-size: 18px;
+                line-height: 20px;
+
+                box-sizing: border-box;
+                border-radius: 2px;
+                display: block;
+                outline: none;
+                padding: 39px 40px 39px 60px;
+                position: relative;
+                width: 100%;
+
+                transition: 0.2s;
+
+                &.has-condition{
+                    margin-left: @sanapage-size + @condition-page-offset;
+                }
+
+                span:not(.page-label){
+                    cursor: pointer;
+                    line-height: 100px;
+                    position: absolute;
+                    top: 0;
+                    width: 40px; height: 100px;
+                    text-align: center;
+
+                    opacity: 0.25;
+                    transition: 0.5s;
+
+                    &:hover{
+                        opacity: 1;
+                    }
+                
+                    &.drag-handle{
+                        cursor: move;
+                        text-align: right;
+                        top: 30%;
+                        left: 0;
+                    }
+
+                    &.delete-element{
+                        top: 30%;
+                        right: 20px;
+                    }
+
+                    &.add-condition,
+                    &.delete-condition{
+                        right: -60px;
+                    }
+                }
+
+                input {
+                    width: 90%;
+                    margin-bottom: 6px;
+
+                }
+            }
+
+            &.add-element{
+                .action-button;
+                
+                background-color: @add-page-action-color;
+                margin: @gap-between-elements auto;
+            }
+        }
+    }
+}

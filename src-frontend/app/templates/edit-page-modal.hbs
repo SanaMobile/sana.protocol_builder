@@ -1,0 +1,22 @@
+{{#modal-dialog title='Edit Page' save='save' cancel='hideModal'}}
+    <div class="element-container">
+        <ul class="element">
+            <li><a class="add-element" {{action 'addElement' 0}}>+</a></li>
+            {{#each element in model.elements}}
+                <li class="element-template">
+                    <a class="element">
+                        <span class="drag-handle octicon octicon-three-bars"></span>
+                        {{input type="text" class="form-control" placeholder="Element ID" value=element.eid}}
+                        {{input type="text" class="form-control" placeholder="Type" value=element.elementType}}
+                        {{input type="text" class="form-control" placeholder="Concept" value=element.concept}}
+                        {{input type="text" class="form-control" placeholder="Question" value=element.question}}
+                        {{input type="text" class="form-control" placeholder="Answer" value=element.answer}}
+                        {{input type="text" class="form-control" placeholder="Choices" value=element.choices}}
+                        <span class="delete-element mega-octicon octicon-trashcan" {{action 'deleteElement' element}}></span>
+                    </a>
+                    <a class="add-element" {{action 'addElement' element.displayIndex}}>+</a>
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+{{/modal-dialog}}
