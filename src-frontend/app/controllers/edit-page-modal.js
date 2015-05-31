@@ -24,8 +24,6 @@ export default Ember.Controller.extend({
               page: this.get('model'),
               displayIndex: targetIndex
             });
-
-            newElement.save();
         },
         deleteElement: function(element) {
             element.deleteRecord();
