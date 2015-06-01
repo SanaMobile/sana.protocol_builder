@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.authtoken.models import Token
+from nose.tools import assert_false
 
 
 class UserTest(TestCase):
@@ -10,8 +10,5 @@ class UserTest(TestCase):
         self.test_user.save()
 
     def test_user_has_token(self):
-        try:
-            token = Token.objects.get(user=self.test_user)
-            self.assertFalse(token is None)
-        except ObjectDoesNotExist:
-            self.assertTrue(False)
+        token = Token.objects.get(user=self.test_user)
+        assert_false(token is None)
