@@ -6,7 +6,7 @@ class Procedure(models.Model):
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     version = models.CharField(max_length=255, null=True)
-    uuid = models.CharField(max_length=36, null=True)
+    uuid = models.CharField(max_length=40, null=True)
     owner = models.ForeignKey(User)
 
 
