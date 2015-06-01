@@ -7,6 +7,9 @@ include_recipe 'git'
 include_recipe 'ssh_known_hosts'
 include_recipe 'supervisor'
 include_recipe "database::postgresql"
+include_recipe "nodejs"
+
+nodejs_npm "ember-cli"
 
 package 'libffi-dev' do
   action :install
