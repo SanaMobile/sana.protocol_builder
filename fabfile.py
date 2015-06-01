@@ -6,6 +6,7 @@ env.hosts = ['sanaprotocolbuilder.me']
 env.user = 'root'
 env.virtualenv = 'source /usr/local/bin/virtualenvwrapper.sh'
 env.project_root = '/opt/sana.protocol_builder'
+env.frontend_root = '/opt/sana.protocol_builder/src-frontend'
 
 
 def test():
@@ -38,11 +39,14 @@ def update_host():
         print(green('Creating database tables...'))
         run('python src-backend/manage.py syncdb --noinput')
 
-        print(green('Importing fixtures...'))
-        run('python src-backend/manage.py loaddata src-backend/fixtures/pages.json')
-
         print(green('Restarting gunicorn...'))
         run('supervisorctl restart gunicorn')
+
+    with cd(env.frontend_root):
+        print(green('Building Ember application...'))
+        run('npm install')
+        run('bower install --allow-root')
+        run('ember build --environment production')
 
 
 def travis_deploy():

@@ -22,5 +22,9 @@
   },
   "nginx": {
     "default_site_enabled": false
+  },
+  "nodejs": {
+    "install_method": "binary",
+    "version": "0.12.4"
   }
 }
