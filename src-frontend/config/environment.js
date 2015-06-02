@@ -19,14 +19,16 @@ module.exports = function(environment) {
     }
   };
 
+  var enableLogging = false;
+
   if (environment === 'development') {
     ENV.APP.API_HOST = 'http://localhost:8000';
     ENV.APP.API_NAMESPACE = 'api';
-    ENV.APP.LOG_RESOLVER = false;
-    ENV.APP.LOG_ACTIVE_GENERATION = false;
-    ENV.APP.LOG_TRANSITIONS = false;
-    ENV.APP.LOG_TRANSITIONS_INTERNAL = false;
-    ENV.APP.LOG_VIEW_LOOKUPS = false;
+    ENV.APP.LOG_RESOLVER = enableLogging;
+    ENV.APP.LOG_ACTIVE_GENERATION = enableLogging;
+    ENV.APP.LOG_TRANSITIONS = enableLogging;
+    ENV.APP.LOG_TRANSITIONS_INTERNAL = enableLogging;
+    ENV.APP.LOG_VIEW_LOOKUPS = enableLogging;
   }
 
   if (environment === 'test') {
