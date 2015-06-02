@@ -40,6 +40,8 @@ class ElementSerializer(serializers.ModelSerializer):
 
 
 class PageSerializer(serializers.ModelSerializer):
+    elements = ElementSerializer(many=True, read_only=True)
+
     class Meta:
         model = models.Page
         fields = (

@@ -45,6 +45,13 @@ export default Ember.ObjectController.extend({
       });
 
       newPage.save();
+    },
+    editPage: function(page) {
+      this.send('showModal', 'edit-page-modal', page);
+    },
+    deletePage: function(page) {
+      page.deleteRecord();
+      page.save();
     }
   }
 });
