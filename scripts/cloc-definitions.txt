@@ -1,0 +1,5 @@
+Markdown
+    filter remove_matches ^\s*#
+    filter remove_inline #.*$
+    extension md
+    3rd_gen_scale 1.00
