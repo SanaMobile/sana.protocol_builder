@@ -1,16 +1,3 @@
 <div class="container-fluid">
-    <ul class="procedure">
-        <li><a class="add-page" {{action 'addPage' 0}}>+</a></li>
-        {{#each page in pages}}
-            <li class="page-template">
-                <a class="open-page" {{action 'editPage' page}}>
-                    <span class="drag-handle octicon octicon-three-bars"></span>
-                    <span class="page-label">Page {{page.displayIndex}}</span>
-                    <span class="add-condition mega-octicon octicon-diff-renamed"></span>
-                    <span class="delete-page mega-octicon octicon-trashcan" {{action 'deletePage' page}}></span>
-                </a>
-                <a class="add-page" {{action 'addPage' page.displayIndex}}>+</a>
-            </li>
-        {{/each}}
-    </ul>
+    {{page-list pages=pages addPage="addPage" editPage="editPage" deletePage="deletePage" updateSortOrder="updateSortOrder"}}
 </div>
