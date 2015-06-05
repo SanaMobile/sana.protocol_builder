@@ -3,7 +3,7 @@ import SanaElement from '../models/element';
 
 export default Ember.Controller.extend({
     types: function() {
-      return SanaElement.TYPES;
+        return SanaElement.TYPES;
     }.property(SanaElement.TYPES),
 
     actions: {
@@ -11,18 +11,18 @@ export default Ember.Controller.extend({
             var targetIndex = selectedIndex + 1;
             var elements = this.get('model.elements');
             var elementsToBePushed = elements.filter(function(element) {
-              return element.get('displayIndex') >= targetIndex;
+                return element.get('displayIndex') >= targetIndex;
             });
 
             elementsToBePushed.forEach(function(element) {
-              element.incrementProperty('displayIndex');
-              // TODO: Find a way to batch these updates
-              element.save();
+                element.incrementProperty('displayIndex');
+                // TODO: Find a way to batch these updates
+                element.save();
             });
 
             var newElement = this.store.createRecord('element', {
-              page: this.get('model'),
-              displayIndex: targetIndex
+                page: this.get('model'),
+                displayIndex: targetIndex
             });
         },
         deleteElement: function(element) {
