@@ -59,6 +59,7 @@ export default Ember.ObjectController.extend({
             this.get('model.pages').forEach(function(page) {
                 var index = indices[page.get('id')];
                 page.set('displayIndex', index);
+                page.save();
             });
 
             this.endPropertyChanges();
