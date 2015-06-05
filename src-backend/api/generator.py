@@ -62,7 +62,7 @@ class ElementGenerator:
 
     def generate(self, parent):
         props = self._get_properties()
-        ElementTree.SubElement(parent, self.name, props)
+        return ElementTree.SubElement(parent, self.name, props)
 
 
 class ProtocolBuilder:
