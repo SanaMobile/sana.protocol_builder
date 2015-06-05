@@ -1,9 +1,4 @@
-import Ember from 'ember';
+import Application from '../routes/application';
 
-export default Ember.Route.extend({
-    beforeModel: function() {
-        if (!Cookies.get('authorizationToken')) {
-            this.transitionTo('login');
-        }
-    }
-})
+export default Application.extend({
+});

@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import Application from "../routes/application";
 
-export default Ember.Route.extend({
+export default Application.extend({
 });
