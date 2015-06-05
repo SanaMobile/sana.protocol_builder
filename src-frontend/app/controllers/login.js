@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import ENV from 'src-frontend/config/environment';
 
 export default Ember.Controller.extend({
     username: '',
@@ -7,7 +8,7 @@ export default Ember.Controller.extend({
     actions: {
         login: function() {
             var controller = this;
-            $.post('http://localhost:8000/auth/login', {
+            $.post(ENV.APP.API_HOST + '/auth/login', {
                 username: this.get('username'),
                 password: this.get('password')
             }, function(response) {
