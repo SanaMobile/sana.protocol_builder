@@ -1,3 +1,4 @@
+from xml.etree import ElementTree
 from django.test import TestCase
 from django.contrib.auth.models import User
 from nose.tools import assert_equals, assert_true, assert_false
@@ -55,3 +56,32 @@ class ProcedureGeneratorTest(TestCase):
 
         assert_true('uuid' in self.procedureElement.attrib)
         assert_equals(self.procedureElement.attrib['uuid'], self.procedure.uuid)
+
+
+class PageGeneratorTest(TestCase):
+    def setUp(self):
+        test_user = User.objects.create_user(
+            'TestUser',
+            'test@sanaprotocolbuilder.me',
+            'testpassword'
+        )
+        test_user.save()
+
+        procedure = Procedure.objects.create(
+            author='tester',
+            title='test procedure',
+            owner=test_user
+        )
+
+        self.page = Page.objects.create(
+            display_index=0,
+            procedure=procedure
+        )
+
+        self.pageElement = PageGenerator(self.page).generate(ElementTree.Element('test'))
+
+    def test_element_has_correct_name(self):
+        assert_equals(self.pageElement.tag, 'Page')
+
+    def test_element_has_no_display_index(self):
+        assert_equals(len(self.pageElement.attrib), 0)
