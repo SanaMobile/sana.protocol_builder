@@ -15,9 +15,6 @@ class Page(models.Model):
     procedure = models.ForeignKey(Procedure, related_name='pages')
 
     class Meta:
-        unique_together = (
-            ('display_index', 'procedure')
-        )
         ordering = ['procedure', 'display_index']
 
 
@@ -43,7 +40,4 @@ class Element(models.Model):
     page = models.ForeignKey(Page, related_name='elements')
 
     class Meta:
-        unique_together = (
-            ('display_index', 'page')
-        )
         ordering = ['page', 'display_index']
