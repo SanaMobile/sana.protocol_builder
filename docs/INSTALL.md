@@ -9,7 +9,7 @@ We use Chef to configure our servers and automate our deployments.
 On your local machine, you will need the following packages to configure a server with Chef:
 
 - Git
-- Ruby
+- Ruby (>= 1.9.3)
 - Bundler
 - Python
 - Fabric
@@ -18,7 +18,8 @@ This will vary depending on your OS, but here's an example using Ubuntu:
 
 ```shell
 apt-get update
-apt-get install git bundler python-pip
+apt-get install git gem python-pip
+gem install bundler
 pip install fabric
 ```
 
