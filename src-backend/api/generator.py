@@ -14,10 +14,10 @@ class ProcedureGenerator:
             'author': self.procedure.author
         }
 
-        if not procedure.version:
+        if self.procedure.version:
             props['version'] = self.procedure.version
 
-        if not procedure.uuid:
+        if self.procedure.uuid:
             props['uuid'] = self.procedure.uuid
 
         return props
@@ -26,7 +26,7 @@ class ProcedureGenerator:
         element = ElementTree.Element(self.name)
         element.attrib = self._get_properties()
 
-        return element.attrib
+        return element
 
 
 class PageGenerator:
@@ -45,17 +45,17 @@ class ElementGenerator:
 
     def _get_properties(self):
         props = {
-            'type': element.element_type,
-            'id': element.eid,
-            'concept': element.concept,
-            'question': element.question,
-            'answer': element.answer
+            'type': self.element.element_type,
+            'id': self.element.eid,
+            'concept': self.element.concept,
+            'question': self.element.question,
+            'answer': self.element.answer
         }
 
-        if not element.numeric:
+        if self.element.numeric:
             props['numeric'] = self.element.numeric
 
-        if not element.choices:
+        if self.element.choices:
             props['choices'] = self.element.choices
 
         return props
