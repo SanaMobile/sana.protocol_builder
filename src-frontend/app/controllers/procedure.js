@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.ObjectController.extend({
     pages: function() {
         return this.get('model.pages').sortBy('displayIndex');
-    }.property('model.pages'),
+    }.property('model.pages.@each.displayIndex'),
 
     actions: {
         addElement: function(page, selectedIndex) {
@@ -52,6 +52,16 @@ export default Ember.ObjectController.extend({
         deletePage: function(page) {
             page.deleteRecord();
             page.save();
+        },
+        updateSortOrder: function(indices) {
+            this.beginPropertyChanges();
+
+            this.get('model.pages').forEach(function(page) {
+                var index = indices[page.get('id')];
+                page.set('displayIndex', index);
+            });
+
+            this.endPropertyChanges();
         }
     }
 });
