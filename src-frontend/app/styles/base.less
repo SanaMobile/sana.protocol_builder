@@ -18,7 +18,7 @@ body{
     text-decoration: none;
     outline: none;
     
-    border-radius: (@action-button-size + @action-button-border-size * 2) / 2;
+    border-radius: @action-button-size / 2;
     display: block;
     width: @action-button-size; height: @action-button-size;
 
@@ -130,7 +130,7 @@ ul.procedure{
                 
                 background-color: @add-page-action-color;
                 margin: @gap-between-pages 0;
-                margin-left: @sanapage-size / 2 - (@action-button-size + @action-button-border-size * 2) / 2;
+                margin-left: @sanapage-size / 2 - @action-button-size / 2;
             }
         }
     }
@@ -159,7 +159,7 @@ ul.element{
             box-sizing: border-box;
             width: @sanapage-size; height: 100px;
             padding: 0;
-            margin-bottom: @gap-between-pages * 2 + @action-button-size + @action-button-border-size * 2;
+            margin-bottom: @gap-between-pages * 2 + @action-button-size;
         }
 
         &.ui-sortable-helper{
