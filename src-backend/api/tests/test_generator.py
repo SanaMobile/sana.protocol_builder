@@ -2,8 +2,8 @@ from xml.etree import ElementTree
 from django.test import TestCase
 from django.contrib.auth.models import User
 from nose.tools import raises, assert_equals, assert_not_equals, assert_true, assert_false
-from api.models import *
-from api.generator import *
+from api.models import Procedure, Page, Element
+from api.generator import ProcedureGenerator, PageGenerator, ElementGenerator, ProtocolBuilder
 import uuid
 
 
@@ -210,7 +210,7 @@ class ProtocolBuilderTestCase(TestCase):
             concept='BURNS',
             question='Select One or More of the Following:',
             answer='',
-            choices='On the head,On the chest,Loins,Inhalation burns,Chemical,In an enclosure,Patient Unconscious,Epileptic Patient, Diabetic Patient',
+            choices='On the head,On the chest,Loins,Inhalation burns,Chemical,In an enclosure,Patient Unconscious,Epileptic Patient, Diabetic Patient',  # noqa
             page=page1
         )
 

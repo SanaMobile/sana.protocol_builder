@@ -1,6 +1,6 @@
 from xml.etree import ElementTree
 from xml.dom import minidom
-from models import *
+from models import Procedure
 
 
 class ProcedureGenerator:
