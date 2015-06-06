@@ -1,7 +1,7 @@
 from xml.etree import ElementTree
 from django.test import TestCase
 from django.contrib.auth.models import User
-from nose.tools import assert_equals, assert_true, assert_false
+from nose.tools import raises, assert_equals, assert_not_equals, assert_true, assert_false
 from api.models import *
 from api.generator import *
 import uuid
@@ -44,7 +44,7 @@ class ProcedureGeneratorTest(TestCase):
         assert_false('uuid' in self.attribs)
 
     def test_element_has_version_attrib(self):
-        self.procedure.version = "0.1"
+        self.procedure.version = '0.1'
         self.procedureElement = self.generator.generate()
 
         assert_true('version' in self.procedureElement.attrib)
@@ -169,3 +169,106 @@ class ElementGeneratorTest(TestCase):
 
         assert_true('choices' in self.elementElement.attrib)
         assert_equals(self.elementElement.attrib['choices'], self.element.choices)
+
+
+class ProtocolBuilderTestCase(TestCase):
+    def setUp(self):
+        self.test_user = User.objects.create_user(
+            'TestUser',
+            'test@sanaprotocolbuilder.me',
+            'testpassword'
+        )
+        self.test_user.save()
+
+        self.procedure = Procedure.objects.create(
+            author='TestUser',
+            title='Burns',
+            owner=self.test_user
+        )
+
+        page1 = Page.objects.create(
+            display_index=0,
+            procedure=self.procedure
+        )
+        page2 = Page.objects.create(
+            display_index=1,
+            procedure=self.procedure
+        )
+        page3 = Page.objects.create(
+            display_index=2,
+            procedure=self.procedure
+        )
+        page4 = Page.objects.create(
+            display_index=3,
+            procedure=self.procedure
+        )
+
+        Element.objects.create(
+            display_index=0,
+            eid='burns',
+            element_type='MULTI_SELECT',
+            concept='BURNS',
+            question='Select One or More of the Following:',
+            answer='',
+            choices='On the head,On the chest,Loins,Inhalation burns,Chemical,In an enclosure,Patient Unconscious,Epileptic Patient, Diabetic Patient',
+            page=page1
+        )
+
+        Element.objects.create(
+            display_index=1,
+            eid='duration',
+            element_type='ENTRY',
+            concept='COMPLAINT DURATION',
+            question='Enter Complaint Duration in Days:',
+            answer='',
+            numeric='DIALPAD',
+            page=page2
+        )
+
+        Element.objects.create(
+            display_index=2,
+            eid='COMMENTS',
+            element_type='ENTRY',
+            concept='BURNS',
+            question='Other comments:',
+            answer='',
+            page=page3
+        )
+
+        Element.objects.create(
+            display_index=3,
+            eid='picture',
+            element_type='PICTURE',
+            concept='COMPLAINT PICTURE',
+            question='Add a Picture:',
+            answer='',
+            page=page4
+        )
+
+        self.procedure.save()
+
+    def test_generates_tree(self):
+        tree = ProtocolBuilder._generateTree(self.test_user, self.procedure.id)
+
+        assert_equals(len(tree), 4)
+
+        for child in tree:
+            assert_equals(len(child), 1)
+
+    def test_generates_string_output(self):
+        protocol = ProtocolBuilder.generate(self.test_user, self.procedure.id)
+        assert_not_equals(protocol, None)
+
+    @raises(ValueError)
+    def test_invalid_owner(self):
+        bad_user = User.objects.create_user(
+            'A Bad user',
+            'bad@sanaprotocolbuilder.me',
+            'bad'
+        )
+
+        ProtocolBuilder.generate(bad_user, self.procedure.id)
+
+    @raises(ValueError)
+    def test_procedure_does_not_exist(self):
+        ProtocolBuilder.generate(self.test_user, -1)

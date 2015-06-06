@@ -73,7 +73,7 @@ class ProtocolBuilder:
         return reparsed.toprettyxml(indent="  ")
 
     @classmethod
-    def generate(cls, owner, pk):
+    def _generateTree(cls, owner, pk):
         try:
             procedure = Procedure.objects.get(pk=pk)
         except Procedure.DoesNotExist:
@@ -84,10 +84,14 @@ class ProtocolBuilder:
 
         procedureElement = ProcedureGenerator(procedure).generate()
 
-        for page in procedure.pages:
+        for page in procedure.pages.all():
             pageElement = PageGenerator(page).generate(procedureElement)
 
-            for element in page.elements:
+            for element in page.elements.all():
                 ElementGenerator(element).generate(pageElement)
 
-        return cls._prettify(procedureElement)
+        return procedureElement
+
+    @classmethod
+    def generate(cls, owner, pk):
+        return cls._prettify(cls._generateTree(owner, pk))
