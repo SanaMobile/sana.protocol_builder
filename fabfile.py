@@ -17,7 +17,6 @@ def test():
 
 def lint():
     local('flake8 src-backend')
-    local('./tools/flow check')
 
 
 def verify():
