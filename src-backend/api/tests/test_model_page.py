@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from nose.tools import raises, assert_equals, nottest
+from nose.tools import raises, assert_equals, assert_not_equals, nottest
 from api.models import Procedure, Page
 
 
@@ -36,6 +36,8 @@ class ProcedureTest(TestCase):
 
         assert_equals(page.display_index, 0)
         assert_equals(page.procedure, self.test_procedure1)
+        assert_not_equals(page.last_modified, None)
+        assert_not_equals(page.created, None)
 
     @raises(IntegrityError)
     def test_display_index_none(self):

@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from nose.tools import raises, assert_equals
+from nose.tools import raises, assert_equals, assert_not_equals
 from api.models import Procedure
 import uuid
 
@@ -46,6 +46,8 @@ class ProcedureTest(TestCase):
         assert_equals(proc.version, '1.0')
         assert_equals(proc.uuid, test_uuid)
         assert_equals(proc.owner, self.test_user)
+        assert_not_equals(proc.last_modified, None)
+        assert_not_equals(proc.created, None)
 
     @raises(IntegrityError)
     def test_author_none(self):

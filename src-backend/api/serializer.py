@@ -17,7 +17,9 @@ class ElementSerializer(serializers.ModelSerializer):
             'page',
             'choices',
             'numeric',
-            'element_type'
+            'element_type',
+            'last_modified',
+            'created'
         )
 
     def to_representation(self, instance):
@@ -48,7 +50,9 @@ class PageSerializer(serializers.ModelSerializer):
             'id',
             'display_index',
             'procedure',
-            'elements'
+            'elements',
+            'last_modified',
+            'created'
         )
 
 
@@ -62,5 +66,7 @@ class ProcedureSerializer(serializers.ModelSerializer):
             'version',
             'uuid',
             'owner',
-            'pages'
+            'pages',
+            'last_modified',
+            'created'
         )

@@ -8,11 +8,15 @@ class Procedure(models.Model):
     version = models.CharField(max_length=255, null=True)
     uuid = models.CharField(max_length=36, null=True)
     owner = models.ForeignKey(User)
+    last_modified = models.DateField(auto_now=True)
+    created = models.DateField(auto_now_add=True)
 
 
 class Page(models.Model):
     display_index = models.PositiveIntegerField()
     procedure = models.ForeignKey(Procedure, related_name='pages')
+    last_modified = models.DateField(auto_now=True)
+    created = models.DateField(auto_now_add=True)
 
     class Meta:
         ordering = ['procedure', 'display_index']
@@ -38,6 +42,8 @@ class Element(models.Model):
     question = models.TextField()
     answer = models.TextField(blank=True)
     page = models.ForeignKey(Page, related_name='elements')
+    last_modified = models.DateField(auto_now=True)
+    created = models.DateField(auto_now_add=True)
 
     class Meta:
         ordering = ['page', 'display_index']
