@@ -14,6 +14,11 @@ export default Ember.Route.extend({
                 outlet: 'modal',
                 parentView: 'application'
             });
+        },
+        error: function(error, transition) {
+            if (error.status == 401) {
+                this.transitionTo('login');
+            }
         }
     }
 });
