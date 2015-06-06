@@ -1,8 +1,8 @@
 <div class="procedure-list">
-  <h1>Your Procedures</h1>
-  <ul class="procedure-list">
-  {{#each procedure in model}}
-    <li>{{#link-to 'procedure' procedure}}{{procedure.title}}{{/link-to}}</li>
-  {{/each}}
-  </ul>
+    <a {{action "createProcedure"}} class="create-procedure btn btn-primary">Create Procedure</a>
+    <ul class="procedures">
+        {{#each procedure in model}}
+            {{procedure-card procedure=procedure}}
+        {{/each}}
+    </ul>
 </div>
