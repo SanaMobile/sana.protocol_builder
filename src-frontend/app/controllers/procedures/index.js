@@ -3,6 +3,7 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
     actions: {
         createProcedure: function() {
+            // TODO: Deal with owner ID and user-inputted information
             var procedureController = this;
             var procedure = this.store.createRecord('procedure', {
                 title: 'Surgery Follow-Up',
