@@ -19,6 +19,9 @@ export default Ember.Controller.extend({
                     alert('Incorrect credentials');
                 }
             });
+        },
+        signup: function() {
+            this.transitionToRoute('signup');
         }
     }
 });

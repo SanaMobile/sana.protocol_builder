@@ -10,6 +10,7 @@ Router.map(function() {
     this.route('login');
     this.route('procedures', function() {});
     this.route('procedure', { path: '/procedures/:procedure_id' });
+    this.route('signup');
 });
 
 export default Router;
