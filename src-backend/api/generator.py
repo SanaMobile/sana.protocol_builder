@@ -1,6 +1,6 @@
 from xml.etree import ElementTree
 from xml.dom import minidom
-from models import *
+from models import Procedure
 
 
 class ProcedureGenerator:
@@ -8,7 +8,7 @@ class ProcedureGenerator:
         self.name = 'Procedure'
         self.procedure = procedure
 
-    def _get_properties(self):
+    def __get_properties(self):
         props = {
             'title': self.procedure.title,
             'author': self.procedure.author
@@ -24,7 +24,7 @@ class ProcedureGenerator:
 
     def generate(self):
         element = ElementTree.Element(self.name)
-        element.attrib = self._get_properties()
+        element.attrib = self.__get_properties()
 
         return element
 
@@ -43,7 +43,7 @@ class ElementGenerator:
         self.name = 'Name'
         self.element = element
 
-    def _get_properties(self):
+    def __get_properties(self):
         props = {
             'type': self.element.element_type,
             'id': self.element.eid,
@@ -61,19 +61,19 @@ class ElementGenerator:
         return props
 
     def generate(self, parent):
-        props = self._get_properties()
+        props = self.__get_properties()
         return ElementTree.SubElement(parent, self.name, props)
 
 
 class ProtocolBuilder:
     @classmethod
-    def _prettify(cls, elem):
+    def __prettify(cls, elem):
         rough_string = ElementTree.tostring(elem, 'utf-8')
         reparsed = minidom.parseString(rough_string)
-        return reparsed.toprettyxml(indent="  ")
+        return reparsed.toprettyxml(indent="    ")
 
     @classmethod
-    def generate(cls, owner, pk):
+    def generateETree(cls, owner, pk):
         try:
             procedure = Procedure.objects.get(pk=pk)
         except Procedure.DoesNotExist:
@@ -82,12 +82,16 @@ class ProtocolBuilder:
         if procedure.owner != owner:
             raise ValueError('Invalid owner')
 
-        procedureElement = ProcedureGenerator(procedure).generate()
+        procedure_element = ProcedureGenerator(procedure).generate()
 
-        for page in procedure.pages:
-            pageElement = PageGenerator(page).generate(procedureElement)
+        for page in procedure.pages.all():
+            page_element = PageGenerator(page).generate(procedure_element)
 
-            for element in page.elements:
-                ElementGenerator(element).generate(pageElement)
+            for element in page.elements.all():
+                ElementGenerator(element).generate(page_element)
 
-        return cls._prettify(procedureElement)
+        return procedure_element
+
+    @classmethod
+    def generate(cls, owner, pk):
+        return cls.__prettify(cls.generateETree(owner, pk))
