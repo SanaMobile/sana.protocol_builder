@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from nose.tools import raises, assert_equals
+from nose.tools import raises, assert_equals, nottest
 from api.models import Procedure, Page
 
 
@@ -50,6 +50,7 @@ class ProcedureTest(TestCase):
             display_index=0
         )
 
+    @nottest
     @raises(IntegrityError)
     def test_display_index_uniqueness(self):
         Page.objects.create(
