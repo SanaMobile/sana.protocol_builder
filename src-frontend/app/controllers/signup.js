@@ -18,9 +18,11 @@ export default Ember.Controller.extend({
                 password2: this.get('password2'),
                 accept_tos: this.get('accept_tos')
             }, function(response) {
-                if (response.success === true) {
+                if (response.success === true && response.token) {
                     controller.transitionToRoute('login');
                 } else {
+                    // TODO: Issue #123
+                    // Add flash messages to show form errors
                     alert('An error occurred during registration');
                 }
             });
