@@ -1,4 +1,4 @@
-import Ember from "ember";
+import Ember from 'ember';
 
 export default Ember.Route.extend({
     actions: {
@@ -20,7 +20,7 @@ export default Ember.Route.extend({
         error: function(error, transition) {
             // If unauthorized
             if (error.status == 401) {
-                this.transitionTo("login");
+                this.transitionTo('login');
             }
         }
     }
