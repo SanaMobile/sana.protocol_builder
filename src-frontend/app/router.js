@@ -8,6 +8,7 @@ var Router = Ember.Router.extend({
 Router.map(function() {
     this.route('index', { path: '/'});
     this.route('login');
+    this.route('signup');
     this.route('procedures', function() {});
     this.route('procedure', { path: '/procedures/:procedure_id' });
 });
