@@ -19,16 +19,27 @@ module.exports = function(environment) {
     }
   };
 
-  var enableLogging = false;
 
   if (environment === 'development') {
+    var enableDebugLogging = false;
+    
     ENV.APP.API_HOST = 'http://localhost:8000';
     ENV.APP.API_NAMESPACE = 'api';
-    ENV.APP.LOG_RESOLVER = enableLogging;
-    ENV.APP.LOG_ACTIVE_GENERATION = enableLogging;
-    ENV.APP.LOG_TRANSITIONS = enableLogging;
-    ENV.APP.LOG_TRANSITIONS_INTERNAL = enableLogging;
-    ENV.APP.LOG_VIEW_LOOKUPS = enableLogging;
+    ENV.APP.LOG_RESOLVER = enableDebugLogging;
+    ENV.APP.LOG_ACTIVE_GENERATION = enableDebugLogging;
+    ENV.APP.LOG_TRANSITIONS = enableDebugLogging;
+    ENV.APP.LOG_TRANSITIONS_INTERNAL = enableDebugLogging;
+    ENV.APP.LOG_VIEW_LOOKUPS = enableDebugLogging;
+
+    ENV.contentSecurityPolicy = {
+      'default-src': "'none'",
+      'script-src': "'self'",
+      'font-src': "'self'",
+      'connect-src': "'self' *",
+      'img-src': "'self'",
+      'style-src': "'self' *",
+      'media-src': "'self'"
+    };
   }
 
   if (environment === 'test') {
