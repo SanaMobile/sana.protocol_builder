@@ -10,7 +10,7 @@ export default Ember.Component.extend({
             revert: true,
             scroll: true,
             placeholder: 'ui-state-highlight',
-            update: function() {
+            update: function(event, ui) {
                 var indices = {};
 
                 $(this).find('a.open-page').each(function(index) {
