@@ -23,11 +23,11 @@ class ProcedureGeneratorTest(TestCase):
         )
 
         self.generator = ProcedureGenerator(self.procedure)
-        self.procedure_element = self.generator.generate()
-        self.attribs = self.procedure_element.attrib
+        self.procedure_etree_element = self.generator.generate()
+        self.attribs = self.procedure_etree_element.attrib
 
     def test_element_has_correct_name(self):
-        assert_equals(self.procedure_element.tag, self.generator.name)
+        assert_equals(self.procedure_etree_element.tag, self.generator.name)
 
     def test_element_has_title(self):
         assert_true('title' in self.attribs)
@@ -45,17 +45,17 @@ class ProcedureGeneratorTest(TestCase):
 
     def test_element_has_version_attrib(self):
         self.procedure.version = '0.1'
-        self.procedure_element = self.generator.generate()
+        self.procedure_etree_element = self.generator.generate()
 
-        assert_true('version' in self.procedure_element.attrib)
-        assert_equals(self.procedure_element.attrib['version'], self.procedure.version)
+        assert_true('version' in self.procedure_etree_element.attrib)
+        assert_equals(self.procedure_etree_element.attrib['version'], self.procedure.version)
 
     def test_element_has_uuid_attrib(self):
         self.procedure.uuid = str(uuid.uuid1())
-        self.procedure_element = self.generator.generate()
+        self.procedure_etree_element = self.generator.generate()
 
-        assert_true('uuid' in self.procedure_element.attrib)
-        assert_equals(self.procedure_element.attrib['uuid'], self.procedure.uuid)
+        assert_true('uuid' in self.procedure_etree_element.attrib)
+        assert_equals(self.procedure_etree_element.attrib['uuid'], self.procedure.uuid)
 
 
 class PageGeneratorTest(TestCase):
@@ -79,13 +79,13 @@ class PageGeneratorTest(TestCase):
         )
 
         self.generator = PageGenerator(self.page)
-        self.page_element = self.generator.generate(ElementTree.Element('test'))
+        self.page_etree_element = self.generator.generate(ElementTree.Element('test'))
 
     def test_element_has_correct_name(self):
-        assert_equals(self.page_element.tag, self.generator.name)
+        assert_equals(self.page_etree_element.tag, self.generator.name)
 
     def test_element_has_no_display_index(self):
-        assert_equals(len(self.page_element.attrib), 0)
+        assert_equals(len(self.page_etree_element.attrib), 0)
 
 
 class ElementGeneratorTest(TestCase):
@@ -119,11 +119,11 @@ class ElementGeneratorTest(TestCase):
         )
 
         self.generator = ElementGenerator(self.element)
-        self.elementElement = self.generator.generate(ElementTree.Element('test'))
-        self.attribs = self.elementElement.attrib
+        self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
+        self.attribs = self.element_etree_element.attrib
 
     def test_element_has_correct_name(self):
-        assert_equals(self.elementElement.tag, self.generator.name)
+        assert_equals(self.element_etree_element.tag, self.generator.name)
 
     def test_element_has_no_display_index(self):
         assert_false('display_index' in self.attribs)
@@ -156,19 +156,19 @@ class ElementGeneratorTest(TestCase):
 
     def test_element_has_numeric(self):
         self.element.numeric = 'DIALPAD'
-        self.elementElement = self.generator.generate(ElementTree.Element('test'))
+        self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
 
-        print self.elementElement.attrib
+        print self.element_etree_element.attrib
 
-        assert_true('numeric' in self.elementElement.attrib)
-        assert_equals(self.elementElement.attrib['numeric'], self.element.numeric)
+        assert_true('numeric' in self.element_etree_element.attrib)
+        assert_equals(self.element_etree_element.attrib['numeric'], self.element.numeric)
 
     def test_element_has_choices(self):
         self.element.choices = 'left,right,center'
-        self.elementElement = self.generator.generate(ElementTree.Element('test'))
+        self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
 
-        assert_true('choices' in self.elementElement.attrib)
-        assert_equals(self.elementElement.attrib['choices'], self.element.choices)
+        assert_true('choices' in self.element_etree_element.attrib)
+        assert_equals(self.element_etree_element.attrib['choices'], self.element.choices)
 
 
 class ProtocolBuilderTestCase(TestCase):
@@ -248,7 +248,7 @@ class ProtocolBuilderTestCase(TestCase):
         self.procedure.save()
 
     def test_generates_tree(self):
-        tree = ProtocolBuilder.generateETree(self.test_user, self.procedure.id)
+        tree = ProtocolBuilder.generate_etree(self.test_user, self.procedure.id)
 
         assert_equals(len(tree), 4)
 

@@ -1,4 +1,7 @@
+from django.http import HttpResponse, Http404
 from rest_framework import viewsets
+from rest_framework.decorators import detail_route
+from generator import ProtocolBuilder
 import models
 import serializer
 
@@ -12,6 +15,18 @@ class ProcedureViewSet(viewsets.ModelViewSet):
 
         user = self.request.user
         return models.Procedure.objects.filter(owner=user)
+
+    @detail_route(methods=['get'])
+    def generate(self, request, pk=None):
+        try:
+            protocol = ProtocolBuilder.generate(request.user, pk)
+        except ValueError:
+            raise Http404('Invalid Procedure')
+
+        response = HttpResponse(protocol, content_type='application/xml')
+        response['Content-Disposition'] = 'attachment; filename="procedure.xml"'
+
+        return response
 
 
 class PageViewSet(viewsets.ModelViewSet):

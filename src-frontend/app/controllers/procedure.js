@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import ENV from 'src-frontend/config/environment';
 
 export default Ember.Controller.extend({
     pages: function() {
@@ -38,6 +39,31 @@ export default Ember.Controller.extend({
             });
 
             this.endPropertyChanges();
+        },
+        generateProtocol: function() {
+            var filename = this.get('model.title') + '.xml';
+
+            Ember.$.ajax({
+                type: 'GET',
+                url: ENV.APP.API_PROCEDURE_URL + this.get('model.id') + ENV.APP.API_GENERATE,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('Authorization', 'Token ' + Cookies.get('authorizationToken'));
+                },
+                success: function(data) {
+                    var blob = new Blob([(new XMLSerializer()).serializeToString(data)], { type: 'text/xml' });
+                    var url = window.URL.createObjectURL(blob);
+
+                    var a = document.createElement("a");
+                    document.body.appendChild(a);
+                    a.setAttribute('id', 'generate-trigger');
+                    a.href = url;
+                    a.download = filename;
+                    a.click();
+
+                    window.URL.revokeObjectURL(url);
+                    Ember.$('#generate-trigger').remove();
+                }
+            });
         }
     }
 });

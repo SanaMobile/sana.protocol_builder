@@ -40,7 +40,7 @@ class PageGenerator:
 
 class ElementGenerator:
     def __init__(self, element):
-        self.name = 'Name'
+        self.name = 'Element'
         self.element = element
 
     def __get_properties(self):
@@ -70,10 +70,10 @@ class ProtocolBuilder:
     def __prettify(cls, elem):
         rough_string = ElementTree.tostring(elem, 'utf-8')
         reparsed = minidom.parseString(rough_string)
-        return reparsed.toprettyxml(indent="    ")
+        return reparsed.toprettyxml(indent=' ' * 4)
 
     @classmethod
-    def generateETree(cls, owner, pk):
+    def generate_etree(cls, owner, pk):
         try:
             procedure = Procedure.objects.get(pk=pk)
         except Procedure.DoesNotExist:
@@ -82,16 +82,16 @@ class ProtocolBuilder:
         if procedure.owner != owner:
             raise ValueError('Invalid owner')
 
-        procedure_element = ProcedureGenerator(procedure).generate()
+        procedure_etree_element = ProcedureGenerator(procedure).generate()
 
         for page in procedure.pages.all():
-            page_element = PageGenerator(page).generate(procedure_element)
+            page_element = PageGenerator(page).generate(procedure_etree_element)
 
             for element in page.elements.all():
                 ElementGenerator(element).generate(page_element)
 
-        return procedure_element
+        return procedure_etree_element
 
     @classmethod
     def generate(cls, owner, pk):
-        return cls.__prettify(cls.generateETree(owner, pk))
+        return cls.__prettify(cls.generate_etree(owner, pk))
