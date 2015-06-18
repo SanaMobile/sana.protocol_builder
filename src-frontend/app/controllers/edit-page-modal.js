@@ -8,27 +8,23 @@ export default Ember.Controller.extend({
 
     actions: {
         addElement: function(selectedIndex) {
-            var targetIndex = selectedIndex + 1;
-            var elements = this.get('model.elements');
-            var elementsToBePushed = elements.filter(function(element) {
-                return element.get('displayIndex') >= targetIndex;
-            });
-
-            elementsToBePushed.forEach(function(element) {
-                element.incrementProperty('displayIndex');
-                // TODO: Find a way to batch these updates
-                element.save();
-            });
+            var page = this.get('model');
 
             var newElement = this.store.createRecord('element', {
-                page: this.get('model'),
+                page: page,
                 displayIndex: targetIndex
             });
+
+            newElement.save().then(function() {
+                page.reload();
+            });
         },
+
         deleteElement: function(element) {
             element.deleteRecord();
             element.save();
         },
+
         save: function() {
             this.get('model.elements').forEach(function(element) {
                 element.save();
