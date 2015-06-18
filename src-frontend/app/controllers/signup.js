@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import Ember from 'ember';
 import ENV from 'src-frontend/config/environment';
 
