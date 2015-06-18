@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import Ember from 'ember';
+
 export default Ember.Component.extend({
     didInsertElement: function() {
         var pageListComponent = this;
@@ -7,7 +10,7 @@ export default Ember.Component.extend({
             revert: true,
             scroll: true,
             placeholder: 'ui-state-highlight',
-            update: function(event, ui) {
+            update: function() {
                 var indices = {};
 
                 $(this).find('a.open-page').each(function(index) {

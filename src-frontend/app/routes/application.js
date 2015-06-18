@@ -15,8 +15,8 @@ export default Ember.Route.extend({
                 parentView: 'application'
             });
         },
-        error: function(error, transition) {
-            if (error.status == 401) {
+        error: function(error) {
+            if (error.status === 401) {
                 this.transitionTo('login');
             }
         }
