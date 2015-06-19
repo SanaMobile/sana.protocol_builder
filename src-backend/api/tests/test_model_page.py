@@ -101,8 +101,38 @@ class ProcedureTest(TestCase):
             procedure=self.test_procedure1
         )
 
-        expected_pages = [page2, page1]
+        page3 = Page.objects.create(
+            display_index=0,
+            procedure=self.test_procedure1
+        )
+
+        expected_pages = [page3, page2, page1]
         pages = Page.objects.all()
 
-        for i in range(0, 2):
+        for i in range(0, 3):
             assert_equals(pages[i], expected_pages[i])
+            assert_equals(pages[i].display_index, i)
+
+    def test_page_update_without_reorder(self):
+        page1 = Page.objects.create(
+            display_index=0,
+            procedure=self.test_procedure1
+        )
+
+        page2 = Page.objects.create(
+            display_index=1,
+            procedure=self.test_procedure1
+        )
+
+        page3 = Page.objects.create(
+            display_index=2,
+            procedure=self.test_procedure1
+        )
+
+        page1.procedure = self.test_procedure2
+        page1.save()
+
+        pages = [page1, page2, page3]
+
+        for i in range(0, 3):
+            assert_equals(pages[i].display_index, i)

@@ -4,6 +4,7 @@ from django.db.models import F
 from api.models import Page
 import logging
 
+
 logger = logging.getLogger('debugger')
 
 
@@ -11,6 +12,7 @@ logger = logging.getLogger('debugger')
 def on_page_pre_save(sender, instance=None, raw=False, **kwargs):
     # Update index of all objects with display index >= object we are saving
     if instance.display_index is not None:
-        logger.info("Updating display indices >= {0}".format(instance.display_index))
+        logger.info("Updating display indices >= {index} for Page {id}"
+                    .format(index=instance.display_index, id=instance.id))
         Page.objects.filter(display_index__gte=instance.display_index)\
                     .update(display_index=(F('display_index') + 1))
