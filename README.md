@@ -1,4 +1,4 @@
-[![Travis Status](https://travis-ci.org/SanaMobile/sana.protocol_builder.svg?branch=master)](https://travis-ci.org/SanaMobile/sana.protocol_builder)
+[![Travis Status](https://travis-ci.org/SanaMobile/sana.protocol_builder.svg?branch=master)](https://travis-ci.org/SanaMobile/sana.protocol_builder) [![Requirements Status](https://requires.io/github/SanaMobile/sana.protocol_builder/requirements.svg?branch=master)](https://requires.io/github/SanaMobile/sana.protocol_builder/requirements/?branch=master)
 
 About This Project
 ===
