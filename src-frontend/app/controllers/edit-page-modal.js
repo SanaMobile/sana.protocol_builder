@@ -12,7 +12,7 @@ export default Ember.Controller.extend({
 
             var newElement = this.store.createRecord('element', {
                 page: page,
-                displayIndex: targetIndex
+                displayIndex: selectedIndex
             });
 
             newElement.save().then(function() {
