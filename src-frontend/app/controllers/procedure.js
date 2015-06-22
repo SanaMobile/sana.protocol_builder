@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
             });
 
             newPage.save().then(function() {
-                procedure.reload();
+                procedure.get('pages').reload();
             });
         },
 

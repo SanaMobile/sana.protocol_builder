@@ -8,7 +8,7 @@
                 <span class="add-condition mega-octicon octicon-diff-renamed"></span>
                 <span class="delete-page mega-octicon octicon-trashcan" {{action 'deletePage' page}}></span>
             </a>
-            <a class="add-page" {{action 'addPage' page.displayIndex}}>+</a>
+            <a class="add-page" {{action 'addPage' (plus-one page.displayIndex)}}>+</a>
         </li>
     {{/each}}
 </ul>
