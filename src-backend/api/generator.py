@@ -1,6 +1,7 @@
 from xml.etree import ElementTree
 from xml.dom import minidom
 from models import Procedure
+import json
 
 
 class ProcedureGenerator:
@@ -56,9 +57,13 @@ class ElementGenerator:
             props['numeric'] = self.element.numeric
 
         if self.element.choices:
-            props['choices'] = self.element.choices
+            props['choices'] = self.__parse_choices()
 
         return props
+
+    def __parse_choices(self):
+        choice_list = json.loads(self.element.choices)
+        return ','.join(choice_list)
 
     def generate(self, parent):
         props = self.__get_properties()
