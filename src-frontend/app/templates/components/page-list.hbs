@@ -6,7 +6,7 @@
                 <span class="drag-handle octicon octicon-three-bars"></span>
                 <span class="page-label">Page {{page.id}}, Display {{page.displayIndex}}</span>
                 <span class="add-condition mega-octicon octicon-diff-renamed"></span>
-                <span class="delete-page mega-octicon octicon-trashcan" {{action 'deletePage' page}}></span>
+                <span class="delete-page mega-octicon octicon-trashcan" {{action 'deletePage' page bubbles=false}}></span>
             </a>
             <a class="add-page" {{action 'addPage' (plus-one page.displayIndex)}}>+</a>
         </li>

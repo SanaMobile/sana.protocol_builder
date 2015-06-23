@@ -16,7 +16,7 @@ export default Ember.Controller.extend({
             });
 
             newElement.save().then(function() {
-                page.reload();
+                page.get('elements').reload();
             });
         },
 
