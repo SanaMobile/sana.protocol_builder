@@ -11,9 +11,9 @@
     "ember-resolver": "~0.1.15",
     "jquery": "^1.11.1",
     "jquery-ui": "~1.11.4",
-    "js-cookie": "^1.5.1",
     "loader.js": "ember-cli/loader.js#3.2.0",
     "qunit": "~1.17.1",
-    "bootstrap": "~3.3.4"
+    "bootstrap": "~3.3.4",
+    "ember-simple-auth": "0.8.0",
   }
 }
