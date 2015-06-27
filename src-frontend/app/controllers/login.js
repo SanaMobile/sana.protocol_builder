@@ -1,6 +1,4 @@
-import $ from 'jquery';
 import Ember from 'ember';
-import ENV from 'src-frontend/config/environment';
 
 export default Ember.Controller.extend({
     username: '',
@@ -8,18 +6,12 @@ export default Ember.Controller.extend({
 
     actions: {
         login: function() {
-            var controller = this;
-            $.post(ENV.APP.API_HOST + '/auth/login', {
+            var credentials = {
                 username: this.get('username'),
                 password: this.get('password')
-            }, function(response) {
-                if (response.success === true && response.token) {
-                    Cookies.set('authorizationToken', response.token);
-                    controller.transitionToRoute('procedures');
-                } else {
-                    alert('Incorrect credentials');
-                }
-            });
+            };
+
+            this.get('session').authenticate('authenticator:token', credentials);
         },
         signup: function() {
             this.transitionToRoute('signup');

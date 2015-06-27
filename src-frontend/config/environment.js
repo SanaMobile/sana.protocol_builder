@@ -62,5 +62,12 @@ module.exports = function(environment) {
     ENV.APP.API_PROCEDURE_URL = ENV.APP.API_HOST + '/' + ENV.APP.API_NAMESPACE + '/procedures';
   }
 
+  ENV['simple-auth'] = {
+      authorizer: 'authorizer:token',
+      crossOriginWhitelist: [ENV.APP.API_HOST],
+      routeAfterAuthentication: 'procedures',
+      routeIfAlreadyAuthenticated: 'procedures'
+  }
+
   return ENV;
 };

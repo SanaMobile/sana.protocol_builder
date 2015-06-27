@@ -1,4 +1,4 @@
-import Application from 'src-frontend/routes/application';
+import Ember from 'ember';
+import UnauthenticatedRouteMixin from 'simple-auth/mixins/unauthenticated-route-mixin';
 
-export default Application.extend({
-});
+export default Ember.Route.extend(UnauthenticatedRouteMixin);

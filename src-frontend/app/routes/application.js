@@ -1,6 +1,7 @@
 import Ember from 'ember';
+import ApplicationRouteMixin from 'simple-auth/mixins/application-route-mixin';
 
-export default Ember.Route.extend({
+export default Ember.Route.extend(ApplicationRouteMixin, {
     actions: {
         showModal: function(name, model) {
             this.render(name, {
@@ -14,11 +15,6 @@ export default Ember.Route.extend({
                 outlet: 'modal',
                 parentView: 'application'
             });
-        },
-        error: function(error, transition) {
-            if (error.status === 401) {
-                this.transitionTo('login');
-            }
         }
     }
 });

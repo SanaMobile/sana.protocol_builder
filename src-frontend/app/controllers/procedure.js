@@ -46,9 +46,6 @@ export default Ember.Controller.extend({
             Ember.$.ajax({
                 type: 'GET',
                 url: ENV.APP.API_PROCEDURE_URL + this.get('model.id') + ENV.APP.API_GENERATE,
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('Authorization', 'Token ' + Cookies.get('authorizationToken'));
-                },
                 success: function(data) {
                     var blob = new Blob([(new XMLSerializer()).serializeToString(data)], { type: 'text/xml' });
                     var url = window.URL.createObjectURL(blob);
