@@ -17,7 +17,7 @@ export default Base.extend({
         return new Ember.RSVP.Promise(function(resolve, reject) {
             Ember.$.ajax({
                 method: 'POST',
-                url: ENV.APP.API_HOST + '/auth/login',
+                url: ENV.APP.API_LOGIN,
                 data: credentials
             }).then(function(response) {
                 Ember.run(function() {
