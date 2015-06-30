@@ -4,7 +4,7 @@ let SanaElement = DS.Model.extend({
     page: DS.belongsTo('page'),
     eid: DS.attr('string'),
     displayIndex: DS.attr('number'),
-    elementType: DS.attr('string'),
+    elementType: DS.attr('string', { defaultValue: 'ENTRY' }),
     concept: DS.attr('string'),
     question: DS.attr('string'),
     answer: DS.attr('string'),

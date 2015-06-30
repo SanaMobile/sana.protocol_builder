@@ -12,11 +12,12 @@ export default Ember.Controller.extend({
 
             var newElement = this.store.createRecord('element', {
                 page: page,
-                displayIndex: selectedIndex
+                displayIndex: selectedIndex,
+                eid: selectedIndex
             });
 
             newElement.save().then(function() {
-                page.reload();
+                page.get('elements').reload();
             });
         },
 
