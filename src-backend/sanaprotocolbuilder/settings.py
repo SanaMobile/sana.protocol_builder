@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',      # Dependency of django.contrib.auth
     'django.contrib.contenttypes',  # Track all of the models installed and provide object level permissions
     'django.contrib.auth',          # User auth system
+    'django.contrib.staticfiles',   # Serving static files on Django error pages
 
     # 3rd party apps
     'rest_framework',               # RESTful endpoint support
@@ -203,3 +204,13 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 # ------------------------------------------------------------------------------
 
 CORS_ORIGIN_ALLOW_ALL = True  # Temporary
+
+# ------------------------------------------------------------------------------
+# Static path
+# Since Django Rest Framework's error pages have the {% load staticfiles %} tag,
+# we need to include the staticfiles module and its configuration even if we
+# do not need static files
+# ------------------------------------------------------------------------------
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
