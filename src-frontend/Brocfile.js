@@ -3,11 +3,11 @@
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 var app = new EmberApp({
-  lessOptions: {
-    paths: [
-      'bower_components/bootstrap/less'
-    ]
-  }
+    lessOptions: {
+        paths: [
+            'bower_components/bootstrap/less'
+        ]
+    }
 });
 
 app.import('bower_components/bootstrap/dist/js/bootstrap.js');
