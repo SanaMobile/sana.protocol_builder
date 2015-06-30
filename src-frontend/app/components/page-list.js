@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import Ember from 'ember';
 
 export default Ember.Component.extend({
@@ -13,8 +12,8 @@ export default Ember.Component.extend({
             update: function(event, ui) {
                 var indices = {};
 
-                $(this).find('a.open-page').each(function(index) {
-                    indices[$(this).data('id')] = index;
+                Ember.$(this).find('a.open-page').each(function(index) {
+                    indices[Ember.$(this).data('id')] = index;
                 });
 
                 pageListComponent.sendAction('updateSortOrder', indices);
