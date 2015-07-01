@@ -32,6 +32,6 @@ export default Base.extend({
     },
 
     invalidate(data) {
-        // TODO: add support for token invalidation
+        return Ember.$.post(ENV.APP.API_LOGOUT);
     }
 });

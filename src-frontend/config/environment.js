@@ -63,6 +63,7 @@ module.exports = function(environment) {
     }
 
     ENV.APP.API_LOGIN = ENV.APP.API_HOST + '/auth/login';
+    ENV.APP.API_LOGOUT = ENV.APP.API_HOST + '/auth/logout';
 
     ENV['simple-auth'] = {
         authorizer: 'authorizer:token',

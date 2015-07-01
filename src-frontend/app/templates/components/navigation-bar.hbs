@@ -17,7 +17,12 @@
                 {{/link-to}}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                {{yield}}
+                <li>{{yield}}</li>
+                {{#if session.isAuthenticated}}
+                    <li><a {{action 'logOut'}}>Log Out</a></li>
+                {{else}}
+                    <li>{{#link-to 'login'}}Log In{{/link-to}}</li>
+                {{/if}}
             </ul>
         </div>
     </div>
