@@ -17,7 +17,8 @@
                 {{/link-to}}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                {{yield}}
+                <li>{{yield}}</li>
+                <li><a {{action 'logOut'}}>Log Out</a></li>
             </ul>
         </div>
     </div>
