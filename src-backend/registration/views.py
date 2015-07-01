@@ -32,12 +32,13 @@ def _flattenFormErrors(form):
 
 
 # ------------------------------------------------------------------------------
-#  Register
+#  Sign up
 #
 #  While there is some risk is removing csrf protection from the signup form
 #  (http://stackoverflow.com/a/15604240), there really isn't any way to insert
 #  a csrf token to the user since Django never serves up any frontend html
 # ------------------------------------------------------------------------------
+
 @csrf_exempt
 @require_http_methods(['POST'])
 def signup(request):

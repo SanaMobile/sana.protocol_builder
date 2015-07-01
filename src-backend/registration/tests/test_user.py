@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-from nose.tools import assert_false
 
 
 class UserTest(TestCase):
@@ -11,4 +10,4 @@ class UserTest(TestCase):
 
     def test_user_has_token(self):
         token = Token.objects.get(user=self.test_user)
-        assert_false(token is None)
+        self.assertTrue(token is not None)

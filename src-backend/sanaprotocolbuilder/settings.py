@@ -214,3 +214,9 @@ CORS_ORIGIN_ALLOW_ALL = True  # Temporary
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# ------------------------------------------------------------------------------
+# Global Constants
+# ------------------------------------------------------------------------------
+
+NORMAL_USER_GROUP = 'normal_users'
