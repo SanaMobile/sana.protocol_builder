@@ -8,6 +8,12 @@ class ProcedureGenerator:
         self.name = 'Procedure'
         self.procedure = procedure
 
+        if not self.procedure.title:
+            raise ValueError('Missing procedure title')
+
+        if not self.procedure.author:
+            raise ValueError('Missing procedure author')
+
     def __get_properties(self):
         props = {
             'title': self.procedure.title,
@@ -34,6 +40,9 @@ class PageGenerator:
         self.name = 'Page'
         self.page = page
 
+        if not self.page.elements.all():
+            raise ValueError('Page with display index %d is empty' % self.page.display_index)
+
     def generate(self, parent):
         return ElementTree.SubElement(parent, self.name)
 
@@ -42,6 +51,24 @@ class ElementGenerator:
     def __init__(self, element):
         self.name = 'Element'
         self.element = element
+
+        if not self.element.element_type:
+            self.__raise_error('Element with id %d has no type')
+
+        if not self.element.eid:
+            self.__raise_error('Element with id %d has no element id')
+
+        if not self.element.concept:
+            self.__raise_error('Element with id %d has no concept')
+
+        if not self.element.question:
+            self.__raise_error('Element with id %d has no question')
+
+        if self.element.answer is None:
+            self.__raise_error('Element with id %d has no default answer')
+
+    def __raise_error(self, error_string):
+        raise ValueError(error_string % self.element.id)
 
     def __get_properties(self):
         props = {
