@@ -1,4 +1,5 @@
 from django.test import TestCase, Client
+from nose.tools import assert_equals, assert_true
 import json
 
 
@@ -19,6 +20,6 @@ class SignupTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
         r = json.loads(response.content)
-        self.assertTrue(r['success'])
-        self.assertTrue(r['token'] is not None)
-        self.assertEqual(len(r['errors']), 0)
+        assert_true(r['success'])
+        assert_true(r['token'] is not None)
+        assert_equals(len(r['errors']), 0)
