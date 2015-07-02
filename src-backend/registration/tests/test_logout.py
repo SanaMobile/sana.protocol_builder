@@ -1,6 +1,8 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+from rest_framework import status
+from nose.tools import assert_equals
 
 
 class LogoutTest(TestCase):
@@ -9,7 +11,7 @@ class LogoutTest(TestCase):
 
     def test_unauthenticated_user_cannot_logout(self):
         response = self.client.get('/auth/logout')
-        self.assertEqual(response.status_code, 401)  # Not authorized
+        assert_equals(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_authenticated_user_can_logout(self):
         user = User.objects.create_user('username', 'test@test.com', 'password')
@@ -19,5 +21,5 @@ class LogoutTest(TestCase):
         response_get = self.client.get('/auth/logout', HTTP_AUTHORIZATION='Token ' + token.key)
         response_post = self.client.post('/auth/logout', HTTP_AUTHORIZATION='Token ' + token.key)
 
-        self.assertEqual(response_get.status_code, 405)  # Method not allowed
-        self.assertEqual(response_post.status_code, 200)
+        assert_equals(response_get.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        assert_equals(response_post.status_code, status.HTTP_200_OK)

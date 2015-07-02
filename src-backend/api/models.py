@@ -11,6 +11,9 @@ class Procedure(models.Model):
     last_modified = models.DateField(auto_now=True)
     created = models.DateField(auto_now_add=True)
 
+    class Meta():
+        app_label = 'api'
+
 
 class Page(models.Model):
     display_index = models.PositiveIntegerField()
@@ -19,6 +22,7 @@ class Page(models.Model):
     created = models.DateField(auto_now_add=True)
 
     class Meta:
+        app_label = 'api'
         ordering = ['procedure', 'display_index']
 
 
@@ -46,4 +50,5 @@ class Element(models.Model):
     created = models.DateField(auto_now_add=True)
 
     class Meta:
+        app_label = 'api'
         ordering = ['page', 'display_index']
