@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+from rest_framework import status
 from nose.tools import assert_equals, assert_true, assert_false
 import json
 
@@ -11,11 +12,11 @@ class LoginTest(TestCase):
 
     def test_invalid_method_cannot_login(self):
         response = self.client.get('/auth/login')
-        assert_equals(response.status_code, 405)  # Method not allowed
+        assert_equals(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_invalid_user_cannot_login(self):
         response = self.client.post('/auth/login', {'username': 'root', 'password': 'hunter2'})
-        assert_equals(response.status_code, 200)
+        assert_equals(response.status_code, status.HTTP_200_OK)
 
         # Check json response
         r = json.loads(response.content)
@@ -31,7 +32,7 @@ class LoginTest(TestCase):
         user.save()
 
         response = self.client.post('/auth/login', {'username': username, 'password': password})
-        assert_equals(response.status_code, 200)
+        assert_equals(response.status_code, status.HTTP_200_OK)
 
         # Check json response
         r = json.loads(response.content)

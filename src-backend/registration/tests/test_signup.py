@@ -1,5 +1,6 @@
 from django.test import TestCase, Client
 from nose.tools import assert_equals, assert_true
+from rest_framework import status
 import json
 
 
@@ -17,7 +18,7 @@ class SignupTest(TestCase):
         }
 
         response = self.client.post('/auth/signup', fields)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         r = json.loads(response.content)
         assert_true(r['success'])
