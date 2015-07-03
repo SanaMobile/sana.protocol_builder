@@ -9,17 +9,17 @@ import uuid
 
 class ProcedureGeneratorTest(TestCase):
     def setUp(self):
-        test_user = User.objects.create_user(
+        self.test_user = User.objects.create_user(
             'TestUser',
             'test@sanaprotocolbuilder.me',
             'testpassword'
         )
-        test_user.save()
+        self.test_user.save()
 
         self.procedure = Procedure.objects.create(
             author='tester',
             title='test procedure',
-            owner=test_user
+            owner=self.test_user
         )
 
         self.generator = ProcedureGenerator(self.procedure)
@@ -36,6 +36,44 @@ class ProcedureGeneratorTest(TestCase):
     def test_element_has_author(self):
         assert_true('author' in self.attribs)
         assert_equals(self.attribs['author'], self.procedure.author)
+
+    @raises(ValueError)
+    def test_error_if_no_title(self):
+        procedure = Procedure.objects.create(
+            author='author',
+            owner=self.test_user
+        )
+
+        ProcedureGenerator(procedure).generate()
+
+    @raises(ValueError)
+    def test_error_if_blank_title(self):
+        procedure = Procedure.objects.create(
+            author='author',
+            title='',
+            owner=self.test_user
+        )
+
+        ProcedureGenerator(procedure).generate()
+
+    @raises(ValueError)
+    def test_error_if_no_author(self):
+        procedure = Procedure.objects.create(
+            title='title',
+            owner=self.test_user
+        )
+
+        ProcedureGenerator(procedure).generate()
+
+    @raises(ValueError)
+    def test_error_if_blank_author(self):
+        procedure = Procedure.objects.create(
+            title='title',
+            author='',
+            owner=self.test_user
+        )
+
+        ProcedureGenerator(procedure).generate()
 
     def test_element_has_no_version_attrib(self):
         assert_false('version' in self.attribs, self.attribs)
@@ -78,8 +116,23 @@ class PageGeneratorTest(TestCase):
             procedure=procedure
         )
 
+        Element.objects.create(
+            display_index=0,
+            eid='1',
+            element_type='SELECT',
+            concept='HEART SURGERY',
+            question='Which valve',
+            answer='',
+            page=self.page
+        )
+
         self.generator = PageGenerator(self.page)
         self.page_etree_element = self.generator.generate(ElementTree.Element('test'))
+
+    @raises(ValueError)
+    def test_error_if_no_elements(self):
+        self.page.elements.all().delete()
+        PageGenerator(self.page).generate(ElementTree.Element('test'))
 
     def test_element_has_correct_name(self):
         assert_equals(self.page_etree_element.tag, self.generator.name)
@@ -103,7 +156,7 @@ class ElementGeneratorTest(TestCase):
             owner=test_user
         )
 
-        page = Page.objects.create(
+        self.page = Page.objects.create(
             display_index=0,
             procedure=procedure
         )
@@ -115,7 +168,7 @@ class ElementGeneratorTest(TestCase):
             concept='HEART SURGERY',
             question='Which valve',
             answer='',
-            page=page
+            page=self.page
         )
 
         self.generator = ElementGenerator(self.element)
@@ -132,21 +185,142 @@ class ElementGeneratorTest(TestCase):
         assert_true('id' in self.attribs)
         assert_equals(self.attribs['id'], self.element.eid)
 
+    @raises(ValueError)
+    def test_error_if_no_id(self):
+        element = Element.objects.create(
+            display_index=0,
+            element_type='SELECT',
+            concept='HEART SURGERY',
+            question='Which valve',
+            answer='',
+            page=self.page
+        )
+
+        ElementGenerator(element).generate(ElementTree.Element('test'))
+
+    @raises(ValueError)
+    def test_error_if_blank_id(self):
+        element = Element.objects.create(
+            display_index=0,
+            eid='',
+            element_type='SELECT',
+            concept='HEART SURGERY',
+            question='Which valve',
+            answer='',
+            page=self.page
+        )
+
+        ElementGenerator(element).generate(ElementTree.Element('test'))
+
     def test_element_has_type(self):
         assert_true('type' in self.attribs)
         assert_equals(self.attribs['type'], self.element.element_type)
+
+    @raises(ValueError)
+    def test_error_if_no_type(self):
+        element = Element.objects.create(
+            display_index=0,
+            eid='id',
+            concept='HEART SURGERY',
+            question='Which valve',
+            answer='',
+            page=self.page
+        )
+
+        ElementGenerator(element).generate(ElementTree.Element('test'))
+
+    @raises(ValueError)
+    def test_error_if_blank_type(self):
+        element = Element.objects.create(
+            display_index=0,
+            eid='id',
+            element_type='',
+            concept='HEART SURGERY',
+            question='Which valve',
+            answer='',
+            page=self.page
+        )
+
+        ElementGenerator(element).generate(ElementTree.Element('test'))
 
     def test_element_has_concept(self):
         assert_true('concept' in self.attribs)
         assert_equals(self.attribs['concept'], self.element.concept)
 
+    @raises(ValueError)
+    def test_error_if_no_concept(self):
+        element = Element.objects.create(
+            display_index=0,
+            eid='id',
+            element_type='SELECT',
+            question='Which valve',
+            answer='',
+            page=self.page
+        )
+
+        ElementGenerator(element).generate(ElementTree.Element('test'))
+
+    @raises(ValueError)
+    def test_error_if_blank_concept(self):
+        element = Element.objects.create(
+            display_index=0,
+            eid='id',
+            element_type='SELECT',
+            concept='',
+            question='Which valve',
+            answer='',
+            page=self.page
+        )
+
+        ElementGenerator(element).generate(ElementTree.Element('test'))
+
     def test_element_has_question(self):
         assert_true('question' in self.attribs)
         assert_equals(self.attribs['question'], self.element.question)
 
+    @raises(ValueError)
+    def test_error_if_no_question(self):
+        element = Element.objects.create(
+            display_index=0,
+            eid='id',
+            element_type='SELECT',
+            concept='HEART SURGERY',
+            answer='',
+            page=self.page
+        )
+
+        ElementGenerator(element).generate(ElementTree.Element('test'))
+
+    @raises(ValueError)
+    def test_error_if_blank_question(self):
+        element = Element.objects.create(
+            display_index=0,
+            eid='id',
+            element_type='SELECT',
+            concept='HEART SURGERY',
+            question='',
+            answer='',
+            page=self.page
+        )
+
+        ElementGenerator(element).generate(ElementTree.Element('test'))
+
     def test_element_has_answer(self):
         assert_true('answer' in self.attribs)
         assert_equals(self.attribs['answer'], self.element.answer)
+
+    @raises(ValueError)
+    def test_error_if_no_answer(self):
+        element = Element.objects.create(
+            display_index=0,
+            element_type='SELECT',
+            concept='HEART SURGERY',
+            question='Which valve',
+            eid='id',
+            page=self.page
+        )
+
+        ElementGenerator(element).generate(ElementTree.Element('test'))
 
     def test_element_has_no_numeric(self):
         assert_false('numeric' in self.attribs)
