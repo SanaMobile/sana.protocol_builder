@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from nose.tools import raises, assert_equals, assert_not_equals, nottest
 from api.models import Procedure, Page
-from api.signals import page_pre_save  # noqa
 
 
 class ProcedureTest(TestCase):
@@ -136,3 +135,36 @@ class ProcedureTest(TestCase):
 
         for i in range(0, 3):
             assert_equals(pages[i].display_index, i)
+
+    def test_page_reorder_with_decrements(self):
+        page1 = Page.objects.create(
+            display_index=0,
+            procedure=self.test_procedure1
+        )
+
+        page2 = Page.objects.create(
+            display_index=1,
+            procedure=self.test_procedure1
+        )
+
+        page3 = Page.objects.create(
+            display_index=2,
+            procedure=self.test_procedure1
+        )
+
+        page4 = Page.objects.create(
+            display_index=3,
+            procedure=self.test_procedure1
+        )        
+
+        page2.display_index = 2
+        page2.save()
+        page1.refresh_from_db()
+        page2.refresh_from_db()
+        page3.refresh_from_db()
+        page4.refresh_from_db()
+
+        assert_equals(page1.display_index, 0)
+        assert_equals(page3.display_index, 1)
+        assert_equals(page2.display_index, 2)
+        assert_equals(page4.display_index, 3)
