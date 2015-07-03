@@ -60,6 +60,7 @@ module.exports = function(environment) {
         ENV.APP.API_NAMESPACE = 'api';
     }
 
+    ENV.APP.API_PAGE_BULK = ENV.APP.API_HOST + '/' + ENV.APP.API_NAMESPACE + '/pages/partial_bulk_update/';
     ENV.APP.API_PROCEDURE_URL = ENV.APP.API_HOST + '/' + ENV.APP.API_NAMESPACE + '/procedures/';
     ENV.APP.API_GENERATE = '/generate/';
     ENV.APP.API_LOGIN = ENV.APP.API_HOST + '/auth/login';

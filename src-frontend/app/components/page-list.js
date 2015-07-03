@@ -10,13 +10,15 @@ export default Ember.Component.extend({
             scroll: true,
             placeholder: 'ui-state-highlight',
             update: function(event, ui) {
-                var indices = {};
+                var pageModels = [];
 
-                Ember.$(this).find('a.open-page').each(function(index) {
-                    indices[Ember.$(this).data('id')] = index;
+                $(this).find('a.open-page').each(function(index) {
+                    pageModels.push({
+                        "id": $(this).data('id'),
+                        "display_index": index
+                    });
                 });
-
-                pageListComponent.sendAction('updateSortOrder', indices);
+                pageListComponent.sendAction('updateSortOrder', pageModels);
             }
         });
     },
