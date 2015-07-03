@@ -10,14 +10,18 @@ export default Ember.Component.extend({
             scroll: true,
             placeholder: 'ui-state-highlight',
             update: function(event, ui) {
+                var sortOrder = $(this).sortable('toArray');
                 var pageModels = [];
 
-                $(this).find('a.open-page').each(function(index) {
+                sortOrder.forEach(function(id, index) {
                     pageModels.push({
-                        "id": $(this).data('id'),
-                        "display_index": index
+                        id: id,
+                        display_index: index
                     });
                 });
+
+                $(this).sortable('cancel');
+
                 pageListComponent.sendAction('updateSortOrder', pageModels);
             }
         });
