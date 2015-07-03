@@ -30,26 +30,19 @@ export default Ember.Controller.extend({
         },
 
         updateSortOrder: function(pageModels) {
-            this.beginPropertyChanges();
-            var updatedData;
             var ctx = this;
             var onSuccess = function(data) {
-                var records = ctx.store.pushMany('page', ctx.store.normalize('page', data));
-                records.forEach(function(record){
-                    record.reload();
-                })
+                data.forEach(function(page) {
+                    ctx.store.push('page', ctx.store.normalize('page', page));
+                });
+            };
 
-            }
-
-            $.ajax({
+            Ember.$.ajax({
                 type: 'PATCH',
                 url: ENV.APP.API_PAGE_BULK,
                 data: JSON.stringify(pageModels),
-                async: false,
                 success: onSuccess
             });
-
-            this.endPropertyChanges();
         },
         generateProtocol: function() {
             var filename = this.get('model.title') + '.xml';
