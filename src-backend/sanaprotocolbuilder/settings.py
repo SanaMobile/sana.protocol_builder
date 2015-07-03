@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',     # Token based authentication
     'django_nose',                  # Better test framework/runner
     'corsheaders',                  # Cross-origin resource sharing
+    'django_extensions',            # Adds some useful dev commands for convenience
 
     # Our apps
     'api',
