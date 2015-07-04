@@ -338,11 +338,11 @@ class ElementGeneratorTest(TestCase):
         assert_equals(self.element_etree_element.attrib['numeric'], self.element.numeric)
 
     def test_element_has_choices(self):
-        self.element.choices = 'left,right,center'
+        self.element.choices = '["left","right","center"]'
         self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
 
         assert_true('choices' in self.element_etree_element.attrib)
-        assert_equals(self.element_etree_element.attrib['choices'], self.element.choices)
+        assert_equals(self.element_etree_element.attrib['choices'], 'left,right,center')
 
 
 class ProtocolBuilderTestCase(TestCase):
@@ -384,7 +384,7 @@ class ProtocolBuilderTestCase(TestCase):
             concept='BURNS',
             question='Select One or More of the Following:',
             answer='',
-            choices='On the head,On the chest,Loins,Inhalation burns,Chemical,In an enclosure,Patient Unconscious,Epileptic Patient, Diabetic Patient',  # noqa
+            choices='["On the head","On the chest","Loins","Inhalation burns","Chemical","In an enclosure","Patient Unconscious","Epileptic Patient","Diabetic Patient"]',  # noqa
             page=page1
         )
 

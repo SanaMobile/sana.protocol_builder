@@ -2,9 +2,12 @@ from collections import OrderedDict
 from rest_framework import serializers
 from rest_framework.fields import SkipField
 import models
+import field
 
 
 class ElementSerializer(serializers.ModelSerializer):
+    choices = field.ElementChoicesField()
+
     class Meta:
         model = models.Element
         fields = (
