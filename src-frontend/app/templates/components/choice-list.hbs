@@ -1,1 +1,7 @@
-{{yield}}
+<ul class="choices">
+    {{#each choice in choices}}
+        <li class="page-template" choice="{{choice}}">
+            {{choice}}
+        </li>
+    {{/each}}
+</ul>
