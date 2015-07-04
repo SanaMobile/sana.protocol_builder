@@ -1,11 +1,6 @@
 import Ember from 'ember';
-import SanaElement from '../models/element';
 
 export default Ember.Controller.extend({
-    types: function() {
-        return SanaElement.TYPES;
-    }.property(SanaElement.TYPES),
-
     actions: {
         addElement: function(selectedIndex) {
             var page = this.get('model');

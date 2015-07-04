@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+    targetObject: Em.computed.alias('parentView'),
     didInsertElement: function() {
         var choiceListComponent = this;
         this.$("ul.choices").sortable({

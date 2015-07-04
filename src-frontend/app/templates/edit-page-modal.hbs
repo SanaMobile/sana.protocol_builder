@@ -3,22 +3,7 @@
         <ul class="element">
             <li><a class="add-element" {{action 'addElement' 0}}>+</a></li>
             {{#each element in model.elements}}
-                <li class="element-template">
-                    <a class="element">
-                        <span class="drag-handle octicon octicon-three-bars"></span>
-
-                        {{view 'select' class="form-control" content=types value=element.elementType}}
-                        {{input type="text" class="form-control" placeholder="Concept" value=element.concept}}
-                        {{input type="text" class="form-control" placeholder="Question" value=element.question}}
-                        {{input type="text" class="form-control" placeholder="Answer" value=element.answer}}
-                        {{#if element.hasChoices}}
-                            {{input type="text" class="form-control" placeholder="Choices" value=element.choices}}
-                        {{/if}}
-
-                        <span class="delete-element mega-octicon octicon-trashcan" {{action 'deleteElement' element}}></span>
-                    </a>
-                    <a class="add-element" {{action 'addElement' element.displayIndex}}>+</a>
-                </li>
+                {{element-cell model=element}}
             {{/each}}
         </ul>
     </div>
