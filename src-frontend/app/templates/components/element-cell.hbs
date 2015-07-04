@@ -7,6 +7,7 @@
         {{input type="text" class="form-control" placeholder="Question" value=model.question}}
         {{input type="text" class="form-control" placeholder="Answer" value=model.answer}}
         {{#if model.hasChoices}}
+            <label>Choices</label>
             {{choice-list choices=model.choices updateChoiceOrder="updateChoiceOrder"}}
         {{/if}}
 

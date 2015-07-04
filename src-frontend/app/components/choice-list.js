@@ -5,6 +5,7 @@ export default Ember.Component.extend({
     didInsertElement: function() {
         var choiceListComponent = this;
         this.$("ul.choices").sortable({
+            handle: 'span.drag-handle',
             revert: true,
             scroll: true,
             update: function(event, ui) {
