@@ -1,25 +1,16 @@
 from xml.etree import ElementTree
 from django.test import TestCase
-from django.contrib.auth.models import User
 from nose.tools import raises, assert_equals, assert_not_equals, assert_true, assert_false
-from api.models import Procedure, Page, Element
 from api.generator import ProcedureGenerator, PageGenerator, ElementGenerator, ProtocolBuilder
+from utils import factories
 import uuid
 
 
 class ProcedureGeneratorTest(TestCase):
     def setUp(self):
-        self.test_user = User.objects.create_user(
-            'TestUser',
-            'test@sanaprotocolbuilder.me',
-            'testpassword'
-        )
-        self.test_user.save()
-
-        self.procedure = Procedure.objects.create(
+        self.procedure = factories.ProcedureFactory(
             author='tester',
-            title='test procedure',
-            owner=self.test_user
+            title='test procedure'
         )
 
         self.generator = ProcedureGenerator(self.procedure)
@@ -39,38 +30,30 @@ class ProcedureGeneratorTest(TestCase):
 
     @raises(ValueError)
     def test_error_if_no_title(self):
-        procedure = Procedure.objects.create(
-            author='author',
-            owner=self.test_user
-        )
+        procedure = factories.ProcedureFactory()
+        procedure.title = None
 
         ProcedureGenerator(procedure).generate()
 
     @raises(ValueError)
     def test_error_if_blank_title(self):
-        procedure = Procedure.objects.create(
-            author='author',
-            title='',
-            owner=self.test_user
+        procedure = factories.ProcedureFactory(
+            title=''
         )
 
         ProcedureGenerator(procedure).generate()
 
     @raises(ValueError)
     def test_error_if_no_author(self):
-        procedure = Procedure.objects.create(
-            title='title',
-            owner=self.test_user
-        )
+        procedure = factories.ProcedureFactory()
+        procedure.author = None
 
         ProcedureGenerator(procedure).generate()
 
     @raises(ValueError)
     def test_error_if_blank_author(self):
-        procedure = Procedure.objects.create(
-            title='title',
-            author='',
-            owner=self.test_user
+        procedure = factories.ProcedureFactory(
+            author=''
         )
 
         ProcedureGenerator(procedure).generate()
@@ -98,31 +81,11 @@ class ProcedureGeneratorTest(TestCase):
 
 class PageGeneratorTest(TestCase):
     def setUp(self):
-        test_user = User.objects.create_user(
-            'TestUser',
-            'test@sanaprotocolbuilder.me',
-            'testpassword'
-        )
-        test_user.save()
-
-        procedure = Procedure.objects.create(
-            author='tester',
-            title='test procedure',
-            owner=test_user
+        self.page = factories.PageFactory(
+            display_index=0
         )
 
-        self.page = Page.objects.create(
-            display_index=0,
-            procedure=procedure
-        )
-
-        Element.objects.create(
-            display_index=0,
-            eid='1',
-            element_type='SELECT',
-            concept='HEART SURGERY',
-            question='Which valve',
-            answer='',
+        factories.ElementFactory(
             page=self.page
         )
 
@@ -143,32 +106,13 @@ class PageGeneratorTest(TestCase):
 
 class ElementGeneratorTest(TestCase):
     def setUp(self):
-        test_user = User.objects.create_user(
-            'TestUser',
-            'test@sanaprotocolbuilder.me',
-            'testpassword'
-        )
-        test_user.save()
-
-        procedure = Procedure.objects.create(
-            author='tester',
-            title='test procedure',
-            owner=test_user
-        )
-
-        self.page = Page.objects.create(
-            display_index=0,
-            procedure=procedure
-        )
-
-        self.element = Element.objects.create(
+        self.element = factories.ElementFactory(
             display_index=0,
             eid='1',
             element_type='SELECT',
             concept='HEART SURGERY',
             question='Which valve',
-            answer='',
-            page=self.page
+            answer=''
         )
 
         self.generator = ElementGenerator(self.element)
@@ -187,27 +131,16 @@ class ElementGeneratorTest(TestCase):
 
     @raises(ValueError)
     def test_error_if_no_id(self):
-        element = Element.objects.create(
-            display_index=0,
-            element_type='SELECT',
-            concept='HEART SURGERY',
-            question='Which valve',
-            answer='',
-            page=self.page
+        element = factories.ElementFactory(
+            eid=None
         )
 
         ElementGenerator(element).generate(ElementTree.Element('test'))
 
     @raises(ValueError)
     def test_error_if_blank_id(self):
-        element = Element.objects.create(
-            display_index=0,
-            eid='',
-            element_type='SELECT',
-            concept='HEART SURGERY',
-            question='Which valve',
-            answer='',
-            page=self.page
+        element = factories.ElementFactory(
+            eid=''
         )
 
         ElementGenerator(element).generate(ElementTree.Element('test'))
@@ -218,27 +151,16 @@ class ElementGeneratorTest(TestCase):
 
     @raises(ValueError)
     def test_error_if_no_type(self):
-        element = Element.objects.create(
-            display_index=0,
-            eid='id',
-            concept='HEART SURGERY',
-            question='Which valve',
-            answer='',
-            page=self.page
+        element = factories.ElementFactory(
+            element_type=None
         )
 
         ElementGenerator(element).generate(ElementTree.Element('test'))
 
     @raises(ValueError)
     def test_error_if_blank_type(self):
-        element = Element.objects.create(
-            display_index=0,
-            eid='id',
-            element_type='',
-            concept='HEART SURGERY',
-            question='Which valve',
-            answer='',
-            page=self.page
+        element = factories.ElementFactory(
+            element_type=''
         )
 
         ElementGenerator(element).generate(ElementTree.Element('test'))
@@ -249,27 +171,16 @@ class ElementGeneratorTest(TestCase):
 
     @raises(ValueError)
     def test_error_if_no_concept(self):
-        element = Element.objects.create(
-            display_index=0,
-            eid='id',
-            element_type='SELECT',
-            question='Which valve',
-            answer='',
-            page=self.page
+        element = factories.ElementFactory(
+            concept=None
         )
 
         ElementGenerator(element).generate(ElementTree.Element('test'))
 
     @raises(ValueError)
     def test_error_if_blank_concept(self):
-        element = Element.objects.create(
-            display_index=0,
-            eid='id',
-            element_type='SELECT',
-            concept='',
-            question='Which valve',
-            answer='',
-            page=self.page
+        element = factories.ElementFactory(
+            concept=''
         )
 
         ElementGenerator(element).generate(ElementTree.Element('test'))
@@ -280,27 +191,16 @@ class ElementGeneratorTest(TestCase):
 
     @raises(ValueError)
     def test_error_if_no_question(self):
-        element = Element.objects.create(
-            display_index=0,
-            eid='id',
-            element_type='SELECT',
-            concept='HEART SURGERY',
-            answer='',
-            page=self.page
+        element = factories.ElementFactory(
+            question=None
         )
 
         ElementGenerator(element).generate(ElementTree.Element('test'))
 
     @raises(ValueError)
     def test_error_if_blank_question(self):
-        element = Element.objects.create(
-            display_index=0,
-            eid='id',
-            element_type='SELECT',
-            concept='HEART SURGERY',
-            question='',
-            answer='',
-            page=self.page
+        element = factories.ElementFactory(
+            question=''
         )
 
         ElementGenerator(element).generate(ElementTree.Element('test'))
@@ -311,13 +211,8 @@ class ElementGeneratorTest(TestCase):
 
     @raises(ValueError)
     def test_error_if_no_answer(self):
-        element = Element.objects.create(
-            display_index=0,
-            element_type='SELECT',
-            concept='HEART SURGERY',
-            question='Which valve',
-            eid='id',
-            page=self.page
+        element = factories.ElementFactory(
+            answer=None
         )
 
         ElementGenerator(element).generate(ElementTree.Element('test'))
@@ -332,8 +227,6 @@ class ElementGeneratorTest(TestCase):
         self.element.numeric = 'DIALPAD'
         self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
 
-        print self.element_etree_element.attrib
-
         assert_true('numeric' in self.element_etree_element.attrib)
         assert_equals(self.element_etree_element.attrib['numeric'], self.element.numeric)
 
@@ -347,82 +240,24 @@ class ElementGeneratorTest(TestCase):
 
 class ProtocolBuilderTestCase(TestCase):
     def setUp(self):
-        self.test_user = User.objects.create_user(
-            'TestUser',
-            'test@sanaprotocolbuilder.me',
-            'testpassword'
-        )
-        self.test_user.save()
-
-        self.procedure = Procedure.objects.create(
+        self.procedure = factories.ProcedureFactory(
             author='TestUser',
-            title='Burns',
-            owner=self.test_user
+            title='Burns'
         )
 
-        page1 = Page.objects.create(
-            display_index=0,
-            procedure=self.procedure
-        )
-        page2 = Page.objects.create(
-            display_index=1,
-            procedure=self.procedure
-        )
-        page3 = Page.objects.create(
-            display_index=2,
-            procedure=self.procedure
-        )
-        page4 = Page.objects.create(
-            display_index=3,
-            procedure=self.procedure
-        )
+        for i in range(4):
+            page = factories.PageFactory(
+                procedure=self.procedure
+            )
 
-        Element.objects.create(
-            display_index=0,
-            eid='burns',
-            element_type='MULTI_SELECT',
-            concept='BURNS',
-            question='Select One or More of the Following:',
-            answer='',
-            choices='["On the head","On the chest","Loins","Inhalation burns","Chemical","In an enclosure","Patient Unconscious","Epileptic Patient","Diabetic Patient"]',  # noqa
-            page=page1
-        )
-
-        Element.objects.create(
-            display_index=1,
-            eid='duration',
-            element_type='ENTRY',
-            concept='COMPLAINT DURATION',
-            question='Enter Complaint Duration in Days:',
-            answer='',
-            numeric='DIALPAD',
-            page=page2
-        )
-
-        Element.objects.create(
-            display_index=2,
-            eid='COMMENTS',
-            element_type='ENTRY',
-            concept='BURNS',
-            question='Other comments:',
-            answer='',
-            page=page3
-        )
-
-        Element.objects.create(
-            display_index=3,
-            eid='picture',
-            element_type='PICTURE',
-            concept='COMPLAINT PICTURE',
-            question='Add a Picture:',
-            answer='',
-            page=page4
-        )
+            factories.ElementFactory(
+                page=page
+            )
 
         self.procedure.save()
 
     def test_generates_tree(self):
-        tree = ProtocolBuilder.generate_etree(self.test_user, self.procedure.id)
+        tree = ProtocolBuilder.generate_etree(factories.UserFactory(), self.procedure.id)
 
         assert_equals(len(tree), 4)
 
@@ -430,19 +265,17 @@ class ProtocolBuilderTestCase(TestCase):
             assert_equals(len(child), 1)
 
     def test_generates_string_output(self):
-        protocol = ProtocolBuilder.generate(self.test_user, self.procedure.id)
+        protocol = ProtocolBuilder.generate(factories.UserFactory(), self.procedure.id)
         assert_not_equals(protocol, None)
 
     @raises(ValueError)
     def test_invalid_owner(self):
-        bad_user = User.objects.create_user(
-            'A Bad user',
-            'bad@sanaprotocolbuilder.me',
-            'bad'
+        bad_user = factories.UserFactory(
+            username='baduser'
         )
 
         ProtocolBuilder.generate(bad_user, self.procedure.id)
 
     @raises(ValueError)
     def test_procedure_does_not_exist(self):
-        ProtocolBuilder.generate(self.test_user, -1)
+        ProtocolBuilder.generate(factories.UserFactory(), -1)

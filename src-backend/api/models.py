@@ -39,7 +39,7 @@ class Element(models.Model):
 
     display_index = models.PositiveIntegerField()
     eid = models.CharField(max_length=255, null=True, blank=True)
-    element_type = models.CharField(max_length=12, choices=TYPES)
+    element_type = models.CharField(max_length=12, choices=TYPES, null=True, blank=True)
     choices = models.TextField(null=True, blank=True)
     numeric = models.CharField(max_length=255, null=True, blank=True)
     concept = models.TextField(null=True, blank=True)
