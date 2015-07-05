@@ -1,7 +1,6 @@
 from django.conf.urls import url, include
 from rest_framework import routers
 from views import ProcedureViewSet, PageViewSet, ElementViewSet
-from api.signals import page_pre_save  # noqa
 from startup import run_once
 
 
