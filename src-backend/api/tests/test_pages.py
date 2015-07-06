@@ -11,21 +11,21 @@ class PageTest(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.user = factories.UserFactory()
-        self.procedure = factories.ProcedureFactory()
+        user = factories.UserFactory()
+        procedure = factories.ProcedureFactory()
         self.page1 = factories.PageFactory(
             display_index=0,
-            procedure=self.procedure
+            procedure=procedure
         )
         self.page2 = factories.PageFactory(
             display_index=1,
-            procedure=self.procedure
+            procedure=procedure
         )
         self.page3 = factories.PageFactory(
             display_index=2,
-            procedure=self.procedure
+            procedure=procedure
         )
-        self.token = Token.objects.get(user=self.user)
+        self.token = Token.objects.get(user=user)
         self.partial_bulk_url = '/api/pages/partial_bulk_update/'
 
     @add_group_permissions
@@ -102,7 +102,6 @@ class PageTest(TestCase):
             else:
                 assert_false(True)
 
-
     @add_group_permissions
     def test_page_reorder_blank_data(self):
         data = []
@@ -114,4 +113,4 @@ class PageTest(TestCase):
             HTTP_AUTHORIZATION=helpers.add_token_to_header(self.token)
         )
 
-        assert_equals(response.status, status.HTTP_406_NOT_ACCEPTABLE)
+        assert_equals(response_patch.status, status.HTTP_406_NOT_ACCEPTABLE)
