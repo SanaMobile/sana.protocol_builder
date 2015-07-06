@@ -1,7 +1,6 @@
 {{#modal-dialog title='Edit Page' save='save' cancel='hideModal'}}
     <div class="element-container">
         <ul class="element">
-            <li><a class="add-element" {{action 'addElement' 0}}>+</a></li>
             {{#each element in model.elements}}
                 {{element-cell model=element}}
             {{/each}}
