@@ -44,11 +44,31 @@ class ElementSerializer(serializers.ModelSerializer):
         return ret
 
 
+class PageListSerializer(serializers.ListSerializer):
+
+    class Meta(object):
+        model = models.Page
+
+    def update(self, instance, validated_data):
+        current_page_mapping = {page.id: page for page in instance}
+        new_data_mapping = {item['id']: item for item in validated_data}
+
+        result = []
+        for new_page_id, data in new_data_mapping.items():
+            page = current_page_mapping.get(new_page_id, None)
+            if page is not None:
+                result.append(self.child.update(page, data))
+
+        return result
+
+
 class PageSerializer(serializers.ModelSerializer):
     elements = ElementSerializer(many=True, read_only=True)
+    id = serializers.IntegerField(read_only=False, required=False)
 
     class Meta:
         model = models.Page
+        list_serializer_class = PageListSerializer
         fields = (
             'id',
             'display_index',
@@ -60,6 +80,7 @@ class PageSerializer(serializers.ModelSerializer):
 
 
 class ProcedureSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.Procedure
         fields = (

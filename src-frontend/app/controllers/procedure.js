@@ -29,16 +29,19 @@ export default Ember.Controller.extend({
             page.save();
         },
 
-        updateSortOrder: function(indices) {
-            this.beginPropertyChanges();
+        updateSortOrder: function(pageModels) {
+            var controller = this;
 
-            this.get('model.pages').forEach(function(page) {
-                var index = indices[page.get('id')];
-                page.set('displayIndex', index);
-                page.save();
+            Ember.$.ajax({
+                type: 'PATCH',
+                url: ENV.APP.API_PAGE_BULK,
+                data: JSON.stringify(pageModels),
+                success: function(data) {
+                    data.forEach(function(page) {
+                    controller.store.push('page', controller.store.normalize('page', page));
+                });
+                }
             });
-
-            this.endPropertyChanges();
         },
         generateProtocol: function() {
             var filename = this.get('model.title') + '.xml';

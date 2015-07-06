@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from models import Procedure, Page, Element
 
 
-def __grant_permissions():
+def grant_permissions():
     # Grant model permissions to the appropriate user groups
     normal_users_group, created = Group.objects.get_or_create(name=settings.NORMAL_USER_GROUP)
     models = [Procedure, Page, Element]
@@ -18,4 +18,4 @@ def __grant_permissions():
 
 
 def run_once():
-    __grant_permissions()
+    grant_permissions()

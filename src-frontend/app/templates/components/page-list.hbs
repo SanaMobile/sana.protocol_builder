@@ -1,7 +1,7 @@
 <ul class="procedure">
     <li><a class="add-page" {{action 'addPage' 0}}>+</a></li>
     {{#each page in pages}}
-        <li class="page-template">
+        <li class="page-template" data-id="{{page.id}}">
             <a class="open-page" {{action 'editPage' page}} data-id="{{page.id}}">
                 <span class="drag-handle octicon octicon-three-bars"></span>
                 <span class="page-label">Page {{page.id}}, Display {{page.displayIndex}}</span>
