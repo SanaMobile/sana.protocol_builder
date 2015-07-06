@@ -1,4 +1,5 @@
-import api.startup
+from api.startup import run_once
+
 
 # Use this decorator to add permissions to a new user
 # created in your setUp method for tests.

@@ -39,24 +39,16 @@ class PageViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return models.Page.objects.filter(procedure__owner_id__exact=user.id)
 
-    def get_serializer(self, *args, **kwargs):
-        if "data" in kwargs:
-            data = kwargs["data"]
-
-            if isinstance(data, list):
-                kwargs["many"] = True
-
-        return super(PageViewSet, self).get_serializer(*args, **kwargs)
-
-    @list_route(methods=["PATCH"])
+    @list_route(methods=['PATCH'])
     def partial_bulk_update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-
         queryset = self.filter_queryset(self.get_queryset)
 
+        if not request.body:
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
         serializer = self.get_serializer(
-            instance = queryset,
-            data = json.loads(request.body),
+            instance=queryset,
+            data=json.loads(request.body),
             many=True,
             partial=True
         )

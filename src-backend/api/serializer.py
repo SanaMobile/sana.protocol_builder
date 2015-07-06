@@ -52,13 +52,13 @@ class PageListSerializer(serializers.ListSerializer):
         page_mapping = {page.id: page for page in models.Page.objects.all()}
         data_mapping = {item['id']: item for item in validated_data}
 
-        res = []
+        result = []
         for page_id, data in data_mapping.items():
             page = page_mapping.get(page_id, None)
             if page is not None:
-                res.append(self.child.update(page, data))
+                result.append(self.child.update(page, data))
 
-        return res
+        return result
 
 
 class PageSerializer(serializers.ModelSerializer):
