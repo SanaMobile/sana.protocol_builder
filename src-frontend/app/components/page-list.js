@@ -10,7 +10,7 @@ export default Ember.Component.extend({
             scroll: true,
             placeholder: 'ui-state-highlight',
             update: function(event, ui) {
-                var sortOrder = $(this).sortable('toArray');
+                var sortOrder = Ember.$(this).sortable('toArray');
                 var pageModels = [];
 
                 sortOrder.forEach(function(id, index) {
@@ -20,7 +20,7 @@ export default Ember.Component.extend({
                     });
                 });
 
-                $(this).sortable('cancel');
+                Ember.$(this).sortable('cancel');
 
                 pageListComponent.sendAction('updateSortOrder', pageModels);
             }

@@ -1,10 +1,10 @@
-from api.startup import run_once
+from api.startup import grant_permissions
 
 
 # Use this decorator to add permissions to a new user
 # created in your setUp method for tests.
-def add_group_permissions(self):
-    def _run_once():
-        run_once()
+def initialize_permissions(self):
+    def _grant_permissions():
+        grant_permissions()
 
-    return _run_once
+    return _grant_permissions

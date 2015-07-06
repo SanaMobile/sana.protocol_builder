@@ -45,16 +45,17 @@ class ElementSerializer(serializers.ModelSerializer):
 
 
 class PageListSerializer(serializers.ListSerializer):
+
     class Meta(object):
         model = models.Page
 
     def update(self, instance, validated_data):
-        page_mapping = {page.id: page for page in models.Page.objects.all()}
-        data_mapping = {item['id']: item for item in validated_data}
+        current_page_mapping = {page.id: page for page in instance}
+        new_data_mapping = {item['id']: item for item in validated_data}
 
         result = []
-        for page_id, data in data_mapping.items():
-            page = page_mapping.get(page_id, None)
+        for page_id, data in new_data_mapping.items():
+            page = current_page_mapping.get(page_id, None)
             if page is not None:
                 result.append(self.child.update(page, data))
 
@@ -63,7 +64,7 @@ class PageListSerializer(serializers.ListSerializer):
 
 class PageSerializer(serializers.ModelSerializer):
     elements = ElementSerializer(many=True, read_only=True)
-    id = serializers.IntegerField(read_only=False)
+    id = serializers.IntegerField(read_only=False, required=False)
 
     class Meta:
         model = models.Page
@@ -79,6 +80,7 @@ class PageSerializer(serializers.ModelSerializer):
 
 
 class ProcedureSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.Procedure
         fields = (

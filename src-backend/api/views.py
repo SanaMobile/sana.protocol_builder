@@ -41,10 +41,10 @@ class PageViewSet(viewsets.ModelViewSet):
 
     @list_route(methods=['PATCH'])
     def partial_bulk_update(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset)
+        queryset = self.filter_queryset(self.get_queryset())
 
         if not request.body:
-            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         serializer = self.get_serializer(
             instance=queryset,

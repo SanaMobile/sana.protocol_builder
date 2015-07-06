@@ -15,5 +15,5 @@
         "qunit": "~1.17.1",
         "bootstrap": "~3.3.4",
         "ember-simple-auth": "0.8.0"
-      }
+    }
 }

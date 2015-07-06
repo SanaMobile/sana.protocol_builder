@@ -30,10 +30,10 @@ export default Ember.Controller.extend({
         },
 
         updateSortOrder: function(pageModels) {
-            var ctx = this;
+            var controller = this;
             var onSuccess = function(data) {
                 data.forEach(function(page) {
-                    ctx.store.push('page', ctx.store.normalize('page', page));
+                    controller.store.push('page', controller.store.normalize('page', page));
                 });
             };
 
