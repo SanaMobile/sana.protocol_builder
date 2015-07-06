@@ -1,8 +1,10 @@
-<ul class="choices">
-    {{#each choice in choices}}
-        <li class="choice-template" choice="{{choice}}">
-            <span class="choice-label">{{choice}}</span>
-            <span class="drag-handle octicon octicon-three-bars"></span>
+<ul class="choices-list">
+    {{#each choices as |choice index|}}
+        <li data-choice="{{choice}}" class="multi-choice">
+            <span class="octicon octicon-three-bars reorder-choice"></span>
+            <div class="choice-input" contenteditable="true">{{choice}}</div>
+            <a class="octicon octicon-x delete-choice" {{action 'deleteChoice' index}}></a>
         </li>
     {{/each}}
 </ul>
+<input type="text" id="new-choice" placeholder="New Choice">
