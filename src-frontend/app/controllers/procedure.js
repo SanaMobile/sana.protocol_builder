@@ -15,8 +15,20 @@ export default Ember.Controller.extend({
                 displayIndex: selectedIndex
             });
 
+            var procedureController = this;
+
             newPage.save().then(function() {
                 procedure.get('pages').reload();
+            }).then(function() {
+                var newElement = procedureController.store.createRecord('element', {
+                    page: newPage,
+                    displayIndex: 0,
+                    eid: newPage.get('id')
+                });
+
+                newElement.save().then(function() {
+                    procedureController.send('editPage', newPage);
+                });
             });
         },
 

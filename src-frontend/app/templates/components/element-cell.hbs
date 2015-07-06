@@ -1,7 +1,5 @@
 <li class="element-template">
     <a class="element">
-        <span class="drag-handle octicon octicon-three-bars"></span>
-
         {{view 'select' class="form-control" content=types value=model.elementType}}
         {{input type="text" class="form-control" placeholder="Concept" value=model.concept}}
         {{input type="text" class="form-control" placeholder="Question" value=model.question}}
@@ -10,8 +8,5 @@
             <label>Choices</label>
             {{choice-list choices=model.choices updateChoiceOrder="updateChoiceOrder"}}
         {{/if}}
-
-        <span class="delete-element mega-octicon octicon-trashcan" {{action 'deleteElement' elemen}}></span>
     </a>
-    <a class="add-element" {{action 'addElement' model.displayIndex}}>+</a>
 </li>

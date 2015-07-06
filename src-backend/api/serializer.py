@@ -6,7 +6,7 @@ import field
 
 
 class ElementSerializer(serializers.ModelSerializer):
-    choices = field.ElementChoicesField()
+    choices = field.ElementChoicesField(required=False)
 
     class Meta:
         model = models.Element
