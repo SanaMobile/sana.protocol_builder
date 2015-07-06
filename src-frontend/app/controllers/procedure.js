@@ -31,17 +31,16 @@ export default Ember.Controller.extend({
 
         updateSortOrder: function(pageModels) {
             var controller = this;
-            var onSuccess = function(data) {
-                data.forEach(function(page) {
-                    controller.store.push('page', controller.store.normalize('page', page));
-                });
-            };
 
             Ember.$.ajax({
                 type: 'PATCH',
                 url: ENV.APP.API_PAGE_BULK,
                 data: JSON.stringify(pageModels),
-                success: onSuccess
+                success: function(data) {
+                    data.forEach(function(page) {
+                    controller.store.push('page', controller.store.normalize('page', page));
+                });
+                }
             });
         },
         generateProtocol: function() {

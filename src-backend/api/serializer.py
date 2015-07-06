@@ -54,8 +54,8 @@ class PageListSerializer(serializers.ListSerializer):
         new_data_mapping = {item['id']: item for item in validated_data}
 
         result = []
-        for page_id, data in new_data_mapping.items():
-            page = current_page_mapping.get(page_id, None)
+        for new_page_id, data in new_data_mapping.items():
+            page = current_page_mapping.get(new_page_id, None)
             if page is not None:
                 result.append(self.child.update(page, data))
 
