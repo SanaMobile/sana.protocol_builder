@@ -80,6 +80,7 @@ class PageSerializer(serializers.ModelSerializer):
 
 
 class ProcedureSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.id')
 
     class Meta:
         model = models.Procedure

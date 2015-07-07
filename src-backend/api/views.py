@@ -13,10 +13,11 @@ class ProcedureViewSet(viewsets.ModelViewSet):
     model = models.Procedure
 
     def get_queryset(self):
-        self.resource_name = 'procedure'  # ensures that unless we override resource_name it will exist
-
         user = self.request.user
         return models.Procedure.objects.filter(owner=user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
     @detail_route(methods=['get'])
     def generate(self, request, pk=None):
