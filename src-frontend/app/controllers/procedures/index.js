@@ -7,8 +7,7 @@ export default Ember.Controller.extend({
             var procedureController = this;
             var procedure = this.store.createRecord('procedure', {
                 title: 'Surgery Follow-Up',
-                author: 'Partners for Care',
-                owner: 1
+                author: 'Partners for Care'
             });
 
             procedure.save().then(function() {
