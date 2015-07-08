@@ -8,7 +8,7 @@ let SanaElement = DS.Model.extend({
     concept: DS.attr('string'),
     question: DS.attr('string'),
     answer: DS.attr('string'),
-    choices: DS.attr(),
+    choices: DS.attr({ defaultValue: [] }),
 
     hasChoices: function() {
         var type = this.get('elementType');
