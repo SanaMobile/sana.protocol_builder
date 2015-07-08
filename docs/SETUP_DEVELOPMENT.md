@@ -55,3 +55,18 @@ export DJANGO_DB_NAME='sample_db_name'
 export DJANGO_DB_USER='sample_db_user'
 export DJANGO_DB_PASSWORD='sample_db_password'
 ```
+
+Extra Configurations
+===
+
+
+###Git Hooks (OS X and Linux)
+
+Set up Git hooks:
+
+```
+cd scripts/
+chmod +x setup_hooks.sh
+./setup_hooks.sh
+```
+
