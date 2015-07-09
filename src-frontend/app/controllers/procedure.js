@@ -6,6 +6,19 @@ export default Ember.Controller.extend({
         return this.get('model.pages').sortBy('displayIndex');
     }.property('model.pages.@each.displayIndex'),
 
+    generateNewPageIndices: function() {
+        var pages = this.get('model.pages');
+        var pageModels = [];
+
+        pages.sortBy('displayIndex').forEach(function(page, index) {
+            pageModels.push({
+                id: page.id,
+                display_index: index
+            });
+        });
+        return pageModels;
+    },
+
     actions: {
         addPage: function(selectedIndex) {
             var procedure = this.get('model');
@@ -44,17 +57,20 @@ export default Ember.Controller.extend({
         updateSortOrder: function(pageModels) {
             var controller = this;
 
+            pageModels = pageModels || controller.generateNewPageIndices();
+
             Ember.$.ajax({
                 type: 'PATCH',
                 url: ENV.APP.API_PAGE_BULK,
                 data: JSON.stringify(pageModels),
                 success: function(data) {
                     data.forEach(function(page) {
-                    controller.store.push('page', controller.store.normalize('page', page));
-                });
+                        controller.store.push('page', controller.store.normalize('page', page));
+                    });
                 }
             });
         },
+
         generateProtocol: function() {
             var filename = this.get('model.title') + '.xml';
 

@@ -38,6 +38,7 @@ export default Ember.Component.extend({
 
         deletePage: function(page) {
             this.sendAction('deletePage', page);
+            this.sendAction('updateSortOrder');
         }
     }
 });
