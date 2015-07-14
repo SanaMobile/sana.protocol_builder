@@ -22,6 +22,18 @@ export default Ember.Controller.extend({
     actions: {
         addPage: function(selectedIndex) {
             var procedure = this.get('model');
+            var pagesToUpdate = [];
+
+            this.get('model.pages').forEach(function(page) {
+                if (page.get('displayIndex') >= selectedIndex) {
+                    pagesToUpdate.push({
+                        id: page.get('id'),
+                        display_index: page.get('displayIndex') + 1
+                    });
+                }
+            });
+
+            this.send('updateSortOrder', pagesToUpdate);
 
             var newPage = this.store.createRecord('page', {
                 procedure: procedure,
