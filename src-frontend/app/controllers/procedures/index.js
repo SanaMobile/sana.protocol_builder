@@ -1,6 +1,10 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+    procedures: function() {
+        return this.get('model').sortBy('lastModified').reverse();
+    }.property('model.@each.lastModified'),
+
     actions: {
         createProcedure: function() {
             // TODO: Deal with owner ID and user-inputted information
