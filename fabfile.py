@@ -24,6 +24,11 @@ def verify():
     test()
 
 
+def runserver():
+    local('python src-backend/manage.py syncdb --noinput')
+    local('python src-backend/manage.py runserver')
+
+
 def update_host():
     with cd(env.project_root), prefix(env.virtualenv), prefix('workon sana_protocol_builder'):
         print(green('Pulling latest revision...'))
