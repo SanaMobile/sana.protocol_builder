@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from nose.tools import raises, assert_equals, assert_not_equals
 from api.models import Procedure
+from utils import factories
 import uuid
 
 
@@ -71,3 +72,13 @@ class ProcedureTest(TestCase):
             author='author',
             title=None
         )
+
+    def test_updates_last_modified(self):
+        procedure = factories.ProcedureFactory()
+        original_last_modified = procedure.last_modified
+
+        factories.PageFactory(
+            procedure=procedure
+        )
+
+        assert_not_equals(original_last_modified, procedure.last_modified)
