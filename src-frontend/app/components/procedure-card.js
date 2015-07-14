@@ -1,5 +1,12 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-    tagName: 'li'
+    tagName: 'li',
+
+    actions: {
+        deleteProcedure: function(procedure) {
+            procedure.deleteRecord();
+            procedure.save();
+        }
+    }
 });
