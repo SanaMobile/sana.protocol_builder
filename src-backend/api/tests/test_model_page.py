@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from nose.tools import raises, assert_equals, assert_not_equals, nottest
+from nose.tools import raises, assert_equals, assert_not_equals, assert_true, nottest
 from api.models import Procedure, Page
 from utils import factories
 
@@ -74,4 +74,4 @@ class ProcedureTest(TestCase):
             page=page
         )
 
-        assert_not_equals(original_last_modified, page.last_modified)
+        assert_true(original_last_modified < page.last_modified)
