@@ -90,6 +90,9 @@ export default Ember.Controller.extend({
 
                     window.URL.revokeObjectURL(url);
                     Ember.$('#generate-trigger').remove();
+                },
+                error: function(xhr, data, error) {
+                    alert(xhr.responseText);
                 }
             });
         }

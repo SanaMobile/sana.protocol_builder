@@ -54,22 +54,23 @@ class ElementGenerator:
         self.element = element
 
         if not self.element.element_type:
-            self.__raise_error('Element with id %d has no type')
+            self.__raise_error('Element has no type')
 
         if not self.element.eid:
-            self.__raise_error('Element with id %d has no element id')
+            self.__raise_error('Element has no id')
 
         if not self.element.concept:
-            self.__raise_error('Element with id %d has no concept')
+            self.__raise_error('Element has no concept')
 
         if not self.element.question:
-            self.__raise_error('Element with id %d has no question')
+            self.__raise_error('Element has no question')
 
         if self.element.answer is None:
-            self.__raise_error('Element with id %d has no default answer')
+            self.__raise_error('Element has no answer')
 
     def __raise_error(self, error_string):
-        raise ValueError(error_string % self.element.id)
+        page = self.element.page
+        raise ValueError('Error on page %d with display_index %d: %s' % (page.id, page.display_index, error_string))
 
     def __get_properties(self):
         props = {

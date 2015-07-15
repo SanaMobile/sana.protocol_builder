@@ -1,4 +1,4 @@
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
@@ -23,8 +23,8 @@ class ProcedureViewSet(viewsets.ModelViewSet):
     def generate(self, request, pk=None):
         try:
             protocol = ProtocolBuilder.generate(request.user, pk)
-        except ValueError:
-            raise Http404('Invalid Procedure')
+        except ValueError as e:
+            return HttpResponseBadRequest(str(e))
 
         response = HttpResponse(protocol, content_type='application/xml')
         response['Content-Disposition'] = 'attachment; filename="procedure.xml"'
