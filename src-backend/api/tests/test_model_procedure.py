@@ -1,8 +1,9 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from nose.tools import raises, assert_equals, assert_not_equals
+from nose.tools import raises, assert_equals, assert_not_equals, assert_true
 from api.models import Procedure
+from utils import factories
 import uuid
 
 
@@ -71,3 +72,27 @@ class ProcedureTest(TestCase):
             author='author',
             title=None
         )
+
+    def test_page_update_updates_last_modified(self):
+        procedure = factories.ProcedureFactory()
+        original_last_modified = procedure.last_modified
+
+        factories.PageFactory(
+            procedure=procedure
+        )
+
+        assert_true(original_last_modified < procedure.last_modified)
+
+    def test_element_update_updates_last_modified(self):
+        procedure = factories.ProcedureFactory()
+        page = factories.PageFactory(
+            procedure=procedure
+        )
+
+        original_last_modified = procedure.last_modified
+
+        factories.ElementFactory(
+            page=page
+        )
+
+        assert_true(original_last_modified < procedure.last_modified)

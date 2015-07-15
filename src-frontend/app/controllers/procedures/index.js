@@ -1,6 +1,14 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+    procedures: function() {
+        return Ember.ArrayProxy.createWithMixins(Ember.SortableMixin, {
+            sortProperties: ['lastModified'],
+            sortAscending: false,
+            content: this.get('model')
+        });
+    }.property('model.@each.lastModified'),
+
     actions: {
         createProcedure: function() {
             // TODO: Deal with owner ID and user-inputted information

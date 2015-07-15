@@ -1,6 +1,6 @@
 {{#link-to 'procedure' procedure}}{{procedure.title}}{{/link-to}}
 
 <div class="card-footer">
-    <span>June 05, 2015</span>
+    <span>{{date-string procedure.lastModified}}</span>
     <span class="octicon octicon-x delete-procedure" {{action 'deleteProcedure' procedure}}/>
 </div>
