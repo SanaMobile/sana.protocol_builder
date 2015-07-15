@@ -2,7 +2,11 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
     procedures: function() {
-        return this.get('model').sortBy('lastModified').reverse();
+        return Ember.ArrayProxy.createWithMixins(Ember.SortableMixin, {
+            sortProperties: ['lastModified'],
+            sortAscending: false,
+            content: this.get('model')
+        });
     }.property('model.@each.lastModified'),
 
     actions: {
