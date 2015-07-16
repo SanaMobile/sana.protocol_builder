@@ -11,6 +11,7 @@ export default Ember.Controller.extend({
     actions: {
         signup: function() {
             var controller = this;
+            var flashMessages = Ember.get(this, 'flashMessages');
             Ember.$.post(ENV.APP.API_HOST + '/auth/signup', {
                 email: this.get('email'),
                 username: this.get('username'),
@@ -19,11 +20,10 @@ export default Ember.Controller.extend({
                 accept_tos: this.get('accept_tos')
             }, function(response) {
                 if (response.success === true && response.token) {
+                    flashMessages.success('Account was created successfully!');
                     controller.transitionToRoute('login');
                 } else {
-                    // TODO: Issue #123
-                    // Add flash messages to show form errors
-                    alert('An error occurred during registration');
+                    flashMessages.danger('An error occurred during registration!');
                 }
             });
         }
