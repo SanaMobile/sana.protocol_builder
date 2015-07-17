@@ -3,7 +3,7 @@
 <div class="procedure-list">
     <a {{action "createProcedure"}} class="create-procedure btn btn-primary">Create Procedure</a>
     <ul class="procedures">
-        {{#each procedure in procedures}}
+        {{#each procedures as |procedure|}}
             {{procedure-card procedure=procedure}}
         {{/each}}
     </ul>
