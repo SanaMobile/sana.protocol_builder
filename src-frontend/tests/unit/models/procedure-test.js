@@ -1,12 +1,10 @@
 import { moduleForModel, test } from 'ember-qunit';
 
 moduleForModel('procedure', 'Unit | Model | procedure', {
-    // Specify the other units that are required for this test.
-    needs: []
+    needs: ['model:page']
 });
 
 test('it exists', function(assert) {
     var model = this.subject();
-    // var store = this.store();
     assert.ok(!!model);
 });
