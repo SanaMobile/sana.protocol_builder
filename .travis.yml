@@ -10,8 +10,11 @@ addons:
 branches:
   only:
     - master
+before_install:
+  - "npm install -g npm@^2"
 install:
   - pip install -r requirements.txt
+  - bash -x ./scripts/install-frontend.sh
 before_script:
   - createuser --superuser test_db_user -U postgres
   - psql -c "ALTER USER test_db_user WITH PASSWORD 'test_db_password';" -U postgres
