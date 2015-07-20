@@ -1,42 +1,21 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
 from django.db import IntegrityError
 from nose.tools import raises, assert_equals, assert_not_equals, assert_true, nottest
-from api.models import Procedure, Page
+from api.models import Page
 from utils import factories
 
 
 class ProcedureTest(TestCase):
-    def setUp(self):
-        self.test_user = User.objects.create_user(
-            'TestUser',
-            'test@sanaprotocolbuilder.me',
-            'testpassword'
-        )
-        self.test_user.save()
-
-        self.test_procedure1 = Procedure.objects.create(
-            author='tester',
-            title='test procedure 1',
-            owner=self.test_user
-        )
-        self.test_procedure1.save()
-
-        self.test_procedure2 = Procedure.objects.create(
-            author='tester',
-            title='test procedure 2',
-            owner=self.test_user
-        )
-        self.test_procedure2.save()
-
     def test_create_page(self):
-        page = Page.objects.create(
+        test_procedure = factories.ProcedureFactory()
+
+        page = factories.PageFactory(
             display_index=0,
-            procedure=self.test_procedure1
+            procedure=test_procedure
         )
 
         assert_equals(page.display_index, 0)
-        assert_equals(page.procedure, self.test_procedure1)
+        assert_equals(page.procedure, test_procedure)
         assert_not_equals(page.last_modified, None)
         assert_not_equals(page.created, None)
 
@@ -44,26 +23,31 @@ class ProcedureTest(TestCase):
     def test_display_index_none(self):
         Page.objects.create(
             display_index=None,
-            procedure=self.test_procedure1
+            procedure=factories.ProcedureFactory()
         )
 
     @raises(IntegrityError)
+    def test_display_index_negative(self):
+        Page.objects.create(
+            display_index=-1,
+            procedure=factories.ProcedureFactory()
+        )
+
+    @raises(ValueError)
     def test_procedure_none(self):
         Page.objects.create(
-            display_index=0
+            display_index=0,
+            procedure=None
         )
 
     @nottest
     @raises(IntegrityError)
     def test_display_index_uniqueness(self):
-        Page.objects.create(
-            display_index=0,
-            procedure=self.test_procedure1
+        factories.PageFactory(
+            display_index=0
         )
-
-        Page.objects.create(
-            display_index=0,
-            procedure=self.test_procedure1
+        factories.PageFactory(
+            display_index=0
         )
 
     def test_updates_last_modified(self):
@@ -75,3 +59,22 @@ class ProcedureTest(TestCase):
         )
 
         assert_true(original_last_modified < page.last_modified)
+
+    def test_orders_properly(self):
+        procedure = factories.ProcedureFactory()
+
+        page1 = factories.PageFactory(
+            display_index=1,
+            procedure=procedure
+        )
+
+        page2 = factories.PageFactory(
+            display_index=0,
+            procedure=procedure
+        )
+
+        pages = Page.objects.all()
+
+        assert_equals(len(pages), 2)
+        assert_equals(pages[0], page2)
+        assert_equals(pages[1], page1)
