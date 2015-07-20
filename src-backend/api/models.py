@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 
 
 class Procedure(models.Model):
@@ -56,6 +57,9 @@ class Element(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def save(self, **kwargs):
+        if self.element_type and (self.element_type, self.element_type) not in self.TYPES:
+            raise IntegrityError('Invalid element type')
+
         super(Element, self).save()
 
         self.page.last_modified = self.last_modified
