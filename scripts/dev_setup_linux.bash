@@ -6,7 +6,7 @@ sudo apt-get update
 # Install python, pip
 sudo apt-get install -y python
 sudo apt-get install -y python-pip
-sudo pip install -r ../requirements.txt
+pip install -r ../requirements.txt
 
 # Install Postgres
 sudo apt-get install -y postgresql
@@ -17,4 +17,3 @@ sudo apt-get install -y node-less
 
 # Install node, grunt
 sudo apt-get install -y npm
-npm install -g grunt-cli
