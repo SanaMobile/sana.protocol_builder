@@ -11,7 +11,6 @@ var app = new EmberApp({
 });
 
 app.import('bower_components/bootstrap/dist/js/bootstrap.js');
-app.import('bower_components/js-cookie/src/js.cookie.js');
 app.import('bower_components/jquery-ui/jquery-ui.js');
 
 // Use `app.import` to add additional libraries to the generated

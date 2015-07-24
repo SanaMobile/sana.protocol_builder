@@ -2,7 +2,7 @@ import { moduleForModel, test } from 'ember-qunit';
 
 moduleForModel('procedure', 'Unit | Serializer | procedure', {
     // Specify the other units that are required for this test.
-    needs: ['serializer:procedure']
+    needs: ['serializer:procedure', 'model:page']
 });
 
 // Replace this with your real tests.

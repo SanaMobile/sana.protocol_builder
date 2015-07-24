@@ -14,6 +14,9 @@ def test():
     local('python src-backend/manage.py test api --noinput')
     local('python src-backend/manage.py test registration --noinput')
 
+    with lcd('src-frontend'):
+        local('ember test')
+
 
 def lint():
     local('flake8 src-backend')
