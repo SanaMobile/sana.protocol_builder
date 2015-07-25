@@ -21,7 +21,11 @@ export default Base.extend({
                 data: credentials
             }).then(function(response) {
                 Ember.run(function() {
-                    resolve({ token: response.token });
+                    if (response.success && response.token) {
+                        resolve({ token: response.token });
+                    } else {
+                        reject();
+                    }
                 });
             }, function(xhr, status, error) {
                 Ember.run(function() {
