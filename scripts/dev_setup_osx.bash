@@ -11,16 +11,10 @@ brew update
 
 # Install Python + dependencies
 brew install python
-sudo pip install -r ../requirements.txt
+pip install -r ../requirements.txt
 
 # Install Postgres
 brew install postgresql
 
-# Install npm 
+# Install npm
 brew install npm
-
-# Install less compiler
-sudo npm install -g less
-
-# Install grunt for automating tasks
-sudo npm install -g grunt-cli
