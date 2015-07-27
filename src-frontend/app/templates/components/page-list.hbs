@@ -1,5 +1,5 @@
 <ul class="procedure">
-    <li><a class="add-page" {{action 'addPage' 0}}>+</a></li>
+    <li><a class="add-page" {{action 'addPage' 0}}>Add Page</a></li>
     {{#each pages as |page|}}
         <li class="page-template" data-id="{{page.id}}">
             <a class="open-page" {{action 'editPage' page}} data-id="{{page.id}}">
@@ -8,7 +8,7 @@
                 <span class="add-condition mega-octicon octicon-diff-renamed"></span>
                 <span class="delete-page mega-octicon octicon-trashcan" {{action 'deletePage' page bubbles=false}}></span>
             </a>
-            <a class="add-page" {{action 'addPage' (plus-one page.displayIndex)}}>+</a>
+            <a class="add-page" {{action 'addPage' (plus-one page.displayIndex)}}>Add Page</a>
         </li>
     {{/each}}
 </ul>
