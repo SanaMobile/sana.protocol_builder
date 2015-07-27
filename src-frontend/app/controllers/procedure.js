@@ -45,20 +45,26 @@ export default Ember.Controller.extend({
             newPage.save().then(function() {
                 procedure.get('pages').reload();
             }).then(function() {
-                var newElement = procedureController.store.createRecord('element', {
-                    page: newPage,
-                    displayIndex: 0,
-                    eid: newPage.get('id')
-                });
-
-                newElement.save().then(function() {
-                    procedureController.send('editPage', newPage);
-                });
+                procedureController.send('editPage', newPage);
             });
         },
 
         editPage: function(page) {
-            this.send('showModal', 'edit-page-modal', page);
+            var procedureController = this;
+
+            if (page.get('elements').length === 0) {
+                var newElement = this.store.createRecord('element', {
+                    page: page,
+                    displayIndex: 0,
+                    eid: page.get('id')
+                });
+
+                newElement.save().then(function() {
+                    procedureController.send('showModal', 'edit-page-modal', page);
+                });
+            } else {
+                this.send('showModal', 'edit-page-modal', page);
+            }
         },
 
         deletePage: function(page) {
