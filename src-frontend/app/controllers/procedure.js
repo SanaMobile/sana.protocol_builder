@@ -19,9 +19,20 @@ export default Ember.Controller.extend({
         return pageModels;
     },
 
+    generateErrorString: function(errors, type) {
+        var message = 'Something went wrong creating the ' + type;
+        errors.forEach(function(error){
+            for (var attr in error.details) {
+                message = attr.toString() + ": " + error.details[attr][0];
+            }
+        });
+        return message;
+    },
+
     actions: {
         addPage: function(selectedIndex) {
             var procedure = this.get('model');
+            var flashMessages = Ember.get(this, 'flashMessages');
             var pagesToUpdate = [];
 
             this.get('model.pages').forEach(function(page) {
@@ -54,6 +65,10 @@ export default Ember.Controller.extend({
                 newElement.save().then(function() {
                     procedureController.send('editPage', newPage);
                 });
+            }).catch(function(response) {
+                var errorMessage = procedureController.generateErrorString(response.errors, 'page');
+                flashMessages.danger(errorMessage);
+                newPage.destroy();
             });
         },
 
