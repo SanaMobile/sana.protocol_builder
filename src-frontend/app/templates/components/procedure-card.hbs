@@ -1,6 +1,8 @@
 {{#link-to 'procedure' procedure}}{{procedure.title}}{{/link-to}}
 
 <div class="card-footer">
-    <span>{{date-string procedure.lastModified}}</span>
+    {{#if procedure.lastModified}}
+        <span>{{date-string procedure.lastModified}}</span>
+    {{/if}}
     <span class="octicon octicon-x delete-procedure" {{action 'deleteProcedure' procedure}}/>
 </div>
