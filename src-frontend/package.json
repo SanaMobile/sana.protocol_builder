@@ -37,6 +37,7 @@
         "ember-disable-proxy-controllers": "^1.0.0",
         "ember-django-adapter": "^0.5.6",
         "ember-export-application-global": "^1.0.2",
-        "ember-git-version": "0.0.1"
+        "ember-git-version": "0.0.1",
+        "phantomjs": "1.9.17"
     }
 }
