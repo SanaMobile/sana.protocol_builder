@@ -7,7 +7,7 @@
 var gulp = require('gulp');
 
 var config = {
-  app: 'app/js/app.js',
+  main: 'app/js/main.coffee',
   javascripts: [
     'app/js/**/*.js',
   ],
@@ -85,22 +85,23 @@ var coffeelint = require('gulp-coffeelint');
 gulp.task('cs-lint', function() {
   gulp.src(config.coffeescripts)
     .pipe(coffeelint())
-    .pipe(coffeelint.reporter(stylish));
+    .pipe(coffeelint.reporter());
 });
 
 var coffeeify = require('gulp-coffeeify');
 gulp.task('js-coffee', function() {
-  gulp.src(config.app)
+  gulp.src(config.main)
     .pipe(coffeeify({
       options: {
         debug: true, // Generate source map 
+        paths: [ __dirname + '/app/js' ]
       }
     }))
     .pipe(gulp.dest(config.output))
     .pipe(connect.reload());
 });
 
-gulp.task('js', ['js-lint', 'js-coffee']);
+gulp.task('js', ['js-lint', 'cs-lint', 'js-coffee']);
 
 //------------------------------------------------------------------------------
 // Default
@@ -109,7 +110,7 @@ gulp.task('js', ['js-lint', 'js-coffee']);
  
 gulp.task('watch', function() {
   gulp.watch(config.stylesheets, ['css']);
-  gulp.watch(config.javascripts, ['js']);
+  gulp.watch([config.javascripts, config.coffeescripts], ['js']);
   gulp.watch(config.bower, ['bower']);
 });
 
