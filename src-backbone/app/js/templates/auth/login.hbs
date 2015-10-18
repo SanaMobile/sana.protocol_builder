@@ -1,0 +1,24 @@
+<h1>Login</h1>
+
+<form id="auth-form">
+    <div class="alert alert-error"></div>
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Username">
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Password">
+    </div>
+    <div class="form-group">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="remember-me" {{#if remember}}checked{{/if}}>
+                Remember Me
+            </label>
+        </div>
+    </div>
+    <div>
+        <button type="submit" class="btn" id="login-btn">Log in</button>
+    </div>
+</form>
