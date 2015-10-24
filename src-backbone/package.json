@@ -24,7 +24,9 @@
     "gulp-handlebars": "~4.0.0",
     "gulp-wrap": "~0.11.0",
     "gulp-declare": "~0.3.0",
-    "gulp-if": "~2.0.0"
+    "gulp-if": "~2.0.0",
+    "gulp-filter": "~3.0.1",
+    "gulp-flatten": "~0.2.0"
   },
   "dependencies": {
     "handlebars": "~4.0.3"
