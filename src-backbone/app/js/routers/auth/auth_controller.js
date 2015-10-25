@@ -9,8 +9,13 @@ module.exports = Marionette.Controller.extend({
         }
 
         console.info('View: Sign Up');
+
+        var AuthLayout = require('views/auth/auth_layout');
         var SignupView = require('views/auth/signup_view');
-        App.root_view.getRegion('main').show(new SignupView().render());
+
+        var auth_layout = new AuthLayout();
+        App.root_view.showChildView('main', auth_layout);
+        auth_layout.showChildView('form_area', new SignupView());
     },
   
     login: function() {
@@ -20,8 +25,13 @@ module.exports = Marionette.Controller.extend({
         }
 
         console.info('View: Login');
+
+        var AuthLayout = require('views/auth/auth_layout');
         var LoginView = require('views/auth/login_view');
-        App.root_view.getRegion('main').show(new LoginView().render());
+
+        var auth_layout = new AuthLayout();
+        App.root_view.showChildView('main', auth_layout);
+        auth_layout.showChildView('form_area', new LoginView());
     },
 
     logout: function() {

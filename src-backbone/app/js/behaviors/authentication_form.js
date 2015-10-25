@@ -1,3 +1,5 @@
+var Helpers = require('utils/helpers');
+
 module.exports = Marionette.Behavior.extend({
 
     ui: {
@@ -9,19 +11,19 @@ module.exports = Marionette.Behavior.extend({
     },
 
     show_errors_in_form: function($form, errors) {
-        $form.find('.alert').text(null);
+        $form.find('.alert').remove();
         $form.find('.has-error').removeClass('has-error');
-        $form.find('span').remove();
+        $form.find('span.help-block').remove();
 
         Object.keys(errors).forEach(function(key) {
             if (key === '__all__') {
-                $form.find('.alert').text(errors[key]);
+                $form.prepend(Helpers.create_alert_html(errors[key], 'danger'));
             } else {
                 var $input = $form.find('input[name=' + key + ']');
                 if ($input.length) {
                     var $parents = $input.parents('.form-group');
                     $parents.addClass('has-error');
-                    $parents.append('<span>' + errors[key] + '</span>');
+                    $parents.append('<span class="help-block">' + errors[key] + '</span>');
                 }
             }
         });
