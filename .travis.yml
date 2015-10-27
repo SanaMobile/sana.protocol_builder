@@ -11,19 +11,40 @@ addons:
 branches:
   only:
     - master
+
 before_install:
-  - "npm install -g npm@^2"
+  - npm install -g npm@latest
+  - nvm install 4.1
+  - nvm use 4.1
+
 install:
-  - pip install -r requirements.txt
-  - bash -x ./scripts/install-frontend.sh
+  # Python tools
+  - pip install --requirement requirements.txt
+
+  # Node tools
+  - npm install --global bower
+  - npm install --global gulp
+  - npm install --global jshint
+  - npm install --global coffee-script
+  - npm install --global mocha
+
+  # Project dependencies
+  - cd src-backbone
+  - npm install
+  - bower install
+  - cd ..
+
 before_script:
   - createuser --superuser test_db_user -U postgres
   - psql -c "ALTER USER test_db_user WITH PASSWORD 'test_db_password';" -U postgres
   - psql -c 'create database sana_test;' -U postgres
+
 script:
   - fab verify
+
 after_success:
   - bash -x ./scripts/deploy.sh
+
 notifications:
   slack:
     secure: a1bQgFl5K8+T6q89xg2hQI2ltsDeDQK8Xh09vCHcpM88bRtjcFkPBYB51GVuRQOuvLGVzFMFSHJrHNsZULo5qwRo7sgSyMkGiJ1kwF59SBZvKVEEdqPcQryLZaS7MLSN3bQfb48uRV17xwhbJCbVy/i9pIXIgzuFBEM1+Vd8H84=

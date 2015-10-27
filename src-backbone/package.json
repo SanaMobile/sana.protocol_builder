@@ -9,12 +9,13 @@
   "private": true,
   "version": "0.0.0",
   "directories": {
-    "test": "tests"
+    "test": "test"
   },
   "scripts": {
     "test": "NODE_PATH='app/js:tests' mocha tests"
   },
   "devDependencies": {
+    "chai": "^3.4.0",
     "gulp": "~3.9.0",
     "gulp-coffeeify": "~0.1.8",
     "gulp-coffeelint": "~0.5.0",
@@ -37,7 +38,7 @@
     "main-bower-files": "~2.9.0",
     "node-localstorage": "^0.6.0",
     "sinon": "~1.17.2",
-    "chai": "^3.4.0"
+    "stream-browserify": "^2.0.1"
   },
   "dependencies": {
     "backbone": "~1.2.3",
