@@ -1,3 +1,6 @@
+Setup = require('utils/setup')
+Setup.load_libs()
+
 $ ->
 
     # Create app
