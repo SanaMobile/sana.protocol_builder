@@ -30,11 +30,12 @@ module.exports = Marionette.Application.extend({
         this.root_view = new RootView();
 
         // Load behaviours
+        var self = this;
         Marionette.Behaviors.behaviorsLookup = function() {
-            return window.Behaviors;
+            return self.Behaviors;
         };
-        window.Behaviors = {};
-        window.Behaviors.AuthenticationForm = AuthenticationForm;
+        this.Behaviors = {};
+        this.Behaviors.AuthenticationForm = AuthenticationForm;
 
         // Load modules
         this.auth_router = new AuthRouter();

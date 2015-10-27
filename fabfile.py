@@ -14,8 +14,8 @@ def test():
     local('python src-backend/manage.py test api --noinput')
     local('python src-backend/manage.py test registration --noinput')
 
-    with lcd('src-frontend'):
-        local('ember test')
+    with lcd('src-backbone'):
+        local('npm test')
 
 
 def lint():
