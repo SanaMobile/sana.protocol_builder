@@ -1,17 +1,42 @@
 var RootView = require('views/root_view');
 
-var AuthenticationForm = require('behaviors/authentication_form');
+var AuthenticationForm = require('behaviors/auth_form_behavior');
 
 var AuthRouter = require('routers/auth/auth_router');
 var ProceduresRouter = require('routers/procedures/procedures_router');
 
 var SessionModel = require('models/session.js');
+var Config = require('utils/config');
 var Helpers = require('utils/helpers');
 var Storage = require('utils/storage');
 
+
 module.exports = Marionette.Application.extend({
 
-    initialize: function() {
+    init: function() {
+        this._setup_authentication();
+        this._setup_views();
+        this._load_behaviors();
+        this._load_routers();
+    },
+
+    onStart: function () {
+        this.session.fetch(); // Load any existing tokens
+        Backbone.history.start({ pushState: true });
+
+        // Do this after Backbone.history has started so the navigate will work
+        if (!this.session.isValid()) {
+            log.info("Started with invalid session");
+            this.session.logout();
+            if (Helpers.current_page_require_authentication()) {
+                Helpers.goto_default_logged_out();
+            }
+        }
+    },
+
+    _setup_authentication: function() {
+        var self = this;
+
         // When Backbone.sync hits an 401, then it means the user token is 
         // no longer valid and they need to relog in
         var sync = Backbone.sync;
@@ -26,30 +51,15 @@ module.exports = Marionette.Application.extend({
             sync(method, model, options);
         };
 
-        // Assign root view for modules to render in
-        this.root_view = new RootView();
-
-        // Load behaviours
-        var self = this;
-        Marionette.Behaviors.behaviorsLookup = function() {
-            return self.Behaviors;
-        };
-        this.Behaviors = {};
-        this.Behaviors.AuthenticationForm = AuthenticationForm;
-
-        // Load modules
-        this.auth_router = new AuthRouter();
-        this.procedure_router = new ProceduresRouter();
-
         // Setup storage mechanism
         this.storage = new Storage();
 
-        // Setup authentication
+        // Setup session
         // After logging in/out, the Session model will trigger the change:auth_token event
-        var active_session = new SessionModel();
-        active_session.on('change:' + SessionModel.AUTH_TOKEN_KEY, function() {
-            var has_token = active_session.has(SessionModel.AUTH_TOKEN_KEY);
-            console.info('Auth Token Changed: ' + has_token);
+        this.session = new SessionModel({ storage: this.storage });
+        this.session.on('change:' + SessionModel.AUTH_TOKEN_KEY, function() {
+            var has_token = self.session.has(SessionModel.AUTH_TOKEN_KEY);
+            log.info('Auth Token Changed: ' + has_token);
 
             if (has_token) {
                 Helpers.goto_default_logged_in();
@@ -57,21 +67,34 @@ module.exports = Marionette.Application.extend({
                 Helpers.goto_default_logged_out();
             }
         });
-        this.session = active_session;
+
+        $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+            options.url = Config.API_BASE + options.url;
+            if (self.session.has(SessionModel.AUTH_TOKEN_KEY)) {
+                jqXHR.setRequestHeader('Authorization', 'Token ' + self.session.get(SessionModel.AUTH_TOKEN_KEY));
+            }
+        });
     },
 
-    onStart: function () {
-        this.session.fetch(); // Load any existing tokens
-        Backbone.history.start({ pushState: true });
+    _setup_views: function() {
+        // Assign root view for modules to render in
+        this.root_view = new RootView();
+    },
 
-        // Do this after Backbone.history has started so the navigate will work
-        if (!this.session.isValid()) {
-            console.info("Started with invalid session");
-            this.session.logout();
-            if (Helpers.current_page_require_authentication()) {
-                Helpers.goto_default_logged_out();
-            }
-        }
+    _load_behaviors: function() {
+        var self = this;
+
+        // Load behaviours
+        Marionette.Behaviors.behaviorsLookup = function() {
+            return self.Behaviors;
+        };
+        this.Behaviors = {};
+        this.Behaviors.AuthenticationForm = AuthenticationForm;
+    },
+
+    _load_routers: function() {
+        this.auth_router = new AuthRouter({ app: this });
+        this.procedure_router = new ProceduresRouter({ app: this });
     },
 
 });

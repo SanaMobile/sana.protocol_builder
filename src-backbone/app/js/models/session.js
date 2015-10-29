@@ -1,37 +1,29 @@
 var AUTH_TOKEN_KEY = 'auth_token';
 var STORAGE_KEY = AUTH_TOKEN_KEY;
 
-var Config = require('utils/config');
-var Helpers = require('utils/helpers');
 
 var SessionModel = Backbone.Model.extend({
 
-    initialize: function() {
-        var self = this;
-        $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
-            options.url = Config.API_BASE + options.url;
-            if (self.has(AUTH_TOKEN_KEY)) {
-                jqXHR.setRequestHeader('Authorization', 'Token ' + self.get(AUTH_TOKEN_KEY));
-            }
-        });
+    constructor : function (options) {
+        this.storage = options && options.storage;
+        Backbone.Model.prototype.constructor.call(this, options);
     },
 
     url: function() {
-        console.error("Session should never use the built-in url() method. All default behaviour that interacts with the server should be overwritten.");
-        return null;
+        throw("Session should never use the built-in url() method. All default behaviour that interacts with the server should be overwritten.");
     },
 
     fetch: function() {
-        this.set(App.storage.read(STORAGE_KEY));
+        this.set(this.storage.read(STORAGE_KEY));
     },
 
     save: function(attributes) {
-        App.storage.write(STORAGE_KEY, this.toJSON());
+        this.storage.write(STORAGE_KEY, this.toJSON());
     },
 
     destroy: function(options) {
         this.clear();
-        App.storage.delete(STORAGE_KEY);
+        this.storage.delete(STORAGE_KEY);
     },
 
     validate: function() {

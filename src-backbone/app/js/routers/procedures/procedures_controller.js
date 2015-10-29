@@ -1,9 +1,14 @@
 module.exports = Marionette.Controller.extend({
 
+    constructor : function (options) {
+        this.app = options.app;
+        Marionette.Controller.prototype.constructor.call(this, options);
+    },
+
     procedures: function () {
-        console.info('View: Procedures');
+        log.info('View: Procedures');
         var ProceduresView = require('views/procedures/procedures_view');
-        App.root_view.getRegion('main').show(new ProceduresView().render());
+        this.app.root_view.getRegion('main').show(new ProceduresView().render());
     },
 
 });

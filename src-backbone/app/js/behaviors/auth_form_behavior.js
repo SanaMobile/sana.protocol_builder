@@ -1,5 +1,6 @@
 var Helpers = require('utils/helpers');
 
+
 module.exports = Marionette.Behavior.extend({
 
     ui: {
@@ -36,12 +37,12 @@ module.exports = Marionette.Behavior.extend({
         var $form = this.ui.form;
 
         this.options.session_authenticator(
-            $form.serializeArray(), 
+            $form.serializeArray(),
             function(errors) {
                 form_view.show_errors_in_form($form, errors);
             },
             function(jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR);
+                log.warn(jqXHR);
             }
         );
     },

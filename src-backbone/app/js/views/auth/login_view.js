@@ -1,13 +1,22 @@
 module.exports = Marionette.ItemView.extend({
 
+    constructor: function(options) {
+        this.app = options.app;
+        Marionette.ItemView.prototype.constructor.call(this, options);
+    },
+
     template: Handlebars.templates.login,
 
-    behaviors: {
-        AuthenticationForm: {
-            session_authenticator: function (form_data, server_error_handler, network_error_handler) {
-                App.session.login(form_data, server_error_handler, network_error_handler);
-            },
-        }
+    behaviors: function() {
+        var self = this;
+
+        return {
+            AuthenticationForm: {
+                session_authenticator: function (form_data, server_error_handler, network_error_handler) {
+                    self.app.session.login(form_data, server_error_handler, network_error_handler);
+                },
+            }
+        };
     },
 
     ui: {
@@ -18,16 +27,22 @@ module.exports = Marionette.ItemView.extend({
         'change @ui.remember_me': 'remember',
     },
 
-    templateHelpers: {
-        remember: App.storage.is_persistent,
+    templateHelpers: function() {
+        var self = this;
+
+        return {
+            remember: function() {
+                return self.app.storage.is_persistent;
+            }
+        };
     },
 
     remember: function() {
         var remember = this.ui.remember_me.is(':checked');
         if (remember) {
-            App.storage.change_engine(localStorage, true);
+            this.app.storage.change_engine(localStorage, true);
         } else {
-            App.storage.change_engine(sessionStorage, false);
+            this.app.storage.change_engine(sessionStorage, false);
         }
     },
 

@@ -1,6 +1,7 @@
 var Config = require('utils/config');
 var prefix = Config.APP_NAMESPACE + '_';
 
+
 module.exports = function() {
 
     this.backend = localStorage;
