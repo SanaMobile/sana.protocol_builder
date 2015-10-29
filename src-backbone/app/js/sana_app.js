@@ -77,8 +77,17 @@ module.exports = Marionette.Application.extend({
     },
 
     _setup_views: function() {
+        var self = this;
+
         // Assign root view for modules to render in
         this.root_view = new RootView();
+
+        this.session.on('request', function() {
+            self.root_view.show_spinner();
+        });
+        this.session.on('complete', function() {
+            self.root_view.hide_spinner();
+        });
     },
 
     _load_behaviors: function() {
