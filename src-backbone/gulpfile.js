@@ -52,6 +52,7 @@ gulp.task('webserver', function() {
 //------------------------------------------------------------------------------
 
 var less = require('gulp-less');
+var path = require('path');
 var minify_css = require('gulp-minify-css');
 var source_maps = require('gulp-sourcemaps');
 var concat = require('gulp-concat');
@@ -59,7 +60,9 @@ var concat = require('gulp-concat');
 gulp.task('css', function() {
     gulp.src(Config.stylesheets)
         .pipe(source_maps.init())
-        .pipe(less())
+        .pipe(less({
+            paths: [ path.join(__dirname, 'app/css') ]
+        }))
         .pipe(concat('app.css'))
         .pipe(minify_css())
         .pipe(gulpif(!debug, source_maps.write()))

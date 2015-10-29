@@ -27,7 +27,7 @@ module.exports = Marionette.Application.extend({
         // Do this after Backbone.history has started so the navigate will work
         if (!this.session.isValid()) {
             log.info("Started with invalid session");
-            this.session.logout();
+            this.session.destroy();
             if (Helpers.current_page_require_authentication()) {
                 Helpers.goto_default_logged_out();
             }
@@ -77,8 +77,17 @@ module.exports = Marionette.Application.extend({
     },
 
     _setup_views: function() {
+        var self = this;
+
         // Assign root view for modules to render in
         this.root_view = new RootView();
+
+        this.session.on('request', function() {
+            self.root_view.show_spinner();
+        });
+        this.session.on('complete', function() {
+            self.root_view.hide_spinner();
+        });
     },
 
     _load_behaviors: function() {

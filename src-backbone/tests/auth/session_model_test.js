@@ -169,6 +169,11 @@ CreateSuite("Session Model", function() {
         });
 
         describe("#logout()", function() {
+            it("should send an AJAX request", function(){
+                session.logout();
+                assert.lengthOf(server.requests, 1);
+            });
+
             it("should call destroy()", function(){
                 var destroy_spy = sinon.spy(session, 'destroy');
                 session.logout();
