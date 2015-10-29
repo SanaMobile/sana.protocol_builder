@@ -39,41 +39,65 @@ var SessionModel = Backbone.Model.extend({
     },
 
     signup: function(form_data, server_error_handler, network_error_handler) {
-        this.logout();
+        this.destroy();
 
         var self = this;
         $.ajax({
             data: form_data,
             type: 'POST',
             url: '/auth/signup',
+            beforeSend: function(jqXHR, settings) {
+                self.trigger('request');
+            },
             success: function(response) {
                 self._auth_handler(response, server_error_handler);
             },
             error: function(error) {
                 network_error_handler(error);
             },
+            complete: function(jqXHR, textStatus) {
+                self.trigger('complete');
+            },
         });
     },
 
     login: function(form_data, server_error_handler, network_error_handler) {
-        this.logout();
+        this.destroy();
 
         var self = this;
         $.ajax({
             data: form_data,
             type: 'POST',
             url: '/auth/login',
+            beforeSend: function(jqXHR, settings) {
+                self.trigger('request');
+            },
             success: function(response) {
                 self._auth_handler(response, server_error_handler);
             },
             error: function(error) {
                 network_error_handler(error);
             },
+            complete: function(jqXHR, textStatus) {
+                self.trigger('complete');
+            },
         });
     },
 
     logout: function() {
         this.destroy();
+
+        var self = this;
+        $.ajax({
+            type: 'POST',
+            url: '/auth/logout',
+            beforeSend: function(jqXHR, settings) {
+                self.trigger('request');
+            },
+            complete: function(jqXHR, textStatus) {
+                self.trigger('complete');
+            },
+        });
     },
 
     _auth_handler: function(response, server_error_handler) {
