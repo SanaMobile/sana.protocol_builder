@@ -90,11 +90,9 @@ CreateSuite("Session Model", function() {
                 session.unset(SessionModel.AUTH_TOKEN_KEY);
                 assert.isDefined(session.validate());
             });
-            it("should call _check_token if there is a token", function() {
-                var check_token_spy = sinon.spy(session, '_check_token');
+            it("should succeed if there is a token", function() {
                 session.set(SessionModel.AUTH_TOKEN_KEY, TOKEN);
-                session.validate();
-                assert(check_token_spy.calledOnce);
+                assert.isUndefined(session.validate());
             });
         });
     });

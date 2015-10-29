@@ -31,11 +31,6 @@ var SessionModel = Backbone.Model.extend({
         if (!this.has(AUTH_TOKEN_KEY)) {
             return 'No auth token in session model.';
         }
-
-        // Check if auth token is still valid
-        if (!this._check_token(this.get(AUTH_TOKEN_KEY))) {
-            return 'Invalid auth token';
-        }
     },
 
     signup: function(form_data, server_error_handler, network_error_handler) {
@@ -85,11 +80,6 @@ var SessionModel = Backbone.Model.extend({
                 server_error_handler(response.errors);
             }
         }
-    },
-
-    _check_token: function(token) {
-        // TODO ping server to see if token is valid
-        return true;
     },
 
 });
