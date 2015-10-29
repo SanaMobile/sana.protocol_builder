@@ -1,9 +1,12 @@
 var AuthController = require('./auth_controller');
-var controller = new AuthController();
+
 
 module.exports = Marionette.AppRouter.extend({
   
-    controller: controller,
+    constructor : function (options) {
+        this.controller = new AuthController(options);
+        Marionette.AppRouter.prototype.constructor.call(this, options);
+    },
 
     appRoutes: {
         'login': 'login',

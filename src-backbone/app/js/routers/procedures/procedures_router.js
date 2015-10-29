@@ -1,9 +1,12 @@
 var ProceduresController = require('./procedures_controller');
-var controller = new ProceduresController();
+
 
 module.exports = Marionette.AppRouter.extend({
-  
-    controller: controller,
+
+    constructor : function (options) {
+        this.controller = new ProceduresController(options);
+        Marionette.AppRouter.prototype.constructor.call(this, options);
+    },
 
     appRoutes: {
         'procedures': 'procedures',

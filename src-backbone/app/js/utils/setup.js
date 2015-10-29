@@ -8,6 +8,9 @@ module.exports = {
         global.Backbone = require('backbone');
         global.Backbone.$ = $;
         global.Marionette = require('backbone.marionette');
-    }
+
+        // Setup logging
+        global.log = require('utils/logger')(global.DEBUG);
+    },
 
 };
