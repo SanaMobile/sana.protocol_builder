@@ -21,13 +21,17 @@ module.exports = Marionette.Application.extend({
     },
 
     onStart: function () {
-        this.session.fetch(); // Load any existing tokens
+        // Load any existing tokens
+        // Do this before Backbone.history has started so that the model change
+        // events don't redirect the user yet
+        this.session.fetch();
+
         Backbone.history.start({ pushState: true });
 
         // Do this after Backbone.history has started so the navigate will work
         if (!this.session.isValid()) {
             log.info("Started with invalid session");
-            this.session.logout();
+            this.session.destroy();
             if (Helpers.current_page_require_authentication()) {
                 Helpers.goto_default_logged_out();
             }
