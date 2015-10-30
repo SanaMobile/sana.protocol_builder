@@ -11,7 +11,7 @@ brew update
 
 # Install Python + dependencies
 brew install python
-pip install -r ../requirements.txt
+pip install -r ../src-backend/requirements.txt
 
 # Install Postgres
 brew install postgresql

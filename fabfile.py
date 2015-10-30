@@ -41,7 +41,7 @@ def update_host():
         run('git clean -fd')
 
         print(green('Installing python dependencies...'))
-        run('pip install -qr requirements.txt')
+        run('pip install -qr src-backend/requirements.txt')
 
         print(green('Creating database tables...'))
         run('python src-backend/manage.py syncdb --noinput')
