@@ -169,9 +169,34 @@ CreateSuite("Session Model", function() {
         });
 
         describe("#logout()", function() {
-            it("should call destroy()", function(){
+            it("should send an AJAX request", function(){
+                session.logout();
+                assert.lengthOf(server.requests, 1);
+            });
+
+            it("should not call destroy() immediately", function(){
                 var destroy_spy = sinon.spy(session, 'destroy');
                 session.logout();
+                assert(destroy_spy.notCalled);
+            });
+
+            it("should call destroy() after server returns success", function(){
+                var destroy_spy = sinon.spy(session, 'destroy');
+
+                session.logout();
+                server.respondWith([200, {}, '']);
+                server.respond();
+
+                assert(destroy_spy.calledOnce);
+            });
+
+            it("should call destroy() after server returns error", function(){
+                var destroy_spy = sinon.spy(session, 'destroy');
+
+                session.logout();
+                server.respondWith([401, {}, '']);
+                server.respond();
+
                 assert(destroy_spy.calledOnce);
             });
         });

@@ -39,7 +39,7 @@ var SessionModel = Backbone.Model.extend({
     },
 
     signup: function(form_data, server_error_handler, network_error_handler) {
-        this.logout();
+        this.destroy();
 
         var self = this;
         $.ajax({
@@ -56,7 +56,7 @@ var SessionModel = Backbone.Model.extend({
     },
 
     login: function(form_data, server_error_handler, network_error_handler) {
-        this.logout();
+        this.destroy();
 
         var self = this;
         $.ajax({
@@ -73,7 +73,18 @@ var SessionModel = Backbone.Model.extend({
     },
 
     logout: function() {
-        this.destroy();
+        var self = this;
+        $.ajax({
+            type: 'POST',
+            url: '/auth/logout',
+            beforeSend: function(jqXHR, settings) {
+                self.trigger('request');
+            },
+            complete: function(jqXHR, textStatus) {
+                self.trigger('complete');
+                self.destroy();
+            },
+        });
     },
 
     _auth_handler: function(response, server_error_handler) {
