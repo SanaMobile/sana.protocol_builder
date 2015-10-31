@@ -6,7 +6,7 @@ sudo apt-get update
 # Install python, pip
 sudo apt-get install -y python
 sudo apt-get install -y python-pip
-pip install -r ../requirements.txt
+pip install -r ../src-backend/requirements.txt
 
 # Install Postgres
 sudo apt-get install -y postgresql
