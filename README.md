@@ -38,12 +38,4 @@ The Sana Protocol is an XML specification for defining medical procedures. Basic
 
 However, these XML documents are difficult to write for non-technical users. The purpose of this project is to provide a easy-to-use web interface to aid doctors and other non-technical users in creating these documents. In other words, this is a WYSIWYM (what you see is what you mean) editor for Sana documents.
 
-Architecture
-===
-
-The frontend is a Single Page Application (SPA) written in Ember.js. The backend is a Django + PostgreSQL application that provides an RESTful API for the frontend. The decoupled nature of the frontend and backend opens the possiblity of implementing the editor in other mediums such as mobile applications.
-
-Installation
-===
-
-See `docs/INSTALL.md`.
+See our [wiki](https://github.com/SanaMobile/sana.protocol_builder/wiki) for more information about this project.

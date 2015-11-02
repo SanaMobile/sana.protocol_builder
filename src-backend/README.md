@@ -1,10 +1,8 @@
-Frequently Used Commands
-===
+# Frequently Used Commands
 
 These commands are assuming you are currently in the `src-backend` folder.
 
-Running Development Server
----
+## Running Development Server
 
 ```
 ./manage.py syncdb
