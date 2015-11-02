@@ -46,11 +46,17 @@ var SessionModel = Backbone.Model.extend({
             data: form_data,
             type: 'POST',
             url: '/auth/signup',
+            beforeSend: function(jqXHR, settings) {
+                self.trigger('request');
+            },
             success: function(response) {
                 self._auth_handler(response, server_error_handler);
             },
             error: function(error) {
                 network_error_handler(error);
+            },
+            complete: function(jqXHR, textStatus) {
+                self.trigger('complete');
             },
         });
     },
@@ -63,11 +69,17 @@ var SessionModel = Backbone.Model.extend({
             data: form_data,
             type: 'POST',
             url: '/auth/login',
+            beforeSend: function(jqXHR, settings) {
+                self.trigger('request');
+            },
             success: function(response) {
                 self._auth_handler(response, server_error_handler);
             },
             error: function(error) {
                 network_error_handler(error);
+            },
+            complete: function(jqXHR, textStatus) {
+                self.trigger('complete');
             },
         });
     },

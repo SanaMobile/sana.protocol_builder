@@ -26,7 +26,7 @@ CreateSuite('Smoke Test', function() {
             sana_app.session.clear();
         });
 
-        describe("Authentication", function() {
+        describe("#_setup_authentication()", function() {
             var server;
 
             beforeEach(function() {
@@ -35,6 +35,10 @@ CreateSuite('Smoke Test', function() {
 
             afterEach(function() {
                 server.restore();
+            });
+
+            it('should setup storage mechanism', function() {
+                assert.isObject(sana_app.storage);
             });
 
             it('should setup authentication', function() {
@@ -65,12 +69,26 @@ CreateSuite('Smoke Test', function() {
             });
         });
 
-        it('should initialize root view', function() {
-            assert.isObject(sana_app.root_view);
+        describe("#_setup_views()", function() {
+            it('should initialize root view', function() {
+                assert.isObject(sana_app.root_view);
+            });
+            it('should have listener on "request" events', function() {
+                var root_view_stub = sinon.stub(sana_app.root_view, 'show_spinner');
+                sana_app.session.trigger('request');
+                assert(root_view_stub.calledOnce);
+            });
+            it('should have listener on "complete" events', function() {
+                var root_view_stub = sinon.stub(sana_app.root_view, 'hide_spinner');
+                sana_app.session.trigger('complete');
+                assert(root_view_stub.calledOnce);
+            });
         });
 
-        it('should setup storage mechanism', function() {
-            assert.isObject(sana_app.storage);
+        describe("#_load_behaviors()", function() {
+            it('should initialize behaviors', function() {
+                assert.isObject(sana_app.Behaviors);
+            });
         });
     });
 });
