@@ -4,6 +4,7 @@ var AuthenticationForm = require('behaviors/auth_form_behavior');
 
 var AuthRouter = require('routers/auth/auth_router');
 var ProceduresRouter = require('routers/procedures/procedures_router');
+var InfoRouter = require('routers/info/info_router');
 
 var SessionModel = require('models/session.js');
 var Config = require('utils/config');
@@ -99,6 +100,7 @@ module.exports = Marionette.Application.extend({
     _load_routers: function() {
         this.auth_router = new AuthRouter({ app: this });
         this.procedure_router = new ProceduresRouter({ app: this });
+        this.info_router = new InfoRouter({ app: this });
     },
 
 });
