@@ -33,4 +33,9 @@ module.exports = {
         return html;
     },
 
+    arrived_on_page: function(title) {
+        document.title = title + " | " + Config.SITE_TITLE;
+        log.info('View: ' + title);
+    },
+
 };

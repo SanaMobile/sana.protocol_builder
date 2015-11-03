@@ -2,13 +2,14 @@ module.exports = Marionette.Controller.extend({
 
     constructor : function (options) {
         this.app = options.app;
+        this.Helpers = (options && options.Helpers) || require('utils/helpers');
         this.InfoLayout = (options && options.InfoLayout) || require('views/info/info_layout');
 
         Marionette.Controller.prototype.constructor.call(this, options);
     },
 
     terms_of_service: function () {
-        log.info('View: Terms of Service');
+        this.Helpers.arrived_on_page('Terms of Service');
 
         var info_layout = new this.InfoLayout({ app: this.app });
         this.app.root_view.showChildView('main', info_layout);
@@ -18,7 +19,7 @@ module.exports = Marionette.Controller.extend({
     },
   
     privacy_policy: function() {
-        log.info('View: Privacy Policy');
+        this.Helpers.arrived_on_page('Privacy Policy');
 
         var info_layout = new this.InfoLayout({ app: this.app });
         this.app.root_view.showChildView('main', info_layout);

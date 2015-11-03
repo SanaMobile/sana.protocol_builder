@@ -9,6 +9,7 @@ module.exports = Marionette.AppRouter.extend({
     },
 
     appRoutes: {
+        '': 'index',
         'login': 'login',
         'logout': 'logout',
         'signup': 'signup',
