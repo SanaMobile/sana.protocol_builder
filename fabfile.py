@@ -12,7 +12,7 @@ env.frontend_root = '/opt/sana.protocol_builder/src-frontend'
 def test():
     local('python src-backend/manage.py syncdb --noinput')
     local('python src-backend/manage.py test api --noinput')
-    local('python src-backend/manage.py test registration --noinput')
+    local('python src-backend/manage.py test authentication --noinput')
 
     with lcd('src-backbone'):
         local('npm test')

@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 from api import urls as apiUrls
-from registration import urls as authUrls
+from authentication import urls as authUrls
 
 admin.autodiscover()
 

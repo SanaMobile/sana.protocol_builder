@@ -50,6 +50,7 @@ module.exports = Marionette.Application.extend({
                 if (xhr.status === 401) {
                     // Reloads the page (i.e. resets the App state)
                     // TODO views should check URL onStart to see if there's a server message and display an alert
+                    self.session.destroy();
                     window.location = '/?error=invalid_token';
                 }
             };
