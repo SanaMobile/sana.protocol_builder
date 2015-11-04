@@ -1,0 +1,56 @@
+<nav class="navbar navbar-inverse navbar-static-top" id="top-navbar"></nav>
+
+<header class="container-fluid spb-container" id="main-menu">
+    <h1>Sana Protocol Builder</h1>
+    <ul>
+        <li><a href="/procedures">Procedures</a></li>
+        <li><a href="/concepts">Concepts</a></li>
+        <li><a href="/help">Help</a></li>
+    </ul>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <header id="procedures-list-heading">
+                <h2>My Procedures</h2>
+                <a href="" id="new-procedure-btn" class="btn btn-success">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    Create a new procedure
+                </a>
+            </header>
+            <nav id="procedure-list-toolbar" class="navbar">
+                <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Filter by name" id="filter-input">
+                    </div>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Options <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a id="sort-by-title" data-sort-key="title">Sort by Title</a></li>
+                            <li><a id="sort-by-author" data-sort-key="author">Sort by Author</a></li>
+                            <li><a id="sort-by-last-modified" data-sort-key="last_modified">Sort by Last Modified</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a id="asc-order" data-sort-order="asc">Ascending Order</a></li>
+                            <li><a id="desc-order" data-sort-order="desc">Descending Order</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <article id="procedures-list">
+            </article>
+        </div>
+    </div>
+</div>
+
+<footer id="main-footer">
+    <p>
+        Copyright &copy; 2015 Sana Protocol Builder
+    </p>
+    <ul>
+        <li><a href="/terms">Terms of Service</a></li>
+        <li><a href="/privacy">Privacy Policy</a></li>
+    </ul>
+</footer>

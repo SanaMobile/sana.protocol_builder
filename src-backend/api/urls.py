@@ -4,7 +4,7 @@ from views import ProcedureViewSet, PageViewSet, ElementViewSet
 from startup import run_once
 
 
-router = routers.SimpleRouter()
+router = routers.SimpleRouter(trailing_slash=False)
 router.register(r'procedures', ProcedureViewSet, base_name='procedure')
 router.register(r'pages', PageViewSet, base_name='page')
 router.register(r'elements', ElementViewSet, base_name='element')
