@@ -59,13 +59,16 @@ var concat = require('gulp-concat');
 
 gulp.task('css', function() {
     gulp.src(Config.stylesheets)
-        .pipe(source_maps.init())
+        .pipe(gulpif(debug, source_maps.init()))
         .pipe(less({
-            paths: [ path.join(__dirname, 'app/css') ]
+            paths: [
+                path.join(__dirname, 'app/css'),
+                path.join(__dirname, 'bower_components'),
+            ]
         }))
         .pipe(concat('app.css'))
         .pipe(minify_css())
-        .pipe(gulpif(!debug, source_maps.write()))
+        .pipe(gulpif(debug, source_maps.write()))
         .pipe(gulp.dest(Config.output + '/css'))
         .pipe(connect.reload());
 });

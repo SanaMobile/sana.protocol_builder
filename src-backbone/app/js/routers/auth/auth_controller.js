@@ -10,13 +10,17 @@ module.exports = Marionette.Controller.extend({
         Marionette.Controller.prototype.constructor.call(this, options);
     },
 
+    index: function() {
+        this.Helpers.goto_default_logged_out();
+    },
+
     signup: function () {
         if (this.app.session.isValid()) {
             this.Helpers.goto_default_logged_in();
             return;
         }
 
-        log.info('View: Sign Up');
+        this.Helpers.arrived_on_page('Sign Up');
 
         var auth_layout = new this.AuthLayout({ app: this.app });
         this.app.root_view.showChildView('main', auth_layout);
@@ -29,7 +33,7 @@ module.exports = Marionette.Controller.extend({
             return;
         }
 
-        log.info('View: Login');
+        this.Helpers.arrived_on_page('Login');
 
         var auth_layout = new this.AuthLayout({ app: this.app });
         this.app.root_view.showChildView('main', auth_layout);
@@ -37,7 +41,8 @@ module.exports = Marionette.Controller.extend({
     },
 
     logout: function() {
-        log.info('View: Logout');
+        this.Helpers.arrived_on_page('Logout');
+
         this.app.session.logout();
     },
 

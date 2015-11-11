@@ -3,9 +3,9 @@ var RootView = require('views/root_view');
 var AuthenticationForm = require('behaviors/auth_form_behavior');
 
 var AuthRouter = require('routers/auth/auth_router');
-var ProceduresRouter = require('routers/procedures/procedures_router');
 var InfoRouter = require('routers/info/info_router');
 var ErrorsRouter = require('routers/errors/errors_router');
+var ProceduresRouter = require('routers/procedures/procedures_router');
 
 var SessionModel = require('models/session.js');
 var Config = require('utils/config');
@@ -24,11 +24,6 @@ module.exports = Marionette.Application.extend({
     },
 
     onStart: function () {
-        // Load any existing tokens
-        // Do this before Backbone.history has started so that the model change
-        // events don't redirect the user yet
-        this.session.fetch();
-
         Backbone.history.start({ pushState: true });
 
         // Do this after Backbone.history has started so the navigate will work
@@ -51,9 +46,8 @@ module.exports = Marionette.Application.extend({
             options.error = function(xhr, ajaxOptions, thrownError) {
                 if (xhr.status === 401) {
                     // Reloads the page (i.e. resets the App state)
-                    // TODO views should check URL onStart to see if there's a server message and display an alert
+                    // TODO present user with error message
                     self.session.destroy();
-                    window.location = '/?error=invalid_token';
                 }
             };
             sync(method, model, options);
@@ -78,10 +72,16 @@ module.exports = Marionette.Application.extend({
 
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
             options.url = Config.API_BASE + options.url;
+
             if (self.session.has(SessionModel.AUTH_TOKEN_KEY)) {
                 jqXHR.setRequestHeader('Authorization', 'Token ' + self.session.get(SessionModel.AUTH_TOKEN_KEY));
             }
         });
+
+        // Load any existing tokens
+        // Do this before Backbone.history has started so that the model change
+        // events don't redirect the user yet
+        this.session.fetch();
     },
 
     _setup_views: function() {
@@ -113,7 +113,10 @@ module.exports = Marionette.Application.extend({
 
         Backbone.history = new History();
         Backbone.history.on(ROUTE_NOT_FOUND_EVENT, function() {
-            Backbone.history.navigate('404', { trigger: true });
+            Backbone.history.navigate('404', {
+                trigger: true,
+                replace: true,
+            });
         });
     },
 

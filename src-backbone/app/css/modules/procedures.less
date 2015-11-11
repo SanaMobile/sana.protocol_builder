@@ -1,0 +1,191 @@
+@import url(utils/constants.less);
+
+header#main-menu{
+    border-bottom: 1px solid @grey-border-light;
+    height: 100px;
+    overflow: hidden;
+
+    h1{
+        background-image: url('/img/logo.png');
+        background-size: 30px 30px;
+        background-repeat: no-repeat;
+        background-position: 0 center;
+        float: left;
+        font-size: 24px;
+        font-weight: bold;
+        line-height: 100px;
+        margin: 0;
+        padding-left: 40px;
+    }
+
+    ul{
+        float: right;
+        list-style: none;
+        margin: 30px 0;
+        padding: 0;
+
+        li{
+            float: left;
+
+            a{
+                display: block;
+                font-weight: bold;
+                font-size: 18px;
+                padding: 10px 15px;
+                text-decoration: none;
+            }
+
+            &:last-child{
+                margin-right: -15px;
+            }
+        }
+    }
+}
+
+header#procedures-list-heading{
+    overflow: hidden;
+
+    h2,
+    #new-procedure-btn{
+        margin: 60px 0;
+    }
+
+    h2{
+        line-height: 40px;
+        float: left;
+    }
+
+    #new-procedure-btn{
+        float: right;
+        font-weight: bold;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 20px;
+
+        span{
+            margin-right: 5px;
+        }
+    }
+}
+
+#procedure-list-toolbar{
+    border: 1px solid @grey-border;
+    margin: 0;
+
+    form{
+        margin: 8px;
+        padding: 0;
+
+        input#filter-input{
+            border-radius: 2px;
+            box-shadow: none;
+            width: 300px;
+        }
+    }
+
+    .dropdown{
+        a{
+            cursor: pointer;
+
+            &.active{
+                background: @grey-bg;
+            }
+        }
+    }
+
+    .navbar-right{
+        margin-right: 0;
+    }
+}
+
+#procedures-list{
+    ul{
+        list-style: none;
+        overflow: hidden;
+        padding: 0;
+    }
+
+    li{
+        box-sizing: border-box;
+        padding: 30px 20px;
+
+        &.empty-procedures{
+            display: block;
+            background-color: @grey-bg;
+            border-left: 5px solid @grey-border;
+            margin-top: 30px;
+        }
+
+        &.procedure{
+            border-bottom: 1px solid @grey-border-light;
+            padding-right: 140px;
+            position: relative;
+
+            a.title{
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 10px;
+                line-height: 24px;
+            }
+
+            span{
+                display: block;
+                margin: 5px 0;
+
+                &.author{
+                    color: @grey-text;
+                }
+
+                &.last-modified{
+                    color: @grey-text;
+                }
+            }
+
+            a.glyphicon{
+                border: 1px solid @grey-border;
+                border-radius: 3px;
+                color: @grey-text;
+                cursor: pointer;
+                display: block;
+                font-size: 15px;
+                line-height: 40px;
+                position: absolute;
+                text-decoration: none;
+                text-align: center;
+                top: 30px;
+                width: 40px; height: 40px;
+
+                &.download{
+                    right: 70px;
+                }
+
+                &.delete{
+                    right: 20px;
+                }
+
+                &:hover{
+                    background: @grey-bg;
+                }
+            }
+        }
+    }
+}
+
+footer#main-footer{
+    border-top: 1px solid @grey-border-light;
+    margin-top: 30px;
+    padding: 60px 0;
+    text-align: center;
+
+    ul{
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+
+        li{
+            display: inline;
+            margin: 0 5px;
+        }
+    }
+}
