@@ -2,34 +2,32 @@ from fabric.api import *  # noqa
 from fabric.colors import *  # noqa
 
 env.colorize_errors = True
-env.hosts = ['sanaprotocolbuilder.me']
-env.user = 'root'
-env.virtualenv = 'source /usr/local/bin/virtualenvwrapper.sh'
-env.project_root = '/opt/sana.protocol_builder'
-env.frontend_root = '/opt/sana.protocol_builder/src-frontend'
+env.hosts           = ['sanaprotocolbuilder.me']
+env.user            = 'root'
+env.virtualenv      = 'source /usr/local/bin/virtualenvwrapper.sh'
+env.project_root    = '/opt/sana.protocol_builder'
+env.backend_dir     = 'src-django'
+env.frontend_dir    = 'src-backbone'
 
 
 def test():
-    local('python src-backend/manage.py syncdb --noinput')
-    local('python src-backend/manage.py test api --noinput')
-    local('python src-backend/manage.py test authentication --noinput')
+    with lcd(env.backend_dir):
+        local('python manage.py syncdb --noinput')
+        local('python manage.py test api --noinput')
+        local('python manage.py test authentication --noinput')
 
-    with lcd('src-backbone'):
+    with lcd(env.frontend_dir):
         local('npm test')
 
 
 def lint():
-    local('flake8 src-backend')
+    with lcd(env.backend_dir):
+        local('flake8')
 
 
 def verify():
     lint()
     test()
-
-
-def runserver():
-    local('python src-backend/manage.py syncdb --noinput')
-    local('python src-backend/manage.py runserver')
 
 
 def update_host():
@@ -40,20 +38,21 @@ def update_host():
         run('git pull origin master')
         run('git clean -fd')
 
-        print(green('Installing python dependencies...'))
-        run('pip install -qr src-backend/requirements.txt')
+        with cd(env.project_root + env.backend_dir):
+            print(green('Installing python dependencies...'))
+            run('pip install --quiet --requirement requirements.txt')
 
-        print(green('Creating database tables...'))
-        run('python src-backend/manage.py syncdb --noinput')
+            print(green('Creating database tables...'))
+            run('python manage.py syncdb --noinput')
 
-        print(green('Restarting gunicorn...'))
-        run('supervisorctl restart gunicorn')
+            print(green('Restarting gunicorn...'))
+            run('supervisorctl restart gunicorn')
 
-    with cd(env.frontend_root):
-        print(green('Building Ember application...'))
-        run('npm install')
-        run('bower install --allow-root')
-        run('ember build --environment production')
+        with cd(env.project_root + env.frontend_dir):
+            print(green('Building Backbone application...'))
+            run('npm install')
+            run('bower install')
+            run('gulp build')
 
 
 def travis_deploy():
