@@ -19,7 +19,7 @@ before_install:
 
 install:
   # Python tools
-  - pip install --requirement src-backend/requirements.txt
+  - pip install --requirement src-django/requirements.txt
 
   # Node tools
   - npm install --global bower

@@ -5,5 +5,5 @@ cloc \
     --read-lang-def=cloc-definitions.txt \
     --exclude-dir=dist,node_modules,bower_components \
     \
-    ../src-backend \
+    ../src-django \
     ../src-backbone

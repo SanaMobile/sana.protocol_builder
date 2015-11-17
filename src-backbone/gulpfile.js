@@ -223,7 +223,9 @@ gulp.task('bower', ['bower-js', 'bower-css', 'bower-fonts']);
 // This executes when you run 'gulp' on the command line
 //------------------------------------------------------------------------------
 
-gulp.task('default', ['css', 'js', 'hbs', 'bower', 'img', 'html'], function(){
+gulp.task('build', ['css', 'js', 'hbs', 'bower', 'img', 'html']);
+
+gulp.task('default', ['build'], function(){
     gulp.watch(Config.stylesheets, ['css']);
     gulp.watch([Config.javascripts, Config.coffeescripts], ['js']);
     gulp.watch(Config.handlebars, ['hbs']);
