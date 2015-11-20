@@ -1,10 +1,10 @@
 var colors = require('colors');
 
 
-module.exports = function(is_debug) {
+module.exports = function(is_enabled) {
     return {
         error: function(message) {
-            if (!is_debug) {
+            if (!is_enabled) {
                 return;
             }
 
@@ -16,7 +16,7 @@ module.exports = function(is_debug) {
         },
 
         warn: function(message) {
-            if (!is_debug) {
+            if (!is_enabled) {
                 return;
             }
 
@@ -28,7 +28,7 @@ module.exports = function(is_debug) {
         },
 
         info: function (message) {
-            if (!is_debug) {
+            if (!is_enabled) {
                 return;
             }
 
@@ -40,7 +40,7 @@ module.exports = function(is_debug) {
         },
 
         log: function (message) {
-            if (!is_debug) {
+            if (!is_enabled) {
                 return;
             }
 
@@ -52,7 +52,7 @@ module.exports = function(is_debug) {
         },
 
         debug: function (message) {
-            if (!is_debug) {
+            if (!is_enabled) {
                 return;
             }
 

@@ -8,7 +8,6 @@ var ErrorsRouter = require('routers/errors/errors_router');
 var ProceduresRouter = require('routers/procedures/procedures_router');
 
 var SessionModel = require('models/session.js');
-var Config = require('utils/config');
 var Helpers = require('utils/helpers');
 var Storage = require('utils/storage');
 

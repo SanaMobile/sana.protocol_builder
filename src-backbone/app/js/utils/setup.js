@@ -3,6 +3,11 @@ var Config = require('utils/config');
 
 module.exports = {
 
+    load_config: function() {
+        global.Config = Config;
+        global.DEBUG = Config.DEBUG;
+    },
+
     load_libs: function() {
         // Loads libraries into global namespace
         global.$ = global.jQuery = require('jquery');
@@ -11,13 +16,14 @@ module.exports = {
         global.Backbone.$ = $;
         global.Marionette = require('backbone.marionette');
 
-        global.Handlebars = require('handlebars');
+        global.Handlebars = require("hbsfy/runtime");
         this._setup_i18n();
         global.HandlebarsIntl = require('handlebars-intl');
         HandlebarsIntl.registerWith(Handlebars);
+    },
 
-        // Setup logging
-        global.log = require('utils/logger')(global.DEBUG);
+    load_logger: function(enabled) {
+        global.log = require('utils/logger')(enabled);
     },
 
     _setup_i18n: function() {

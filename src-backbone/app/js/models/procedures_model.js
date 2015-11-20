@@ -1,8 +1,8 @@
 module.exports = Backbone.Model.extend({
 
     defaults: {
-        'title': 'Untitled', // TODO allow nullable titles
-        'author': 'Stephen', // TODO either fetch user's username or let API allow nullable authors
+        'title': 'Untitled Procedure',
+        'author': '',
         'pages': [],
     },
 

@@ -1,6 +1,6 @@
 module.exports = Marionette.ItemView.extend({
 
-    template: Handlebars.templates.signup,
+    template: require('templates/auth/signup'),
 
     behaviors: {
         AuthenticationForm: {

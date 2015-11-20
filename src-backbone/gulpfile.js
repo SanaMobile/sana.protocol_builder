@@ -5,19 +5,14 @@
 //------------------------------------------------------------------------------
 
 var gulp = require('gulp');
-var debug = false;
 
 var Config = {
-    main_app: [
-        'app/js/main.coffee',
+    DEBUG: false,
+    entry_file: [
+        'app/js/main.js',
     ],
     javascripts: [
         'app/js/**/*.js',
-    ],
-    coffeescripts: [
-        'app/js/**/*.coffee',
-    ],
-    handlebars: [
         'app/js/**/*.hbs',
     ],
     stylesheets: [
@@ -39,6 +34,7 @@ var Config = {
 //------------------------------------------------------------------------------
 
 var connect = require('gulp-connect');
+
 gulp.task('webserver', function() {
     connect.server({
         livereload: true,
@@ -51,24 +47,27 @@ gulp.task('webserver', function() {
 // CSS Tasks
 //------------------------------------------------------------------------------
 
-var less = require('gulp-less');
-var path = require('path');
-var minify_css = require('gulp-minify-css');
-var source_maps = require('gulp-sourcemaps');
-var concat = require('gulp-concat');
-
 gulp.task('css', function() {
+    var gulpif = require('gulp-if');
+    var less = require('gulp-less');
+    var path = require('path');
+    var minify_css = require('gulp-minify-css');
+    var source_maps = require('gulp-sourcemaps');
+    var concat = require('gulp-concat');
+
     gulp.src(Config.stylesheets)
-        .pipe(gulpif(debug, source_maps.init()))
-        .pipe(less({
-            paths: [
-                path.join(__dirname, 'app/css'),
-                path.join(__dirname, 'bower_components'),
-            ]
-        }))
-        .pipe(concat('app.css'))
-        .pipe(minify_css())
-        .pipe(gulpif(debug, source_maps.write()))
+    
+        .pipe(gulpif(Config.DEBUG, source_maps.init({ loadMaps: true })))
+            .pipe(less({
+                paths: [
+                    path.join(__dirname, 'app/css'),
+                    path.join(__dirname, 'bower_components'),
+                ]
+            }))
+            .pipe(concat('app.css'))
+            .pipe(minify_css())
+        .pipe(gulpif(Config.DEBUG, source_maps.write({ sourceRoot: '/map-css' })))
+
         .pipe(gulp.dest(Config.output + '/css'))
         .pipe(connect.reload());
 });
@@ -77,71 +76,61 @@ gulp.task('css', function() {
 // JS Tasks
 //------------------------------------------------------------------------------
 
-var jshint = require('gulp-jshint'); // Note: we're using JSHint, a better fork of the original JSLint
-var stylish = require('jshint-stylish');
-
 gulp.task('js-lint', function() {
+    var jshint = require('gulp-jshint'); // Note: we're using JSHint, a better fork of the original JSLint
+    var stylish = require('jshint-stylish');
+    var filter = require('gulp-filter');
+
+    var js_filter = filter('**/*.js');
+
     gulp.src(Config.javascripts)
-        .pipe(jshint())
+        .pipe(js_filter)
+        .pipe(jshint({
+            esnext: true
+        }))
         .pipe(jshint.reporter(stylish));
 });
 
-var coffeelint = require('gulp-coffeelint');
+gulp.task('js-browserify', function() {
+    var gulpif = require('gulp-if');
+    var browserify = require('browserify');
+    var source = require('vinyl-source-stream');
+    var buffer = require('vinyl-buffer');
+    var uglify = require('gulp-uglify');
+    var gulp_util = require('gulp-util');
+    var source_maps = require('gulp-sourcemaps');
 
-gulp.task('cs-lint', function() {
-    gulp.src(Config.coffeescripts)
-        .pipe(coffeelint())
-        .pipe(coffeelint.reporter());
-});
+    var js_files = browserify({
+        entries: Config.entry_file,
+        debug: Config.DEBUG,
+        paths: [ __dirname + '/app/js' ],
+        extensions: ['.hbs'],
+    });
 
-var coffeeify = require('gulp-coffeeify');
-var rename = require("gulp-rename");
+    js_files.transform("babelify", {
+        presets: [
+            'es2015'
+        ]
+    });
 
-gulp.task('js-coffee', function() {
-    gulp.src(Config.main_app)
-        .pipe(coffeeify({
-            options: {
-                debug: true, // Generate source map 
-                paths: [ __dirname + '/app/js' ]
-            }
-        }))
-        .pipe(rename('app.js'))
+    js_files.transform(require('hbsfy').configure({
+        extensions: ['hbs']
+    }));
+
+    js_files.bundle()
+        .pipe(source('app.js')) // Treats stream as a single dummy file
+        .pipe(buffer()) // Buffers stream into single file
+        
+        .pipe(gulpif(Config.DEBUG, source_maps.init({ loadMaps: true })))
+            .pipe(uglify())
+                .on('error', gulp_util.log)
+        .pipe(gulpif(Config.DEBUG, source_maps.write({ sourceRoot: '/map-js' })))
+
         .pipe(gulp.dest(Config.output + '/js'))
         .pipe(connect.reload());
 });
 
-gulp.task('js', ['js-lint', 'cs-lint', 'js-coffee']);
-
-//------------------------------------------------------------------------------
-// Handlebars Tasks
-//------------------------------------------------------------------------------
-
-var handlebars = require('gulp-handlebars');
-var wrap = require('gulp-wrap');
-var declare = require('gulp-declare');
-var concat = require('gulp-concat');
-
-gulp.task('hbs', function() {
-    gulp.src(Config.handlebars)
-        .pipe(handlebars({
-            handlebars: require('handlebars')
-        }))
-        .pipe(wrap('(function() { var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {}; templates[\'<%= getName(file.relative) %>\'] = template(<%= contents %>);})();', {}, {
-            imports: {
-                getName: function(filename) {
-                    var path = require('path');
-                    return path.basename(filename, path.extname(filename));
-                }
-            }
-        }))
-        .pipe(declare({
-            namespace: 'Sana.templates',
-            noRedeclare: true, // Avoid duplicate declarations 
-        }))
-        .pipe(concat('templates.js'))
-        .pipe(gulp.dest(Config.output + '/js'))
-        .pipe(connect.reload());
-});
+gulp.task('js', ['js-lint', 'js-browserify']);
 
 //------------------------------------------------------------------------------
 // Image Tasks
@@ -168,11 +157,6 @@ gulp.task('html', function() {
 //------------------------------------------------------------------------------
 
 var main_bower_files = require('main-bower-files');
-var gulpif = require('gulp-if');
-var uglify = require('gulp-uglify');
-var filter = require('gulp-filter');
-var flatten = require('gulp-flatten');
-
 var bower_files = main_bower_files({
     overrides: {
         bootstrap: {
@@ -181,22 +165,33 @@ var bower_files = main_bower_files({
                 './dist/css/*.min.*',
                 './dist/fonts/*.*'
             ]
+        },
+        jquery: {
+            // Do not load Bower's jQuery because node already loads it
+            ignore: true,
         }
     }
 });
 
 gulp.task('bower-js', function() {
+    var uglify = require('gulp-uglify');
+    var concat = require('gulp-concat');
+    var filter = require('gulp-filter');
+
     var js_filter = filter('**/*.js');
 
     gulp.src(bower_files, { base: 'bower_components' })
         .pipe(js_filter)
         .pipe(concat('libs.js'))
-        .pipe(gulpif(!debug, uglify()))
+        .pipe(uglify())
         .pipe(gulp.dest(Config.output + '/js'))
         .pipe(connect.reload());
 });
 
 gulp.task('bower-css', function() {
+    var concat = require('gulp-concat');
+    var filter = require('gulp-filter');
+
     var css_filter = filter('**/*.css');
 
     gulp.src(bower_files, { base: 'bower_components' })
@@ -207,6 +202,9 @@ gulp.task('bower-css', function() {
 });
 
 gulp.task('bower-fonts', function() {
+    var flatten = require('gulp-flatten');
+    var filter = require('gulp-filter');
+
     var font_filter = filter('**/dist/fonts/*.*');
 
     gulp.src(bower_files, { base: 'bower_components' })
@@ -223,12 +221,11 @@ gulp.task('bower', ['bower-js', 'bower-css', 'bower-fonts']);
 // This executes when you run 'gulp' on the command line
 //------------------------------------------------------------------------------
 
-gulp.task('build', ['css', 'js', 'hbs', 'bower', 'img', 'html']);
+gulp.task('build', ['css', 'js', 'bower', 'img', 'html']);
 
 gulp.task('default', ['build'], function(){
     gulp.watch(Config.stylesheets, ['css']);
-    gulp.watch([Config.javascripts, Config.coffeescripts], ['js']);
-    gulp.watch(Config.handlebars, ['hbs']);
+    gulp.watch(Config.javascripts, ['js']);
     gulp.watch(Config.bower_components, ['bower']);
     gulp.watch(Config.images, ['img']);
     gulp.watch(Config.html, ['html']);
@@ -241,7 +238,10 @@ gulp.task('default', ['build'], function(){
 //------------------------------------------------------------------------------
 
 gulp.task('set-debug', function(){
-    debug = true;
+    var colors = require('colors');
+    console.log('Gulp Debug Mode'.yellow.bgBlack);
+
+    Config.DEBUG = true;
 })
 
 gulp.task('debug', ['set-debug'], function(){

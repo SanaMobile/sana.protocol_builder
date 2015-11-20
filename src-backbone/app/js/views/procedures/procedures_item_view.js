@@ -1,6 +1,6 @@
 module.exports = Marionette.ItemView.extend({
 
-    template: Handlebars.templates.procedures_item,
+    template: require('templates/procedures/procedures_item'),
     tagName: 'li',
     className: 'procedure',
 

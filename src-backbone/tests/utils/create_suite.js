@@ -3,7 +3,10 @@ global.document = require("jsdom").jsdom();
 global.window = document.defaultView;
 
 // Load client libraries
-require('utils/setup').load_libs();
+var Setup = require('utils/setup');
+Setup.load_config();
+Setup.load_libs();
+Setup.load_logger(false);
 
 // Setup sinon
 global.XMLHttpRequest = window.XMLHttpRequest;
