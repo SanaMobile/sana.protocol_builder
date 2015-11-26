@@ -11,7 +11,22 @@ module.exports = Marionette.ItemView.extend({
 
     delete_procedure: function(event) {
         event.preventDefault();
-        this.model.destroy();
+
+        var self = this;
+        var el = this.$el;
+
+        el.fadeOut(function() {
+            self.model.destroy({
+                success: function(model, response, options) {
+                    console.info('Deleted Procedure', self.model.get('id'));
+                },
+                error: function(model, response, options) {
+                    console.warn('Failed to delete Procedure', self.model.get('id'), response.responseJSON);
+                    el.fadeIn();
+                    // TODO show error alert
+                },
+            });
+        });
     },
 
     download_procedure: function(event) {
@@ -22,11 +37,5 @@ module.exports = Marionette.ItemView.extend({
     onRender: function() {
         this.$el.hide().fadeIn();
     },
-
-    remove: function(){
-        this.$el.fadeOut(function() {
-            $(this).remove();
-        });
-    }
 
 });
