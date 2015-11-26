@@ -1,4 +1,3 @@
-var Config = require('utils/config');
 var prefix = Config.APP_NAMESPACE + '_';
 
 

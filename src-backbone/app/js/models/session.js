@@ -4,8 +4,8 @@ var STORAGE_KEY = AUTH_TOKEN_KEY;
 
 var SessionModel = Backbone.Model.extend({
 
-    constructor : function (options) {
-        this.storage = options && options.storage;
+    constructor : function (options = {}) {
+        this.storage = options.storage;
         Backbone.Model.prototype.constructor.call(this, options);
     },
 

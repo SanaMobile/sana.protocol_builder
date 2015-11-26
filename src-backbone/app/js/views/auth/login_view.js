@@ -1,11 +1,11 @@
 module.exports = Marionette.ItemView.extend({
 
-    constructor: function(options) {
+    template: require('templates/auth/login'),
+
+    constructor: function(options = {}) {
         this.app = options.app;
         Marionette.ItemView.prototype.constructor.call(this, options);
     },
-
-    template: Handlebars.templates.login,
 
     behaviors: function() {
         var self = this;

@@ -9,7 +9,8 @@ module.exports = Marionette.AppRouter.extend({
     },
 
     appRoutes: {
-        'procedures': 'procedures',
+        'procedures'     : 'procedures',
+        'procedures/:id' : 'procedure_builder',
     }
 
 });

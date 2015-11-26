@@ -25,7 +25,7 @@ install:
   - npm install --global bower
   - npm install --global gulp
   - npm install --global jshint
-  - npm install --global coffee-script
+  - npm install --global browserify
   - npm install --global mocha
 
   # Project dependencies

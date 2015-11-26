@@ -1,6 +1,6 @@
 module.exports = Marionette.LayoutView.extend({
 
-    template: Handlebars.templates.procedures_layout,
+    template: require('templates/procedures/procedures_layout'),
 
     ui: {
         search_input: 'input#filter-input',
@@ -24,13 +24,13 @@ module.exports = Marionette.LayoutView.extend({
         'click a#desc-order': 'change_sort_order',
     },
 
-    constructor: function(options) {
-        this.app                      = options.app || global.App;
-        this.ProceduresCollection     = (options && options.ProceduresCollection)     || require('models/procedures_collection');
-        this.Procedure                = (options && options.Procedure)                || require('models/procedures_model');
-        this.AccountNavbarView        = (options && options.AccountNavbarView)        || require('views/procedures/account_navbar_view');
-        this.ProceduresCollectionView = (options && options.ProceduresCollectionView) || require('views/procedures/procedures_collection_view');
-        this.Helpers                  = (options && options.Helpers)                  || require('utils/helpers');
+    constructor: function(options = {}) {
+        this.app                      = options.app                      || global.App;
+        this.ProceduresCollection     = options.ProceduresCollection     || require('models/procedures_collection');
+        this.Procedure                = options.Procedure                || require('models/procedures_model');
+        this.AccountNavbarView        = options.AccountNavbarView        || require('views/procedures/account_navbar_view');
+        this.ProceduresCollectionView = options.ProceduresCollectionView || require('views/procedures/procedures_collection_view');
+        this.Helpers                  = options.Helpers                  || require('utils/helpers');
 
         Marionette.LayoutView.prototype.constructor.call(this, options);
     },
@@ -78,7 +78,9 @@ module.exports = Marionette.LayoutView.extend({
         event.preventDefault();
 
         var self = this;
-        var new_procedure = new this.Procedure({}, {
+        var new_procedure = new this.Procedure({
+            author: 'Stephen' // TODO either fetch user's username or let API allow nullable authors
+        }, {
             collection: this.procedures_collection
         });
         new_procedure.save({}, {

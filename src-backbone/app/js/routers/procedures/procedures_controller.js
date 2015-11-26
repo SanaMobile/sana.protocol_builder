@@ -1,9 +1,11 @@
 module.exports = Marionette.Controller.extend({
 
-    constructor : function (options) {
-        this.app = options.app;
-        this.ProceduresLayout = (options && options.ProceduresLayout) || require('views/procedures/procedures_layout');
-        this.Helpers          = (options && options.Helpers)          || require('utils/helpers');
+    constructor : function (options = {}) {
+        this.app              = options.app;
+        this.ProceduresLayout = options.ProceduresLayout || require('views/procedures/procedures_layout');
+        this.BuilderLayout    = options.BuilderLayout    || require('views/procedures/builder_layout');
+        this.Procedure        = options.Procedure        || require('models/procedures_model');
+        this.Helpers          = options.Helpers          || require('utils/helpers');
 
         Marionette.Controller.prototype.constructor.call(this, options);
     },
@@ -17,6 +19,10 @@ module.exports = Marionette.Controller.extend({
         });
         procedures_layout.render();
         this.app.root_view.getRegion('main').show(procedures_layout);
+    },
+
+    procedure_builder: function(id) {
+        this.Helpers.arrived_on_page('Procedure' + (DEBUG ? ' id:' + id : ''));
     },
 
 });

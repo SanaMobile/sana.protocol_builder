@@ -1,6 +1,3 @@
-var Config = require('utils/config');
-
-
 module.exports = {
 
     goto_default_logged_in: function() {

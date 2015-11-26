@@ -1,5 +1,6 @@
 var CreateSuite = require('utils/create_suite');
 
+
 CreateSuite('Smoke Test', function() {
     describe('Test suite can run', function () {
         it('Array#indexOf should return -1 when the value is not present', function () {
