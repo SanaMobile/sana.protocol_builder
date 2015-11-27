@@ -5,7 +5,7 @@ module.exports = Backbone.Collection.extend({
 
     model: Procedure,
 
-    url: '/procedures',
+    url: '/api/procedures',
 
     constructor: function(options) {
         this.set_order_asc(false);
