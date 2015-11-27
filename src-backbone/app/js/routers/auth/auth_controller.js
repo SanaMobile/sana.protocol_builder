@@ -24,7 +24,7 @@ module.exports = Marionette.Controller.extend({
 
         var auth_layout = new this.AuthLayout({ app: this.app });
         this.app.root_view.showChildView('main', auth_layout);
-        auth_layout.showChildView('form_area', new this.SignupView({ app: this.app }));
+        auth_layout.showChildView('auth_form_area', new this.SignupView({ app: this.app }));
     },
   
     login: function() {
@@ -37,7 +37,7 @@ module.exports = Marionette.Controller.extend({
 
         var auth_layout = new this.AuthLayout({ app: this.app });
         this.app.root_view.showChildView('main', auth_layout);
-        auth_layout.showChildView('form_area', new this.LoginView({ app: this.app }));
+        auth_layout.showChildView('auth_form_area', new this.LoginView({ app: this.app }));
     },
 
     logout: function() {

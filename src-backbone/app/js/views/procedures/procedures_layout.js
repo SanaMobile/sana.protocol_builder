@@ -3,18 +3,18 @@ module.exports = Marionette.LayoutView.extend({
     template: require('templates/procedures/procedures_layout'),
 
     ui: {
-        search_input: 'input#filter-input',
+        procedure_filter: 'input#procedure-filter',
         sort_toolbar_dropdown: '#procedure-list-toolbar ul.dropdown-menu',
     },
 
     regions: {
-        top_navbar: '#top-navbar',
-        procedures_list: '#procedures-list',
+        top_navbar: 'nav#top-navbar',
+        procedures_list: 'div#procedures-list',
     },
 
     events: {
         'click a#new-procedure-btn': 'create_new_procedure',
-        'keyup @ui.search_input': 'filter_procedures',
+        'keyup @ui.procedure_filter': 'filter_procedures',
 
         'click a#sort-by-title': 'change_sort_key',
         'click a#sort-by-author': 'change_sort_key',
@@ -97,7 +97,7 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     filter_procedures: function(event) {
-        var query = this.ui.search_input.val();
+        var query = this.ui.procedure_filter.val();
 
         if (query) {
             var pattern = new RegExp(query, 'i'); // i = ignore case
