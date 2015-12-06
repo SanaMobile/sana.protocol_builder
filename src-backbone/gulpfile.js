@@ -99,6 +99,7 @@ gulp.task('js-browserify', function() {
     var uglify = require('gulp-uglify');
     var gulp_util = require('gulp-util');
     var source_maps = require('gulp-sourcemaps');
+    var stripDebug = require('gulp-strip-debug');
 
     var js_files = browserify({
         entries: Config.entry_file,
@@ -118,12 +119,13 @@ gulp.task('js-browserify', function() {
     }));
 
     js_files.bundle()
+        .on('error', gulp_util.log)
         .pipe(source('app.js')) // Treats stream as a single dummy file
         .pipe(buffer()) // Buffers stream into single file
+        .pipe(gulpif(!Config.DEBUG, stripDebug()))
         
         .pipe(gulpif(Config.DEBUG, source_maps.init({ loadMaps: true })))
-            .pipe(uglify())
-                .on('error', gulp_util.log)
+            .pipe(gulpif(!Config.DEBUG, uglify()))
         .pipe(gulpif(Config.DEBUG, source_maps.write({ sourceRoot: '/map-js' })))
 
         .pipe(gulp.dest(Config.output + '/js'))

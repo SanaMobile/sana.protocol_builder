@@ -60,7 +60,7 @@ module.exports = Marionette.Application.extend({
         this.session = new SessionModel({ storage: this.storage });
         this.session.on('change:' + SessionModel.AUTH_TOKEN_KEY, function() {
             var has_token = self.session.has(SessionModel.AUTH_TOKEN_KEY);
-            log.info('Auth Token Changed: ' + has_token);
+            console.info('Auth Token Changed: ' + has_token);
 
             if (has_token) {
                 Helpers.goto_default_logged_in();

@@ -32,7 +32,7 @@ module.exports = {
 
     arrived_on_page: function(title) {
         document.title = title + " | " + Config.SITE_TITLE;
-        log.info('View: ' + title);
+        console.info('View: ' + title);
     },
 
 };

@@ -37,12 +37,12 @@ module.exports = Backbone.Collection.extend({
     },
 
     set_comparator_key: function(key) {
-        log.info('Procedure Comparator Key: ' + key);
+        console.info('Procedure Comparator Key: ' + key);
         this._comparator_key = key;
     },
 
     set_order_asc: function(sort_asc) {
-        log.info('Procedure Sort Asc: ' + sort_asc);
+        console.info('Procedure Sort Asc: ' + sort_asc);
         this._sort_asc = sort_asc;
     },
 
