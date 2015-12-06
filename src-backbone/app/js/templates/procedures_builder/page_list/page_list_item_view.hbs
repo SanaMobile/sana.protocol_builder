@@ -1,0 +1,15 @@
+<div class="handle" title="Drag to re-order this page"></div>
+
+<a class="delete" title="Delete this page"><span class="glyphicon glyphicon-remove"></span></a>
+
+<a class="page">
+    <ul class="element-preview">
+    {{#each elements}}
+        <li data-element-id="{{ id }}" class="element-type-{{ sluggify element_type }}">
+            {{ question }}
+        </li>
+    {{else}}
+        <li class="empty">Empty Page</li>
+    {{/each}}
+    </ul>
+</a>

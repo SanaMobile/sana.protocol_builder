@@ -1,6 +1,6 @@
 module.exports = Marionette.ItemView.extend({
 
-    template: require('templates/procedures/account_navbar'),
+    template: require('templates/procedures/procedures_navbar'),
 
     constructor: function(options = {}) {
         this.app = options.app || global.App;
