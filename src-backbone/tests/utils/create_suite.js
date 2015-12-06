@@ -1,6 +1,7 @@
 // Emulate browser APIs
 global.document = require("jsdom").jsdom();
 global.window = document.defaultView;
+global.navigator = window.navigator;
 
 // Load client libraries
 var Setup = require('utils/setup');

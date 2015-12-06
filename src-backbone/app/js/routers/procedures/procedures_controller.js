@@ -2,9 +2,9 @@ module.exports = Marionette.Controller.extend({
 
     constructor : function (options = {}) {
         this.app              = options.app;
+        this.Procedure        = options.Procedure        || require('models/procedure_model');
         this.ProceduresLayout = options.ProceduresLayout || require('views/procedures/procedures_layout');
-        this.BuilderLayout    = options.BuilderLayout    || require('views/procedures/builder_layout');
-        this.Procedure        = options.Procedure        || require('models/procedures_model');
+        this.BuilderLayout    = options.BuilderLayout    || require('views/procedures_builder/main_layout');
         this.Helpers          = options.Helpers          || require('utils/helpers');
 
         Marionette.Controller.prototype.constructor.call(this, options);
@@ -13,16 +13,36 @@ module.exports = Marionette.Controller.extend({
     procedures: function () {
         this.Helpers.arrived_on_page('Procedures');
 
-        // Setup main layout
         var procedures_layout = new this.ProceduresLayout({
             app: this.app
         });
-        procedures_layout.render();
-        this.app.root_view.getRegion('main').show(procedures_layout);
+        this.app.root_view.show_view(procedures_layout);
     },
 
-    procedure_builder: function(id) {
-        this.Helpers.arrived_on_page('Procedure' + (DEBUG ? ' id:' + id : ''));
+    procedures_builder: function(procedure_id, page_id) {
+        this.Helpers.arrived_on_page('Builder');
+        if (DEBUG) {
+            this.Helpers.arrived_on_page('procedure:' + procedure_id + ' page:' + page_id);
+        }
+
+        var procedure = new this.Procedure({ 
+            id: procedure_id,
+        }, {
+            load_details: true,
+            active_page_id: page_id,
+        });
+
+        var self = this;
+        procedure.fetch({
+            success: function() {
+                console.info('Fetched Procedure', procedure_id);
+                self.app.root_view.show_view(new self.BuilderLayout({ model: procedure }), 'builder');
+            },
+            error: function() {
+                console.warn('Failed to fetch Procedure', procedure_id);
+                // TODO maybe present error alert?
+            },
+        });
     },
 
 });

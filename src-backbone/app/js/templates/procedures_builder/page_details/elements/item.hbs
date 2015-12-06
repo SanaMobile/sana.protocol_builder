@@ -1,0 +1,32 @@
+<h2>{{ readable_element_name element_type }}</h2>
+
+<a class="delete glyphicon glyphicon-remove" title="Delete this element"></a>
+<a class="move-up glyphicon glyphicon-chevron-up" title="Move this element up"></a>
+<a class="move-down glyphicon glyphicon-chevron-down" title="Move this element down"></a>
+
+<form id="element-{{ id }}">
+    <div class="form-group">
+        <label for="concept-{{ id }}">Concept</label>
+        <input type="text" id="concept-{{ id }}" name="concept" class="form-control concept" value="{{ concept }}">
+    </div>
+    <div class="form-group">
+        <label for="question-{{ id }}">Question</label>
+        <input type="text" id="question-{{ id }}" name="question" class="form-control question" value="{{ question }}">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="required" class="required"> Required
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group custom-answer"></div>
+
+    <div class="form-group">
+        <label for="image-{{ id }}">Image</label>
+        <input type="text" id="image-{{ id }}" name="image" class="form-control image" value="{{ image }}">
+    </div>
+    <div class="form-group">
+        <label for="audio-{{ id }}">Audio</label>
+        <input type="text" id="audio-{{ id }}" name="audio" class="form-control audio" value="{{ audio }}">
+    </div>
+</form>

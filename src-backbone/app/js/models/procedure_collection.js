@@ -1,4 +1,4 @@
-var Procedure = require('models/procedures_model');
+var Procedure = require('models/procedure_model');
 
 
 module.exports = Backbone.Collection.extend({
@@ -7,12 +7,12 @@ module.exports = Backbone.Collection.extend({
 
     url: '/api/procedures',
 
-    constructor: function(options) {
+    constructor: function(models, options) {
         this.set_order_asc(false);
         this.set_comparator_key('last_modified');
         this.comparator = this._comparator;
 
-        Backbone.Collection.prototype.constructor.call(this, options);
+        Backbone.Collection.prototype.constructor.call(this, models, options);
     },
 
     _asc_comparator: function(l, r) {

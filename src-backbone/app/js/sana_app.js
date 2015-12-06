@@ -1,14 +1,15 @@
-var RootView = require('views/root_view');
+let RootView = require('views/root_view');
 
-var AuthenticationForm = require('behaviors/auth_form_behavior');
+let AuthenticationForm = require('behaviors/auth_form_behavior');
+let SortableCollection = require('behaviors/sortable_collection_behavior');
 
-var AuthRouter = require('routers/auth/auth_router');
-var InfoRouter = require('routers/info/info_router');
-var ProceduresRouter = require('routers/procedures/procedures_router');
+let AuthRouter = require('routers/auth/auth_router');
+let InfoRouter = require('routers/info/info_router');
+let ProceduresRouter = require('routers/procedures/procedures_router');
 
-var SessionModel = require('models/session.js');
-var Helpers = require('utils/helpers');
-var Storage = require('utils/storage');
+let SessionModel = require('models/session.js');
+let Helpers = require('utils/helpers');
+let Storage = require('utils/storage');
 
 
 module.exports = Marionette.Application.extend({
@@ -27,7 +28,7 @@ module.exports = Marionette.Application.extend({
 
         // Do this after Backbone.history has started so the navigate will work
         if (!this.session.isValid()) {
-            log.info("Started with invalid session");
+            console.info("Started with invalid session");
             this.session.destroy();
             if (Helpers.current_page_require_authentication()) {
                 Helpers.goto_default_logged_out();
@@ -42,11 +43,15 @@ module.exports = Marionette.Application.extend({
         // no longer valid and they need to relog in
         var sync = Backbone.sync;
         Backbone.sync = function(method, model, options) {
+            var errorHandler = options.error;
             options.error = function(xhr, ajaxOptions, thrownError) {
                 if (xhr.status === 401) {
                     // Reloads the page (i.e. resets the App state)
                     // TODO present user with error message
                     self.session.destroy();
+                } else {
+                    console.warn('Cannot globally handle Backbone.sync error; delegating to event handlers if any.');
+                    errorHandler(xhr, ajaxOptions, thrownError);
                 }
             };
             sync(method, model, options);
@@ -126,6 +131,7 @@ module.exports = Marionette.Application.extend({
         };
         this.Behaviors = {};
         this.Behaviors.AuthenticationForm = AuthenticationForm;
+        this.Behaviors.SortableCollection = SortableCollection;
     },
 
     _load_routers: function() {

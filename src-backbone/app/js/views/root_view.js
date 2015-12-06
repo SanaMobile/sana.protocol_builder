@@ -6,6 +6,15 @@ module.exports = Marionette.LayoutView.extend({
         main: '#main'
     },
 
+    show_view: function(view, body_class = null) {
+        if (DEBUG) {
+            global.active_view = view;
+        }
+
+        this.getRegion('main').show(view);
+        this.$el.removeClass().addClass(body_class);
+    },
+
     show_spinner: function() {
         var $spinner = $('<div class="spinner" />').hide();
         $spinner.appendTo(this.$el).fadeIn('fast');
