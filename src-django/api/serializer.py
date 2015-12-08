@@ -95,3 +95,12 @@ class ProcedureSerializer(serializers.ModelSerializer):
             'last_modified',
             'created'
         )
+
+
+class ProcedureDetailSerializer(ProcedureSerializer):
+    owner = serializers.ReadOnlyField(source='owner.id')
+
+    class Meta(ProcedureSerializer.Meta):
+        model = models.Procedure
+        depth = 1
+        fields = ProcedureSerializer.Meta.fields
