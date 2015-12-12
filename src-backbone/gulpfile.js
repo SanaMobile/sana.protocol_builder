@@ -25,7 +25,7 @@ var Config = {
     html: [
         'app/index.html'
     ],
-    bower_components: 'bower_components/**',
+    bower_components: 'bower_components/**/*',
     output: 'dist'
 };
 

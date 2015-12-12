@@ -1,7 +1,18 @@
 @import url(utils/constants.less);
 
-header#main-header{
-    border-bottom: 1px solid @grey-border-light;
+
+nav#procedures-navbar{
+    margin-bottom: 0;
+
+    .welcome{
+        color: @grey-text-darkbg;
+        line-height: 50px;
+        margin-right: 15px;
+    }
+}
+
+header#procedures-menu{
+    border-bottom: 1px solid @grey-border;
     height: 100px;
     overflow: hidden;
 
@@ -61,14 +72,10 @@ header#procedures-list-heading{
         height: 40px;
         line-height: 40px;
         padding: 0 20px;
-
-        span{
-            margin-right: 5px;
-        }
     }
 }
 
-#procedure-list-toolbar{
+nav#procedure-list-toolbar{
     border: 1px solid @grey-border;
     margin: 0;
 
@@ -88,7 +95,8 @@ header#procedures-list-heading{
             cursor: pointer;
 
             &.active{
-                background: @grey-bg;
+                background: @link-blue;
+                color: #fff;
             }
         }
     }
@@ -98,7 +106,7 @@ header#procedures-list-heading{
     }
 }
 
-div#procedures-list{
+section#procedures-list{
     ul{
         list-style: none;
         overflow: hidden;
@@ -172,7 +180,7 @@ div#procedures-list{
 }
 
 footer#main-footer{
-    border-top: 1px solid @grey-border-light;
+    border-top: 1px solid @grey-border;
     margin-top: 30px;
     padding: 60px 0;
     text-align: center;

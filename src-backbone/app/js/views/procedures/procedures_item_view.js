@@ -11,6 +11,8 @@ module.exports = Marionette.ItemView.extend({
 
     delete_procedure: function(event) {
         event.preventDefault();
+
+        // TODO prompt user for confirmation
         this.model.destroy();
     },
 

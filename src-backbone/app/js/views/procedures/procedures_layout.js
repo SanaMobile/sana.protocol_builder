@@ -8,8 +8,8 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     regions: {
-        top_navbar: 'nav#top-navbar',
-        procedures_list: 'div#procedures-list',
+        procedures_navbar: 'nav#procedures-navbar',
+        procedures_list: 'section#procedures-list',
     },
 
     events: {
@@ -26,9 +26,9 @@ module.exports = Marionette.LayoutView.extend({
 
     constructor: function(options = {}) {
         this.app                      = options.app                      || global.App;
-        this.ProceduresCollection     = options.ProceduresCollection     || require('models/procedures_collection');
-        this.Procedure                = options.Procedure                || require('models/procedures_model');
-        this.AccountNavbarView        = options.AccountNavbarView        || require('views/procedures/account_navbar_view');
+        this.Procedure                = options.Procedure                || require('models/procedure_model');
+        this.ProceduresCollection     = options.ProceduresCollection     || require('models/procedure_collection');
+        this.ProceduresNavbarView     = options.ProceduresNavbarView     || require('views/procedures/procedures_navbar_view');
         this.ProceduresCollectionView = options.ProceduresCollectionView || require('views/procedures/procedures_collection_view');
         this.Helpers                  = options.Helpers                  || require('utils/helpers');
 
@@ -46,6 +46,9 @@ module.exports = Marionette.LayoutView.extend({
             complete: function() {
                 self.app.session.trigger('complete');
             },
+            success: function() {
+                self.render();
+            },
         });
     },
 
@@ -53,15 +56,13 @@ module.exports = Marionette.LayoutView.extend({
         this._update_toolbar_options();
 
         // Account navbar
-        this.account_navbar_view = new this.AccountNavbarView();
-        this.account_navbar_view.render();
-        this.getRegion('top_navbar').show(this.account_navbar_view);
+        this.procedures_navbar_view = new this.ProceduresNavbarView();
+        this.getRegion('procedures_navbar').show(this.procedures_navbar_view);
 
         // Procedures collection
         this.procedures_collection_view = new this.ProceduresCollectionView({
             collection: this.procedures_collection,
         });
-        this.procedures_collection_view.render();
         this.getRegion('procedures_list').show(this.procedures_collection_view);
     },
 
@@ -78,11 +79,7 @@ module.exports = Marionette.LayoutView.extend({
         event.preventDefault();
 
         var self = this;
-        var new_procedure = new this.Procedure({
-            author: 'Stephen' // TODO either fetch user's username or let API allow nullable authors
-        }, {
-            collection: this.procedures_collection
-        });
+        var new_procedure = new this.Procedure(); // Does not need to set 'collection' option because it already has a urlRoot property
         new_procedure.save({}, {
             beforeSend: function() {
                 self.app.session.trigger('request'); // TODO
@@ -91,7 +88,7 @@ module.exports = Marionette.LayoutView.extend({
                 self.app.session.trigger('complete');
             },
             success: function() {
-                self.procedures_collection.add(new_procedure);
+                Backbone.history.navigate('/procedures/' + new_procedure.id, { trigger: true });
             },
         });
     },

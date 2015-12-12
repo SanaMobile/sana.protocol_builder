@@ -1,0 +1,194 @@
+@import url(utils/constants.less);
+@import url(utils/helpers.less);
+
+
+section.details-panel{
+    border-bottom: 1px solid @grey-border;
+    padding: 40px;
+    padding-right: @container-side-padding;
+
+    h1{
+        font-size: 24px;
+        line-height: 40px;
+        margin: 40px 0;
+
+        &:first-child{
+            margin-top: 0;
+        }
+    }
+}
+
+div#elements-list ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li{
+        &.element{
+            border: 1px solid @grey-border;
+            margin-bottom: 20px;
+            min-height: 40px * 2 + 50px;
+            padding: 40px (40px * 2 + 50px);
+            position: relative;
+
+            &:last-child{
+                margin-bottom: 0;
+            }
+
+            div.form-group{
+                margin-bottom: 20px;
+
+                div.checkbox{
+                    margin-left: 5px;
+                }
+
+                &:last-child{
+                    margin-bottom: 0;
+                }
+            }
+
+            h2{
+                line-height: 50px;
+                margin: 0;
+                margin-bottom: 20px;
+            }
+
+            a.glyphicon{
+                cursor: pointer;
+                display: block;
+                position: absolute;
+                width: 50px; height: 50px;
+                right: 40px;
+
+                color: @black-text;
+                font-size: 24px;
+                line-height: 50px;
+                text-align: center;
+                text-decoration: none;
+
+                &:hover{
+                    color: @link-blue;
+                }
+
+                &.delete{
+                    top: 40px;
+                }
+
+                &.move-up{
+                    top: 50%;
+                    margin-top: -50px;
+                }
+
+                &.move-down{
+                    top: 50%;
+                }
+
+                &.disabled{
+                    color: @grey-text-darkbg;
+                }
+            }
+
+            &:before{
+                background-image: url('/img/elements/default-large.png');
+                background-repeat: no-repeat;
+                background-position: center;
+                display: block;
+                content: '';
+                position: absolute;
+                top: 40px; left: 40px;
+                width: 50px; height: 50px;
+            }
+
+            .icon(@name) {
+                &.element-type-@{name} {
+                    &:before {
+                        background-image: url('/img/elements/@{name}-large.png');
+                    }
+                }
+            }
+
+            .icon(date);
+            .icon(entry);
+            .icon(select);
+            .icon(multi-select);
+            .icon(radio);
+            .icon(picture);
+            .icon(plugin);
+            .icon(entry-plugin);
+        }
+
+        &.empty-elements{
+            background-color: @grey-bg;
+            border-left: 5px solid @grey-border;
+            display: block;
+            padding: 40px;
+        }
+    }
+}
+
+ul#new-element-btns{
+    .clearfix;
+
+    list-style: none;
+    margin: 0 -5px;
+    padding: 0;
+
+    li{
+        box-sizing: border-box;
+        padding: 0 5px;
+        width: 100% / 8;
+        float: left;
+
+        a{
+            @icon-box-height: 100px;
+            
+            border: 1px solid @grey-border;
+            cursor: pointer;
+            display: block;
+            padding: 10px;
+            padding-top: @icon-box-height + 10px;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.2s;
+
+            color: @black-text;
+            font-size: 15px;
+            font-weight: bold;
+            line-height: 20px;
+
+            &:before{
+                background-image: url('/img/elements/default-large.png');
+                background-repeat: no-repeat;
+                background-position: center;
+                border-bottom: 1px solid @grey-border;
+                content: '';
+                display: block;
+                position: absolute;
+                top: 0; left: 0; right: 0;
+                height: @icon-box-height;
+            }
+
+            &:hover{
+                background-color: @grey-bg;
+            }
+
+            .icon(@name) {
+                &.element-type-@{name} {
+                    &:before {
+                        background-image: url('/img/elements/@{name}-large.png');
+                    }
+                }
+            }
+
+            .icon(date);
+            .icon(entry);
+            .icon(select);
+            .icon(multi-select);
+            .icon(radio);
+            .icon(picture);
+            .icon(plugin);
+            .icon(entry-plugin);
+        }
+    }
+}

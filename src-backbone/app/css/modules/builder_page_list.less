@@ -1,0 +1,146 @@
+@import url(utils/constants.less);
+@import url(utils/helpers.less);
+
+
+section#pages-list{
+    a#create-new-page-btn{
+        display: block;
+        font-weight: bold;
+        margin: @column-margin;
+        padding: @column-margin;
+    }
+
+    ul.pages-list{
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li.ui-sortable-placeholder{
+            border-bottom: 1px solid @grey-border;
+            position: relative;
+
+            &:after{
+                background: @grey-bg;
+                content: '';
+                display: block;
+                position: absolute;
+                top: 5px; right: 5px; bottom: 5px; left: 5px;
+                border: 5px dashed @grey-border;
+            }
+        }
+
+        li.page{
+            background: #fff;
+            cursor: pointer;
+            border-bottom: 1px solid @grey-border;
+            position: relative;
+
+            &.active{
+                background: @grey-bg;
+            }
+
+            &:hover{
+                background: @grey-bg-light;
+            }
+
+            a.page{
+                color: @black-text;
+                text-decoration: none;
+
+                display: block;
+                min-height: 50px;
+                padding: @column-margin;
+                padding-left: @container-side-padding;
+                padding-right: @column-margin * 2 + 20px;
+                width: 100%; height: 100%;
+            }
+
+            ul.element-preview{
+                list-style: none;
+                padding: 0;
+
+                li{
+                    font-size: 15px;
+                    line-height: 30px;
+                    min-height: 30px;
+                    padding-left: 25px;
+                    position: relative;
+
+                    &:before{
+                        background-image: url('/img/elements/default.png');
+                        background-repeat: no-repeat;
+                        background-size: 100% 100%;
+
+                        display: block;
+                        content: '';
+                        overflow: hidden;
+                        position: absolute;
+                        top: (30px - 16px) / 2; left: 2px;
+                        width: 16px; height: 16px;
+                    }
+
+                    .icon(@name) {
+                        &.element-type-@{name} {
+                            &:before {
+                                background-image: url('/img/elements/@{name}.png');
+                            }
+                        }
+                    }
+
+                    .icon(date);
+                    .icon(entry);
+                    .icon(select);
+                    .icon(multi-select);
+                    .icon(radio);
+                    .icon(picture);
+                    .icon(plugin);
+                    .icon(entry-plugin);
+
+                    &.empty{
+                        font-style: italic;
+
+                        &:before{
+                            display: none;
+                        }
+                    }
+                }
+            }
+
+            &.ui-sortable-helper{
+                cursor: move;
+                border: 1px solid @grey-border;
+                box-shadow: 0 0 20px @grey-border;
+            }
+
+            div.handle{
+                background-image: url('/img/common-icons/drag-handle.png');
+                background-repeat: no-repeat;
+                background-position: center @column-margin;
+                cursor: move;
+                border-right: 1px solid @grey-border-light;
+                display: block;
+                position: absolute;
+                top: 0; left: 0;
+                width: @container-side-padding - @column-margin; height: 100%;
+
+                opacity: 0.5;
+                transition: 0.5s;
+
+                &:hover{
+                    opacity: 1;
+                }
+            }
+
+            a.delete{
+                color: @grey-text;
+                cursor: pointer;
+                display: block;
+                line-height: 30px;
+                position: absolute;
+                text-align: center;
+                top: @column-margin; right: @column-margin;
+                width: 30px; height: 30px;
+            }
+        }
+    }
+}
