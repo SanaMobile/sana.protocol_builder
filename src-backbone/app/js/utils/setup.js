@@ -23,6 +23,8 @@ module.exports = {
         this._setup_i18n();
         global.HandlebarsIntl = require('handlebars-intl');
         HandlebarsIntl.registerWith(Handlebars);
+
+        require('bootstrap');
     },
 
     load_hb_helpers: function() {
