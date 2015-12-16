@@ -20,12 +20,14 @@ var Config = {
         'app/css/**/*.css',
     ],
     images: [
-        'app/img/**/*'
+        'app/img/**/*',
+    ],
+    fonts: [
+        'node_modules/bootstrap/fonts/**/*',
     ],
     html: [
-        'app/index.html'
+        'app/index.html',
     ],
-    bower_components: 'bower_components/**',
     output: 'dist'
 };
 
@@ -61,7 +63,6 @@ gulp.task('css', function() {
             .pipe(less({
                 paths: [
                     path.join(__dirname, 'app/css'),
-                    path.join(__dirname, 'bower_components'),
                 ]
             }))
             .pipe(concat('app.css'))
@@ -145,6 +146,16 @@ gulp.task('img', function() {
 });
 
 //------------------------------------------------------------------------------
+// Font Tasks
+//------------------------------------------------------------------------------
+
+gulp.task('fonts', function() {
+    gulp.src(Config.fonts)
+        .pipe(gulp.dest(Config.output + '/fonts'))
+        .pipe(connect.reload());
+});
+
+//------------------------------------------------------------------------------
 // HTML Tasks
 //------------------------------------------------------------------------------
 
@@ -155,81 +166,17 @@ gulp.task('html', function() {
 });
 
 //------------------------------------------------------------------------------
-// Bower Tasks
-//------------------------------------------------------------------------------
-
-var main_bower_files = require('main-bower-files');
-var bower_files = main_bower_files({
-    overrides: {
-        bootstrap: {
-            main: [
-                './dist/js/bootstrap.js',
-                './dist/css/*.min.*',
-                './dist/fonts/*.*'
-            ]
-        },
-        jquery: {
-            // Do not load Bower's jQuery because node already loads it
-            ignore: true,
-        }
-    }
-});
-
-gulp.task('bower-js', function() {
-    var uglify = require('gulp-uglify');
-    var concat = require('gulp-concat');
-    var filter = require('gulp-filter');
-
-    var js_filter = filter('**/*.js');
-
-    gulp.src(bower_files, { base: 'bower_components' })
-        .pipe(js_filter)
-        .pipe(concat('libs.js'))
-        .pipe(uglify())
-        .pipe(gulp.dest(Config.output + '/js'))
-        .pipe(connect.reload());
-});
-
-gulp.task('bower-css', function() {
-    var concat = require('gulp-concat');
-    var filter = require('gulp-filter');
-
-    var css_filter = filter('**/*.css');
-
-    gulp.src(bower_files, { base: 'bower_components' })
-        .pipe(css_filter)
-        .pipe(concat('libs.css'))
-        .pipe(gulp.dest(Config.output + '/css'))
-        .pipe(connect.reload());
-});
-
-gulp.task('bower-fonts', function() {
-    var flatten = require('gulp-flatten');
-    var filter = require('gulp-filter');
-
-    var font_filter = filter('**/dist/fonts/*.*');
-
-    gulp.src(bower_files, { base: 'bower_components' })
-        .pipe(font_filter)
-        .pipe(flatten())
-        .pipe(gulp.dest(Config.output + '/fonts'))
-        .pipe(connect.reload());
-});
-
-gulp.task('bower', ['bower-js', 'bower-css', 'bower-fonts']);
-
-//------------------------------------------------------------------------------
 // Default
 // This executes when you run 'gulp' on the command line
 //------------------------------------------------------------------------------
 
-gulp.task('build', ['css', 'js', 'bower', 'img', 'html']);
+gulp.task('build', ['css', 'js', 'img', 'fonts', 'html']);
 
 gulp.task('default', ['build'], function(){
     gulp.watch(Config.stylesheets, ['css']);
     gulp.watch(Config.javascripts, ['js']);
-    gulp.watch(Config.bower_components, ['bower']);
     gulp.watch(Config.images, ['img']);
+    gulp.watch(Config.fonts, ['fonts']);
     gulp.watch(Config.html, ['html']);
 
     gulp.start('webserver');

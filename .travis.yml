@@ -22,7 +22,6 @@ install:
   - pip install --requirement src-django/requirements.txt
 
   # Node tools
-  - npm install --global bower
   - npm install --global gulp
   - npm install --global jshint
   - npm install --global browserify
@@ -31,7 +30,6 @@ install:
   # Project dependencies
   - cd src-backbone
   - npm install
-  - bower install
   - cd ..
 
 before_script:

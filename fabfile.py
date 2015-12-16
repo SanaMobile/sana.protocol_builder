@@ -51,7 +51,6 @@ def update_host():
         with cd(env.project_root + env.frontend_dir):
             print(green('Building Backbone application...'))
             run('npm install')
-            run('bower install')
             run('gulp build')
 
 
