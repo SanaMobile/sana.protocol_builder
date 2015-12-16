@@ -22,10 +22,6 @@ module.exports = {
         HandlebarsIntl.registerWith(Handlebars);
     },
 
-    load_logger: function(enabled) {
-        global.log = require('utils/logger')(enabled);
-    },
-
     _setup_i18n: function() {
         var is_locales_supported = require('intl-locales-supported');
 

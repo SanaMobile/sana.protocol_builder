@@ -42,7 +42,7 @@ module.exports = Marionette.Behavior.extend({
                 form_view.show_errors_in_form($form, errors);
             },
             function(jqXHR, textStatus, errorThrown) {
-                log.warn(jqXHR);
+                console.warn(jqXHR);
             }
         );
     },

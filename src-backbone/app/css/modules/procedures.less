@@ -1,6 +1,6 @@
 @import url(utils/constants.less);
 
-header#main-menu{
+header#main-header{
     border-bottom: 1px solid @grey-border-light;
     height: 100px;
     overflow: hidden;
@@ -76,14 +76,14 @@ header#procedures-list-heading{
         margin: 8px;
         padding: 0;
 
-        input#filter-input{
+        input#procedure-filter{
             border-radius: 2px;
             box-shadow: none;
             width: 300px;
         }
     }
 
-    .dropdown{
+    li.dropdown{
         a{
             cursor: pointer;
 
@@ -98,7 +98,7 @@ header#procedures-list-heading{
     }
 }
 
-#procedures-list{
+div#procedures-list{
     ul{
         list-style: none;
         overflow: hidden;

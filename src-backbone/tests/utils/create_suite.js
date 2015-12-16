@@ -6,7 +6,12 @@ global.window = document.defaultView;
 var Setup = require('utils/setup');
 Setup.load_config();
 Setup.load_libs();
-Setup.load_logger(false);
+
+// Turn off debug logs
+Config.DEBUG = false;
+console.info = function(){};
+console.warn = function(){};
+console.error = function(){};
 
 // Setup sinon
 global.XMLHttpRequest = window.XMLHttpRequest;
