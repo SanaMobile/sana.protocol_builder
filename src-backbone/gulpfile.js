@@ -12,6 +12,7 @@ var Config = {
         'app/js/main.js',
     ],
     javascripts: [
+        'tests/**/*.js',
         'app/js/**/*.js',
         'app/js/**/*.hbs',
     ],
