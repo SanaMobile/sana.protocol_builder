@@ -27,5 +27,13 @@ module.exports = Marionette.Controller.extend({
             template: require('templates/info/privacy_policy'),
         }));
     },
+  
+    e404_not_found: function() {
+        var info_layout = new this.InfoLayout({ app: this.app });
+        this.app.root_view.showChildView('main', info_layout);
+        info_layout.showChildView('info_area', new Marionette.ItemView({
+            template: require('templates/errors/404_not_found'),
+        }));
+    },
 
 });

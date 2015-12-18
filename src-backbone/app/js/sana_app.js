@@ -4,7 +4,6 @@ var AuthenticationForm = require('behaviors/auth_form_behavior');
 
 var AuthRouter = require('routers/auth/auth_router');
 var InfoRouter = require('routers/info/info_router');
-var ErrorsRouter = require('routers/errors/errors_router');
 var ProceduresRouter = require('routers/procedures/procedures_router');
 
 var SessionModel = require('models/session.js');
@@ -18,6 +17,7 @@ module.exports = Marionette.Application.extend({
         this._setup_authentication();
         this._setup_views();
         this._setup_history();
+
         this._load_behaviors();
         this._load_routers();
     },
@@ -98,11 +98,12 @@ module.exports = Marionette.Application.extend({
     },
 
     _setup_history: function() {
-        var ROUTE_NOT_FOUND_EVENT = 'route-not-found';
+        let self = this;
+        let ROUTE_NOT_FOUND_EVENT = 'route-not-found';
 
-        var History = Backbone.History.extend({
+        let History = Backbone.History.extend({
             loadUrl: function() {
-                var match = Backbone.History.prototype.loadUrl.apply(this, arguments);
+                let match = Backbone.History.prototype.loadUrl.apply(this, arguments);
                 if (!match) {
                     this.trigger(ROUTE_NOT_FOUND_EVENT);
                 }
@@ -112,10 +113,7 @@ module.exports = Marionette.Application.extend({
 
         Backbone.history = new History();
         Backbone.history.on(ROUTE_NOT_FOUND_EVENT, function() {
-            Backbone.history.navigate('404', {
-                trigger: true,
-                replace: true,
-            });
+            self.info_router.controller.e404_not_found();
         });
     },
 
@@ -134,7 +132,6 @@ module.exports = Marionette.Application.extend({
         this.auth_router = new AuthRouter({ app: this });
         this.procedure_router = new ProceduresRouter({ app: this });
         this.info_router = new InfoRouter({ app: this });
-        this.errors_router = new ErrorsRouter({ app: this });
     },
 
 });
