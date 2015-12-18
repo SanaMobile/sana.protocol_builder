@@ -1,11 +1,17 @@
 module.exports = {
 
     goto_default_logged_in: function() {
-        Backbone.history.navigate('procedures', { trigger: true });
+        Backbone.history.navigate('procedures', {
+            trigger: true,
+            replace: true,
+        });
     },
 
     goto_default_logged_out: function() {
-        Backbone.history.navigate('login', { trigger: true });
+        Backbone.history.navigate('login', {
+            trigger: true,
+            replace: true,
+        });
     },
 
     current_page_require_authentication: function() {
