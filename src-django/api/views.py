@@ -9,12 +9,17 @@ import serializer
 
 
 class ProcedureViewSet(viewsets.ModelViewSet):
-    serializer_class = serializer.ProcedureSerializer
     model = models.Procedure
 
     def get_queryset(self):
         user = self.request.user
         return models.Procedure.objects.filter(owner=user)
+
+    def get_serializer_class(self):
+        request_flag = 'only_return_id'
+        if self.request.GET.get(request_flag) == 'true':
+            return serializer.ProcedureSerializer
+        return serializer.ProcedureDetailSerializer
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
