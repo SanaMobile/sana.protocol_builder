@@ -4,12 +4,12 @@ let Helpers = require('utils/helpers');
 
 module.exports = {
 
-    load_config: function() {
+    loadConfig: function() {
         global.Config = Config;
         global.DEBUG = Config.DEBUG;
     },
 
-    load_libs: function() {
+    loadLibs: function() {
         // Loads libraries into global namespace
         global.$ = global.jQuery = require('jquery');
         require('jquery-ui/sortable');
@@ -20,27 +20,27 @@ module.exports = {
         global.Marionette = require('backbone.marionette');
 
         global.Handlebars = require("hbsfy/runtime");
-        this._setup_i18n();
+        this._setupI18N();
         global.HandlebarsIntl = require('handlebars-intl');
         HandlebarsIntl.registerWith(Handlebars);
 
         require('bootstrap');
     },
 
-    load_hb_helpers: function() {
+    loadHandlebarsHelpers: function() {
         Handlebars.registerHelper('sluggify', Helpers.sluggify);
 
-        Handlebars.registerHelper('readable_element_name', function(str) {
+        Handlebars.registerHelper('readableElementName', function(str) {
             return Config.ELEMENT_NAMES[str];
         });
     },
 
-    _setup_i18n: function() {
-        var is_locales_supported = require('intl-locales-supported');
+    _setupI18N: function() {
+        let isLocalesSupported = require('intl-locales-supported');
 
         if (global.Intl) {
             // Determine if the built-in `Intl` has the locale data we need.
-            if (!is_locales_supported(Config.LOCALES_SUPPORTED)) {
+            if (!isLocalesSupported(Config.LOCALES_SUPPORTED)) {
                 // `Intl` exists, but it doesn't have the data we need, so load the
                 // polyfill and replace the constructors with need with the polyfill's.
                 require('intl');

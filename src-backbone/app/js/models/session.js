@@ -1,8 +1,8 @@
-var AUTH_TOKEN_KEY = 'auth_token';
-var STORAGE_KEY = AUTH_TOKEN_KEY;
+const AUTH_TOKEN_KEY = 'AUTH_TOKEN_KEY';
+const STORAGE_KEY = AUTH_TOKEN_KEY;
 
 
-var SessionModel = Backbone.Model.extend({
+let SessionModel = Backbone.Model.extend({
 
     constructor : function (options = {}) {
         this.storage = options.storage;
@@ -33,22 +33,22 @@ var SessionModel = Backbone.Model.extend({
         }
     },
 
-    signup: function(form_data, server_error_handler, network_error_handler) {
+    signup: function(formData, serverErrorHandler, networkErrorHandler) {
         this.destroy();
 
-        var self = this;
+        let self = this;
         $.ajax({
-            data: form_data,
+            data: formData,
             type: 'POST',
             url: '/auth/signup',
             beforeSend: function(jqXHR, settings) {
                 self.trigger('request');
             },
             success: function(response) {
-                self._auth_handler(response, server_error_handler);
+                self._authHandler(response, serverErrorHandler);
             },
             error: function(error) {
-                network_error_handler(error);
+                networkErrorHandler(error);
             },
             complete: function(jqXHR, textStatus) {
                 self.trigger('complete');
@@ -56,22 +56,22 @@ var SessionModel = Backbone.Model.extend({
         });
     },
 
-    login: function(form_data, server_error_handler, network_error_handler) {
+    login: function(formData, serverErrorHandler, networkErrorHandler) {
         this.destroy();
 
-        var self = this;
+        let self = this;
         $.ajax({
-            data: form_data,
+            data: formData,
             type: 'POST',
             url: '/auth/login',
             beforeSend: function(jqXHR, settings) {
                 self.trigger('request');
             },
             success: function(response) {
-                self._auth_handler(response, server_error_handler);
+                self._authHandler(response, serverErrorHandler);
             },
             error: function(error) {
-                network_error_handler(error);
+                networkErrorHandler(error);
             },
             complete: function(jqXHR, textStatus) {
                 self.trigger('complete');
@@ -80,7 +80,7 @@ var SessionModel = Backbone.Model.extend({
     },
 
     logout: function() {
-        var self = this;
+        let self = this;
         $.ajax({
             type: 'POST',
             url: '/auth/logout',
@@ -94,13 +94,13 @@ var SessionModel = Backbone.Model.extend({
         });
     },
 
-    _auth_handler: function(response, server_error_handler) {
+    _authHandler: function(response, serverErrorHandler) {
         if (response.success) {
             this.set(AUTH_TOKEN_KEY, response.token);
             this.save();
         } else {
-            if (_.isFunction(server_error_handler)) {
-                server_error_handler(response.errors);
+            if (_.isFunction(serverErrorHandler)) {
+                serverErrorHandler(response.errors);
             }
         }
     },
