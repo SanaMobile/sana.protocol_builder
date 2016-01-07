@@ -38,7 +38,30 @@ module.exports = {
 
     arrived_on_page: function(title) {
         document.title = title + " | " + Config.SITE_TITLE;
-        console.info('View: ' + title);
+        console.info('%cView: ' + title, 'background:Green; color:White');
+    },
+
+    propagate_events: function(src, dest, events_to_propagate) {
+        var create_event_handler = function(event) {
+            return function() {
+                dest.trigger(event);
+            };
+        };
+
+        for (let event of events_to_propagate) {
+            src.on(event, create_event_handler(event));
+        }
+    },
+
+    sluggify: function(str) {
+        return str && str
+            .toLowerCase()
+            .replace(/\s+/g, '-')           // Replace spaces with -
+            .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+            .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+            .replace(/^-+/, '')             // Trim - from start of text
+            .replace(/-+$/, '')             // Trim - from end of text
+        ;
     },
 
 };

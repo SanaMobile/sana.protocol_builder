@@ -1,6 +1,7 @@
 var Setup = require('utils/setup');
 Setup.load_config();
 Setup.load_libs();
+Setup.load_hb_helpers();
 
 
 $(document).ready(function() {

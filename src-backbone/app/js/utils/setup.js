@@ -1,4 +1,5 @@
-var Config = require('utils/config');
+let Config = require('utils/config');
+let Helpers = require('utils/helpers');
 
 
 module.exports = {
@@ -11,6 +12,8 @@ module.exports = {
     load_libs: function() {
         // Loads libraries into global namespace
         global.$ = global.jQuery = require('jquery');
+        require('jquery-ui/sortable');
+
         global._ = require('underscore');
         global.Backbone = require('backbone');
         global.Backbone.$ = $;
@@ -22,6 +25,14 @@ module.exports = {
         HandlebarsIntl.registerWith(Handlebars);
 
         require('bootstrap');
+    },
+
+    load_hb_helpers: function() {
+        Handlebars.registerHelper('sluggify', Helpers.sluggify);
+
+        Handlebars.registerHelper('readable_element_name', function(str) {
+            return Config.ELEMENT_NAMES[str];
+        });
     },
 
     _setup_i18n: function() {
