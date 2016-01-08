@@ -1,0 +1,152 @@
+let RootView = require('views/rootLayoutView');
+
+let AuthFormBehavior = require('behaviors/authFormBehavior');
+let SortableBehavior = require('behaviors/sortableBehavior');
+
+let AuthRouter = require('routers/authRouter');
+let InfoRouter = require('routers/infoRouter');
+let ProceduresRouter = require('routers/proceduresRouter');
+
+let Session = require('models/session.js');
+let Helpers = require('utils/helpers');
+let Storage = require('utils/storage');
+
+
+module.exports = Marionette.Application.extend({
+
+    init: function() {
+        this._setupAuth();
+        this._setupViews();
+        this._setupHistory();
+
+        this._loadBehaviors();
+        this._loadRouters();
+    },
+
+    onStart: function () {
+        Backbone.history.start({ pushState: true });
+
+        // Do this after Backbone.history has started so the navigate will work
+        if (!this.session.isValid()) {
+            console.info("Started with invalid session");
+            this.session.destroy();
+            if (Helpers.currentPageRequiresAuth()) {
+                Helpers.navigateToDefaultLoggedOut();
+            }
+        }
+    },
+
+    switchView: function(view, bodyClass = null) {
+        if (DEBUG) {
+            global.activeView = view;
+        }
+
+        this._rootView.getRegion('main').show(view);
+        this._rootView.$el.removeClass().addClass(bodyClass);
+    },
+
+    _setupAuth: function() {
+        let self = this;
+
+        // When Backbone.sync hits an 401, then it means the user token is 
+        // no longer valid and they need to relog in
+        let sync = Backbone.sync;
+        Backbone.sync = function(method, model, options) {
+            let errorHandler = options.error;
+            options.error = function(xhr, ajaxOptions, thrownError) {
+                if (xhr.status === 401) {
+                    // Reloads the page (i.e. resets the App state)
+                    // TODO present user with error message
+                    self.session.destroy();
+                } else {
+                    console.warn('Cannot globally handle Backbone.sync error; delegating to event handlers if any.');
+                    errorHandler(xhr, ajaxOptions, thrownError);
+                }
+            };
+            sync(method, model, options);
+        };
+
+        // Setup storage mechanism
+        this.storage = new Storage();
+
+        // Setup session
+        // After logging in/out, the Session model will trigger the change:AUTH_TOKEN_KEY event
+        this.session = new Session({ storage: this.storage });
+        this.session.on('change:' + Session.AUTH_TOKEN_KEY, function() {
+            let hasToken = self.session.has(Session.AUTH_TOKEN_KEY);
+            console.info('Auth Token Changed: ' + hasToken);
+
+            if (hasToken) {
+                Helpers.navigateToDefaultLoggedIn();
+            } else {
+                Helpers.navigateToDefaultLoggedOut();
+            }
+        });
+
+        $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+            options.url = Config.API_BASE + options.url;
+
+            if (self.session.has(Session.AUTH_TOKEN_KEY)) {
+                jqXHR.setRequestHeader('Authorization', 'Token ' + self.session.get(Session.AUTH_TOKEN_KEY));
+            }
+        });
+
+        // Load any existing tokens
+        // Do this before Backbone.history has started so that the model change
+        // events don't redirect the user yet
+        this.session.fetch();
+    },
+
+    _setupViews: function() {
+        let self = this;
+
+        // Assign root view for modules to render in
+        this._rootView = new RootView();
+
+        this.session.on('request', function() {
+            self._rootView.showSpinner();
+        });
+        this.session.on('complete', function() {
+            self._rootView.hideSpinner();
+        });
+    },
+
+    _setupHistory: function() {
+        const ROUTE_NOT_FOUND_EVENT = 'route-not-found';
+        let self = this;
+
+        let History = Backbone.History.extend({
+            loadUrl: function() {
+                let match = Backbone.History.prototype.loadUrl.apply(this, arguments);
+                if (!match) {
+                    this.trigger(ROUTE_NOT_FOUND_EVENT);
+                }
+                return match;
+            }
+        });
+
+        Backbone.history = new History();
+        Backbone.history.on(ROUTE_NOT_FOUND_EVENT, function() {
+            self.routers.infoRouter.controller.routeError404NotFound();
+        });
+    },
+
+    _loadBehaviors: function() {
+        let self = this;
+
+        Marionette.Behaviors.behaviorsLookup = function() {
+            return self.Behaviors;
+        };
+        this.Behaviors = {};
+        this.Behaviors.AuthFormBehavior = AuthFormBehavior;
+        this.Behaviors.SortableBehavior = SortableBehavior;
+    },
+
+    _loadRouters: function() {
+        this.routers = {};
+        this.routers.authRouter = new AuthRouter({ app: this });
+        this.routers.infoRouter = new InfoRouter({ app: this });
+        this.routers.proceduresRouter = new ProceduresRouter({ app: this });
+    },
+
+});
