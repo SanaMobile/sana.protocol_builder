@@ -9,7 +9,7 @@ include_recipe 'supervisor'
 include_recipe "database::postgresql"
 include_recipe "nodejs"
 
-nodejs_npm "ember-cli"
+nodejs_npm 'gulp'
 
 package 'libffi-dev' do
   action :install

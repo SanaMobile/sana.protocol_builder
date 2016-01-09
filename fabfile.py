@@ -5,7 +5,7 @@ env.colorize_errors = True
 env.hosts           = ['sanaprotocolbuilder.me']
 env.user            = 'root'
 env.virtualenv      = 'source /usr/local/bin/virtualenvwrapper.sh'
-env.project_root    = '/opt/sana.protocol_builder'
+env.project_root    = '/opt/sana.protocol_builder/'
 env.backend_dir     = 'src-django'
 env.frontend_dir    = 'src-backbone'
 
