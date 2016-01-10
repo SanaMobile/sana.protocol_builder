@@ -7,7 +7,7 @@ let AuthRouter = require('routers/authRouter');
 let InfoRouter = require('routers/infoRouter');
 let ProceduresRouter = require('routers/proceduresRouter');
 
-let Session = require('models/session.js');
+let Session = require('models/session');
 let Helpers = require('utils/helpers');
 let Storage = require('utils/storage');
 
@@ -15,7 +15,10 @@ let Storage = require('utils/storage');
 module.exports = Marionette.Application.extend({
 
     init: function() {
-        this._setupAuth();
+        this._setupSession();
+        this._setupBackboneSync();
+        this._setupAjaxPrefilters();
+
         this._setupViews();
         this._setupHistory();
 
@@ -45,26 +48,8 @@ module.exports = Marionette.Application.extend({
         this._rootView.$el.removeClass().addClass(bodyClass);
     },
 
-    _setupAuth: function() {
+    _setupSession: function() {
         let self = this;
-
-        // When Backbone.sync hits an 401, then it means the user token is 
-        // no longer valid and they need to relog in
-        let sync = Backbone.sync;
-        Backbone.sync = function(method, model, options) {
-            let errorHandler = options.error;
-            options.error = function(xhr, ajaxOptions, thrownError) {
-                if (xhr.status === 401) {
-                    // Reloads the page (i.e. resets the App state)
-                    // TODO present user with error message
-                    self.session.destroy();
-                } else {
-                    console.warn('Cannot globally handle Backbone.sync error; delegating to event handlers if any.');
-                    errorHandler(xhr, ajaxOptions, thrownError);
-                }
-            };
-            sync(method, model, options);
-        };
 
         // Setup storage mechanism
         this.storage = new Storage();
@@ -83,6 +68,41 @@ module.exports = Marionette.Application.extend({
             }
         });
 
+        // Load any existing tokens
+        // Do this before Backbone.history has started so that the model change
+        // events don't redirect the user yet
+        this.session.fetch();
+    },
+
+    _setupBackboneSync: function() {
+        let self = this;
+
+        // When Backbone.sync hits an 401, then it means the user token is 
+        // no longer valid and they need to relog in
+        let originalSync = Backbone.sync;
+        Backbone.sync = function(method, model, options) {
+            let originalErrorHandler = options.error;
+            options.error = function(xhr, ajaxOptions, thrownError) {
+                switch (xhr.status) {
+                    case 401: {
+                        // Reloads the page (i.e. resets the App state)
+                        // TODO present user with error message
+                        self.session.destroy();
+                        break;
+                    }
+                    default: {
+                        console.warn('Cannot globally handle Backbone.sync error');
+                    }
+                }
+                originalErrorHandler(xhr, ajaxOptions, thrownError);
+            };
+            originalSync(method, model, options);
+        };
+    },
+
+    _setupAjaxPrefilters: function() {
+        let self = this;
+
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
             options.url = Config.API_BASE + options.url;
 
@@ -90,11 +110,6 @@ module.exports = Marionette.Application.extend({
                 jqXHR.setRequestHeader('Authorization', 'Token ' + self.session.get(Session.AUTH_TOKEN_KEY));
             }
         });
-
-        // Load any existing tokens
-        // Do this before Backbone.history has started so that the model change
-        // events don't redirect the user yet
-        this.session.fetch();
     },
 
     _setupViews: function() {
@@ -144,9 +159,9 @@ module.exports = Marionette.Application.extend({
 
     _loadRouters: function() {
         this.routers = {};
-        this.routers.authRouter = new AuthRouter({ app: this });
-        this.routers.infoRouter = new InfoRouter({ app: this });
-        this.routers.proceduresRouter = new ProceduresRouter({ app: this });
+        this.routers.authRouter = new AuthRouter();
+        this.routers.infoRouter = new InfoRouter();
+        this.routers.proceduresRouter = new ProceduresRouter();
     },
 
 });

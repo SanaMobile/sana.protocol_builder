@@ -1,5 +1,5 @@
-let Config = require('utils/config');
-let Helpers = require('utils/helpers');
+let Config = require('./config');
+let Helpers = require('./helpers');
 
 
 module.exports = {
@@ -20,6 +20,7 @@ module.exports = {
         global.Marionette = require('backbone.marionette');
 
         global.Handlebars = require("hbsfy/runtime");
+        this._loadHandlebarsHelpers();
         this._setupI18N();
         global.HandlebarsIntl = require('handlebars-intl');
         HandlebarsIntl.registerWith(Handlebars);
@@ -27,7 +28,7 @@ module.exports = {
         require('bootstrap');
     },
 
-    loadHandlebarsHelpers: function() {
+    _loadHandlebarsHelpers: function() {
         Handlebars.registerHelper('sluggify', Helpers.sluggify);
 
         Handlebars.registerHelper('readableElementName', function(str) {

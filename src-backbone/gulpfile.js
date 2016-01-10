@@ -1,17 +1,18 @@
 'use strict';
 
+require('babel-core/register');
+
 //------------------------------------------------------------------------------
 // Config
 //------------------------------------------------------------------------------
 
-var gulp = require('gulp');
+let gulp = require('gulp');
 
-var Config = {
+let Config = {
     DEBUG: false,
-    entry_file: [
-        'app/js/main.js',
-    ],
-    configDir: 'app/js/utils/',
+    output: 'dist/',
+    entryFile: 'app/js/main.js',
+    configFileDir: 'app/js/utils/',
     configFile: 'config.js',
     configTemplateFile: 'configTemplate.js',
 
@@ -33,14 +34,13 @@ var Config = {
     html: [
         'app/index.html',
     ],
-    output: 'dist'
 };
 
 //------------------------------------------------------------------------------
 // Webserver
 //------------------------------------------------------------------------------
 
-var connect = require('gulp-connect');
+let connect = require('gulp-connect');
 
 gulp.task('webserver', function() {
     connect.server({
@@ -55,24 +55,23 @@ gulp.task('webserver', function() {
 //------------------------------------------------------------------------------
 
 gulp.task('css', function() {
-    var gulpif = require('gulp-if');
-    var less = require('gulp-less');
-    var path = require('path');
-    var minify_css = require('gulp-minify-css');
-    var source_maps = require('gulp-sourcemaps');
-    var concat = require('gulp-concat');
+    let gulpif = require('gulp-if');
+    let less = require('gulp-less');
+    let path = require('path');
+    let cssnano = require('gulp-cssnano');
+    let sourceMaps = require('gulp-sourcemaps');
+    let concat = require('gulp-concat');
 
     gulp.src(Config.stylesheets)
-    
-        .pipe(gulpif(Config.DEBUG, source_maps.init({ loadMaps: true })))
+        .pipe(gulpif(Config.DEBUG, sourceMaps.init({ loadMaps: true })))
             .pipe(less({
                 paths: [
                     path.join(__dirname, 'app/css'),
                 ]
             }))
             .pipe(concat('app.css'))
-            .pipe(minify_css())
-        .pipe(gulpif(Config.DEBUG, source_maps.write({ sourceRoot: '/map-css' })))
+            .pipe(cssnano())
+        .pipe(gulpif(Config.DEBUG, sourceMaps.write({ sourceRoot: '/map-css' })))
 
         .pipe(gulp.dest(Config.output + '/css'))
         .pipe(connect.reload());
@@ -92,66 +91,69 @@ gulp.task('js-config', function () {
         DEBUG: Config.DEBUG,
     };
 
-    gulp.src(Config.ConfigDir + Config.configTemplateFile)
+    gulp.src(Config.configFileDir + Config.configTemplateFile)
         .pipe(template(data))
-        .pipe(rename(Config.ConfigDir + Config.configFile))
+        .pipe(rename(Config.configFileDir + Config.configFile))
         .pipe(gulp.dest('.'));
 });
 
 gulp.task('js-lint', function() {
-    var jshint = require('gulp-jshint'); // Note: we're using JSHint, a better fork of the original JSLint
-    var stylish = require('jshint-stylish');
-    var filter = require('gulp-filter');
+    let jshint = require('gulp-jshint'); // Note: we're using JSHint, a better fork of the original JSLint
+    let stylish = require('jshint-stylish');
+    let filter = require('gulp-filter');
 
-    var js_filter = filter([
+    var jsFilter = filter([
         '**/*.js',
         '!**/' + Config.configTemplateFile,
     ]);
 
     gulp.src(Config.javascripts)
-        .pipe(js_filter)
+        .pipe(jsFilter)
         .pipe(jshint({
             esnext: true
         }))
         .pipe(jshint.reporter(stylish));
 });
 
-gulp.task('js-browserify', ['js-config'], function() {
-    var gulpif = require('gulp-if');
-    var browserify = require('browserify');
-    var source = require('vinyl-source-stream');
-    var buffer = require('vinyl-buffer');
-    var uglify = require('gulp-uglify');
-    var gulp_util = require('gulp-util');
-    var source_maps = require('gulp-sourcemaps');
-    var stripDebug = require('gulp-strip-debug');
+gulp.task('js-browserify', ['js-config', 'js-lint'], function() {
+    let gulpif = require('gulp-if');
+    let browserify = require('browserify');
+    let source = require('vinyl-source-stream');
+    let buffer = require('vinyl-buffer');
+    let uglify = require('gulp-uglify');
+    let gulpUtil = require('gulp-util');
+    let sourceMaps = require('gulp-sourcemaps');
+    let stripDebug = require('gulp-strip-debug');
 
-    var js_files = browserify({
-        entries: Config.entry_file,
+    let jsFiles = browserify({
+        entries: Config.entryFile,
         debug: Config.DEBUG,
         paths: [ __dirname + '/app/js' ],
         extensions: ['.hbs'],
     });
 
-    js_files.transform("babelify", {
+    jsFiles.transform("babelify", {
         presets: [
             'es2015'
         ]
     });
 
-    js_files.transform(require('hbsfy').configure({
+    jsFiles.transform(require('hbsfy').configure({
         extensions: ['hbs']
     }));
 
-    js_files.bundle()
-        .on('error', gulp_util.log)
+    jsFiles.bundle()
+        .on('error', gulpUtil.log)
         .pipe(source('app.js')) // Treats stream as a single dummy file
         .pipe(buffer()) // Buffers stream into single file
+
+        // Strip console.logs
         .pipe(gulpif(!Config.DEBUG, stripDebug()))
         
-        .pipe(gulpif(Config.DEBUG, source_maps.init({ loadMaps: true })))
+        // Compress files
+        .pipe(gulpif(Config.DEBUG, sourceMaps.init({ loadMaps: true })))
             .pipe(gulpif(!Config.DEBUG, uglify()))
-        .pipe(gulpif(Config.DEBUG, source_maps.write({ sourceRoot: '/map-js' })))
+        .pipe(gulpif(Config.DEBUG, sourceMaps.write({ sourceRoot: '/map-js' })))
 
         .pipe(gulp.dest(Config.output + '/js'))
         .pipe(connect.reload());
@@ -190,7 +192,7 @@ gulp.task('html', function() {
 });
 
 //------------------------------------------------------------------------------
-// Default
+// Runner (default)
 // This executes when you run 'gulp' on the command line
 //------------------------------------------------------------------------------
 
@@ -206,17 +208,34 @@ gulp.task('default', ['build'], function(){
     gulp.start('webserver');
 });
 
-//------------------------------------------------------------------------------
 // Debug
-//------------------------------------------------------------------------------
 
 gulp.task('set-debug', function(){
-    var colors = require('colors');
+    let colors = require('colors');
     console.log('Gulp Debug Mode'.yellow.bgBlack);
-
     Config.DEBUG = true;
 })
 
 gulp.task('debug', ['set-debug'], function(){
     gulp.start('default');
 })
+
+//------------------------------------------------------------------------------
+// Test
+//------------------------------------------------------------------------------
+
+gulp.task('js-unit-test', ['js-lint', 'js-config'], function() {
+    let filter = require('gulp-filter');
+    let mocha = require('gulp-mocha');
+    let stripDebug = require('gulp-strip-debug');
+
+    gulp.src(Config.javascripts)
+        .pipe(filter('**/**_test.js'))
+        .pipe(mocha({
+            require: [
+                './tests/setup/globals',
+            ],
+        }));
+});
+
+gulp.task('test', ['js-unit-test']);
