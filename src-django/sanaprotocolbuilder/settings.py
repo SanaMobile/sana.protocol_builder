@@ -139,23 +139,14 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        'verbose': {
-            'format': '[%(levelname)s] [%(asctime)s] [%(module)s] %(message)s'
-        },
         'simple': {
-            'format': '[%(levelname)s] %(message)s'
+            'format': '[%(levelname)s] [%(asctime)s] [%(module)s] %(message)s'
         },
         'box': {
             'format': '[%(levelname)s]\n' + ('-' * 80) + '\n%(message)s\n' + ('-' * 80) + '\n'
-        }
+        },
     },
     'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': 'info.log',
-            'formatter': 'verbose',
-        },
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
@@ -172,7 +163,7 @@ LOGGING = {
             'propagate': True,
         },
         'auth': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console'],
             'level': 'INFO',
             'propagate': True,
         }
