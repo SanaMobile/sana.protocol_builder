@@ -1,6 +1,6 @@
 module.exports = {
 
-    DEBUG: true,
+    DEBUG: <%= DEBUG %>,
 
     INPUT_DELAY_BEFORE_SAVE: 500, // in milliseconds
 
@@ -8,7 +8,7 @@ module.exports = {
 
     APP_NAMESPACE: 'spb',
 
-    API_BASE: 'http://localhost:8000',
+    API_BASE: '<%= API_BASE %>',
 
     LOCALES_SUPPORTED: [
         'en'

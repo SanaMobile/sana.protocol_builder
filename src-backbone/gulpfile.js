@@ -11,6 +11,10 @@ var Config = {
     entry_file: [
         'app/js/main.js',
     ],
+    configDir: 'app/js/utils/',
+    configFile: 'config.js',
+    configTemplateFile: 'configTemplate.js',
+
     javascripts: [
         'tests/**/*.js',
         'app/js/**/*.js',
@@ -78,12 +82,31 @@ gulp.task('css', function() {
 // JS Tasks
 //------------------------------------------------------------------------------
 
+gulp.task('js-config', function () {
+    let template = require('gulp-template');
+    let rename = require('gulp-rename');
+
+    let data = {
+        API_BASE: (Config.DEBUG ? 'http://localhost:8000'
+                                : 'https://www.sanaprotocolbuilder.me'),
+        DEBUG: Config.DEBUG,
+    };
+
+    gulp.src(Config.ConfigDir + Config.configTemplateFile)
+        .pipe(template(data))
+        .pipe(rename(Config.ConfigDir + Config.configFile))
+        .pipe(gulp.dest('.'));
+});
+
 gulp.task('js-lint', function() {
     var jshint = require('gulp-jshint'); // Note: we're using JSHint, a better fork of the original JSLint
     var stylish = require('jshint-stylish');
     var filter = require('gulp-filter');
 
-    var js_filter = filter('**/*.js');
+    var js_filter = filter([
+        '**/*.js',
+        '!**/' + Config.configTemplateFile,
+    ]);
 
     gulp.src(Config.javascripts)
         .pipe(js_filter)
@@ -93,7 +116,7 @@ gulp.task('js-lint', function() {
         .pipe(jshint.reporter(stylish));
 });
 
-gulp.task('js-browserify', function() {
+gulp.task('js-browserify', ['js-config'], function() {
     var gulpif = require('gulp-if');
     var browserify = require('browserify');
     var source = require('vinyl-source-stream');
