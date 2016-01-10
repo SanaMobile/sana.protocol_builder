@@ -1,7 +1,6 @@
 let Setup = require('utils/setup');
 Setup.loadConfig();
 Setup.loadLibs();
-Setup.loadHandlebarsHelpers();
 
 
 $(document).ready(function() {
