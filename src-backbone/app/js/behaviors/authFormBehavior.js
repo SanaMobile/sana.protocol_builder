@@ -17,7 +17,7 @@ module.exports = Marionette.Behavior.extend({
         let self = this;
         let $form = this.ui.form;
 
-        this.options.sessionAuthenticator(
+        this.options.onAuthenticate(
             $form.serializeArray(),
             function(errors) {
                 self._showErrorsInForm($form, errors);
