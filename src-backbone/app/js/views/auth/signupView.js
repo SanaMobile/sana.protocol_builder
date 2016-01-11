@@ -7,7 +7,7 @@ module.exports = Marionette.ItemView.extend({
 
     behaviors: {
         AuthFormBehavior: {
-            sessionAuthenticator: function (formData, serverErrorHandler, networkErrorHandler) {
+            onAuthenticate: function (formData, serverErrorHandler, networkErrorHandler) {
                 App().session.signup(formData, serverErrorHandler, networkErrorHandler);
             },
         }
