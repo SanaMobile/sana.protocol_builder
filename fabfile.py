@@ -17,8 +17,7 @@ def test():
         local('python manage.py test authentication --noinput')
 
     with lcd(env.frontend_dir):
-        pass
-        # local('npm test')
+        local('npm test')
 
 
 def lint():
