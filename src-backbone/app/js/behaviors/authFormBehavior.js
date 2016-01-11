@@ -8,10 +8,10 @@ module.exports = Marionette.Behavior.extend({
     },
 
     events: {
-        'submit @ui.form': 'auth',
+        'submit @ui.form': '_auth',
     },
 
-    auth: function(event) {
+    _auth: function(event) {
         event.preventDefault();
 
         let self = this;
