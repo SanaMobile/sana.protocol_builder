@@ -1,113 +1,170 @@
-// var CreateSuite = require('utils/create_suite');
-// var AuthController = require('routers/auth/auth_controller');
-// var SessionModel = require('models/session');
-// var RootView = require('views/root_view');
+require('setup/hooks');
 
+describe('Auth Controller', function() {
+    let app;
+    let appSwitchViewStub;
 
-// CreateSuite("Auth Controller", function() {
-//     var app;
-//     var auth_controller;
+    let authController;
+    let helpersMock;
 
-//     var root_view_stub;
-//     var auth_layout_spy;
-//     var auth_layout_stub;
-//     var signup_view_stub;
-//     var login_view_stub;
+    let authLayoutView;
+    let authLayoutViewShowChildViewStub;
+    let authLayoutViewStub;
 
-//     var helpers_mock;
+    let signupView;
+    let signupViewStub;
 
-//     beforeEach(function() {
-//         app = {
-//             session: new SessionModel(),
-//             root_view: new RootView(),
-//         };
+    let loginView;
+    let loginViewStub;
 
-//         root_view_stub = sinon.stub(app.root_view, 'showChildView');
-//         auth_layout_spy = sinon.spy();
-//         auth_layout_stub = sinon.stub().returns({ showChildView: auth_layout_spy });
-//         signup_view_stub = sinon.stub();
-//         login_view_stub = sinon.stub();
+    beforeEach(function() {
+        // Setup helpers
+        let helpers = require('utils/helpers');
+        helpersMock = sinon.mock(helpers);
 
-//         auth_controller = new AuthController({
-//             app: app,
-//             AuthLayout: auth_layout_stub,
-//             SignupView: signup_view_stub,
-//             LoginView: login_view_stub,
-//         });
+        // Setup app
+        let SanaApp = proxyquire('sanaApp', {
+            'views/rootLayoutView'       : {},
+            'behaviors/authFormBehavior' : {},
+            'behaviors/sortableBehavior' : {},
+            'routers/authRouter'         : {},
+            'routers/infoRouter'         : {},
+            'routers/proceduresRouter'   : {},
+            'utils/helpers'              : helpers,
+        });
+        app = new SanaApp();
+        let getAppInstance = function() {
+            return app;
+        };
+        appSwitchViewStub = sinon.stub(app, 'switchView');
 
-//         helpers_mock = sinon.mock(auth_controller.Helpers);
-//     });
+        // Setup authLayoutView
+        authLayoutViewShowChildViewStub = sinon.stub();
+        authLayoutView = {
+            showChildView: authLayoutViewShowChildViewStub,
+        };
+        authLayoutViewStub = sinon.stub().returns(authLayoutView);
 
-//     afterEach(function() {
-//         helpers_mock.verify();
-//     });
+        // Setup signupView
+        signupView = {
+            name: 'signupView',
+        };
+        signupViewStub = sinon.stub().returns(signupView);
 
-//     describe("#signup()", function() {
-//         it("should redirect if user is already logged in", function() {
-//             var session_stub = sinon.stub(app.session, 'isValid', function() {
-//                 return true;
-//             });
+        // Setup loginView
+        loginView = {
+            name: 'loginView',
+        };
+        loginViewStub = sinon.stub().returns(loginView);
 
-//             helpers_mock.expects('goto_default_logged_in').once();
+        // Setup authController
+        let AuthController = proxyquire('controllers/authController', {
+            'sanaAppInstance'           : getAppInstance,
+            'utils/helpers'             : helpers,
+            'views/auth/authLayoutView' : authLayoutViewStub,
+            'views/auth/signupView'     : signupViewStub,
+            'views/auth/loginView'      : loginViewStub,
+        });
+        authController = new AuthController();
+    });
 
-//             auth_controller.signup();
+    afterEach(function() {
+        helpersMock.verify();
+        helpersMock.restore();
+    });
 
-//             sinon.assert.notCalled(auth_layout_stub);
-//             sinon.assert.notCalled(signup_view_stub);
-//             sinon.assert.notCalled(root_view_stub);
-//         });
-//         it("should render in root view if not logged in", function() {
-//             var session_stub = sinon.stub(app.session, 'isValid', function() {
-//                 return false;
-//             });
+    describe('#routeIndex()', function() {
+        it('always redirect to logged out page', function() {
+            helpersMock.expects('navigateToDefaultLoggedOut').once();
+            authController.routeIndex();
+        });
+    });
 
-//             helpers_mock.expects('goto_default_logged_in').never();
+    describe('#routeSignup()', function() {
+        it('should redirect if user is already logged in', function() {
+            let Session = require('models/session');
+            app.session = new Session();
+            let sessionStub = sinon.stub(app.session, 'isValid', function() {
+                return true;
+            });
 
-//             auth_controller.signup();
+            helpersMock.expects('arrivedOnView').never();
+            helpersMock.expects('navigateToDefaultLoggedIn').once();
+            authController.routeLogin();
 
-//             assert(auth_layout_stub.calledOnce);
-//             assert(signup_view_stub.calledOnce);
-//             sinon.assert.notCalled(login_view_stub);
-//             assert(root_view_stub.calledOnce);
-//         });
-//     });
+            assert(authLayoutViewStub.notCalled);
+            assert(signupViewStub.notCalled);
+            assert(loginViewStub.notCalled);
+        });
 
-//     describe("#login()", function() {
-//         it("should redirect if user is already logged in", function() {
-//             var session_stub = sinon.stub(app.session, 'isValid', function() {
-//                 return true;
-//             });
+        it('should render in root view if user is not logged in', function() {
+            let Session = require('models/session');
+            app.session = new Session();
+            let sessionStub = sinon.stub(app.session, 'isValid', function() {
+                return false;
+            });
 
-//             helpers_mock.expects('goto_default_logged_in').once();
+            helpersMock.expects('arrivedOnView').once();
+            helpersMock.expects('navigateToDefaultLoggedIn').never();
+            authController.routeSignup();
 
-//             auth_controller.login();
+            assert(appSwitchViewStub.calledOnce);
+            assert(appSwitchViewStub.calledWith(authLayoutView));
+            assert(authLayoutViewShowChildViewStub.calledWith('authFormArea', signupView));
 
-//             sinon.assert.notCalled(auth_layout_stub);
-//             sinon.assert.notCalled(login_view_stub);
-//             sinon.assert.notCalled(signup_view_stub);
-//             sinon.assert.notCalled(root_view_stub);
-//         });
-//         it("should render in root view if not logged in", function() {
-//             var session_stub = sinon.stub(app.session, 'isValid', function() {
-//                 return false;
-//             });
+            assert(authLayoutViewStub.calledOnce);
+            assert(signupViewStub.calledWithNew());
+            assert(loginViewStub.notCalled);
+        });
+    });
 
-//             helpers_mock.expects('goto_default_logged_in').never();
+    describe('#routeLogin()', function() {
+        it('should redirect if user is already logged in', function() {
+            let Session = require('models/session');
+            app.session = new Session();
+            let sessionStub = sinon.stub(app.session, 'isValid', function() {
+                return true;
+            });
 
-//             auth_controller.login();
+            helpersMock.expects('arrivedOnView').never();
+            helpersMock.expects('navigateToDefaultLoggedIn').once();
+            authController.routeLogin();
 
-//             assert(auth_layout_stub.calledOnce);
-//             assert(login_view_stub.calledOnce);
-//             sinon.assert.notCalled(signup_view_stub);
-//             assert(root_view_stub.calledOnce);
-//         });
-//     });
+            assert(authLayoutViewStub.notCalled);
+            assert(signupViewStub.notCalled);
+            assert(loginViewStub.notCalled);
+        });
 
-//     describe("#logout()", function() {
-//         it("should clear session", function() {
-//             var session_stub = sinon.stub(app.session, 'logout');
-//             auth_controller.logout();
-//             assert(session_stub.calledOnce);
-//         });
-//     });
-// });
+        it('should render in root view if user is not logged in', function() {
+            let Session = require('models/session');
+            app.session = new Session();
+            let sessionStub = sinon.stub(app.session, 'isValid', function() {
+                return false;
+            });
+
+            helpersMock.expects('arrivedOnView').once();
+            helpersMock.expects('navigateToDefaultLoggedIn').never();
+            authController.routeLogin();
+
+            assert(appSwitchViewStub.calledOnce);
+            assert(appSwitchViewStub.calledWith(authLayoutView));
+            assert(authLayoutViewShowChildViewStub.calledWith('authFormArea', loginView));
+
+            assert(authLayoutViewStub.calledOnce);
+            assert(signupViewStub.notCalled);
+            assert(loginViewStub.calledWithNew());
+        });
+    });
+
+    describe('#routeLogout()', function() {
+        it('should clear session', function() {
+            let Session = require('models/session');
+            app.session = new Session();
+            let sessionStub = sinon.stub(app.session, 'logout');
+
+            authController.routeLogout();
+
+            assert(sessionStub.calledOnce);
+        });
+    });
+});
