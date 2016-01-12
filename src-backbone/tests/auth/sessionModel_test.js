@@ -1,252 +1,261 @@
-// var CreateSuite = require('utils/create_suite');
-// var Storage = require('utils/storage');
-// var SessionModel = require('models/session');
+require('setup/hooks');
 
-// const TOKEN = 'fake_token';
+const TOKEN = 'fake_token';
 
+describe("Session Model", function() {
+    let session;
+    let storage;
 
-// CreateSuite("Session Model", function() {
-//     var session;
-//     var storage;
+    beforeEach(function() {
+        const Storage = require('utils/storage');
+        const Session = require('models/session');
+        storage = new Storage();
+        session = new Session({ storage: storage });
+    });
 
-//     beforeEach(function() {
-//         storage = new Storage();
-//         session = new SessionModel({
-//             storage: storage
-//         });
-//     });
+    afterEach(function() {
+        session.clear();
+    });
 
-//     afterEach(function() {
-//         session.clear();
-//     });
+    describe("#constructor()", function() {
+        it("should have a storage engine", function() {
+            assert.isObject(session.storage);
+            assert.strictEqual(session.storage, storage);
+        });
+    });
 
-//     describe("Model default behaviour", function() {
-//         var storage_mock;
+    describe("Default Backbone.Model Behaviour", function() {
+        let storageMock;
 
-//         beforeEach(function() {
-//             storage_mock = sinon.mock(session.storage);
-//         });
+        beforeEach(function() {
+            storageMock = sinon.mock(session.storage);
+        });
 
-//         afterEach(function() {
-//             storage_mock.verify();
-//         });
+        afterEach(function() {
+            storageMock.verify();
+        });
 
-//         describe("#url()", function() {
-//             it("should throw an error", function() {
-//                 assert.throw(session.url);
-//             });
-//         });
+        describe("#url()", function() {
+            it("should throw an error", function() {
+                assert.throws(session.url, ReferenceError);
+            });
+        });
 
-//         describe("#fetch()", function() {
-//             it("should read from storage", function() {
-//                 storage_mock.expects('read').once();
-//                 session.fetch();
-//             });
-//             it("should trigger change event", function() {
-//                 var storage_stub = sinon.stub(session.storage, 'read', function() {
-//                     var data = {};
-//                     data[SessionModel.AUTH_TOKEN_KEY] = TOKEN;
-//                     return data;
-//                 });
+        describe("#fetch()", function() {
+            it("should read from storage", function() {
+                storageMock.expects('read').once();
+                session.fetch();
+            });
 
-//                 var event_spy = sinon.spy();
-//                 session.on('change:' + SessionModel.AUTH_TOKEN_KEY, event_spy);
-//                 session.fetch();
-//                 assert(event_spy.calledOnce);
-//             });
-//         });
+            it("should trigger change event", function() {
+                let Session = require('models/session');
+                let storageStub = sinon.stub(session.storage, 'read', function() {
+                    let data = {};
+                    data[Session.AUTH_TOKEN_KEY] = TOKEN;
+                    return data;
+                });
 
-//         describe("#save()", function() {
-//             it("should write to storage", function() {
-//                 storage_mock.expects('write').once();
-//                 session.save();
-//             });
-//         });
+                let eventSpy = sinon.spy();
+                session.on('change:' + Session.AUTH_TOKEN_KEY, eventSpy);
 
-//         describe("#destroy()", function() {
-//             it("should delete from storage", function() {
-//                 storage_mock.expects('delete').once();
-//                 session.destroy();
-//             });
-//             it("should trigger change event", function() {
-//                 var event_spy = sinon.spy();
-//                 session.set(SessionModel.AUTH_TOKEN_KEY, TOKEN);
-//                 session.on('change:' + SessionModel.AUTH_TOKEN_KEY, event_spy);
-//                 session.destroy();
-//                 assert(event_spy.calledOnce);
-//             });
-//             it("should not have any data left afterwards", function() {
-//                 session.set('test_key', 'test_data');
-//                 session.destroy();
-//                 assert.isFalse(session.has('test_key'));
-//             });
-//         });
+                session.fetch(); // Will read from storageStub and should trigger a change event
 
-//         describe("#validate()", function() {
-//             // validate() returns nothing if it was successful
-//             // otherwise returns something to represent the error
+                assert(eventSpy.calledOnce);
+            });
+        });
 
-//             it("should fail if there is no token", function() {
-//                 session.unset(SessionModel.AUTH_TOKEN_KEY);
-//                 assert.isDefined(session.validate());
-//             });
-//             it("should succeed if there is a token", function() {
-//                 session.set(SessionModel.AUTH_TOKEN_KEY, TOKEN);
-//                 assert.isUndefined(session.validate());
-//             });
-//         });
-//     });
+        describe("#save()", function() {
+            it("should write to storage", function() {
+                storageMock.expects('write').once();
+                session.save();
+            });
+        });
 
-//     describe("Authentication Methods", function() {
-//         var server;
+        describe("#destroy()", function() {
+            it("should delete from storage", function() {
+                storageMock.expects('delete').once();
+                session.destroy();
+            });
 
-//         beforeEach(function() {
-//             server = sinon.fakeServer.create();
-//         });
+            it("should trigger change event", function() {
+                const Session = require('models/session');
+                session.set(Session.AUTH_TOKEN_KEY, TOKEN);
 
-//         afterEach(function() {
-//             server.restore();
-//         });
+                let eventSpy = sinon.spy();
+                session.on('change:' + Session.AUTH_TOKEN_KEY, eventSpy);
 
-//         describe("#signup()", function() {
-//             it("should send an AJAX request", function(){
-//                 session.signup();
-//                 assert.lengthOf(server.requests, 1);
-//             });
+                session.destroy();
 
-//             it("should call _auth_handler on success", function(){
-//                 server.respondWith([200, {}, '']);
+                assert(eventSpy.calledOnce);
+            });
 
-//                 var auth_handler_spy = sinon.spy(session, '_auth_handler');
-//                 session.signup();
-//                 server.respond();
+            it("should not have any data left afterwards", function() {
+                session.set('test_key', 'test_data');
 
-//                 assert(auth_handler_spy.calledOnce);
-//             });
+                session.destroy();
 
-//             it("should call network_error_handler on error", function(){
-//                 server.respondWith([404, {}, '']);
+                assert.isFalse(session.has('test_key'));
+            });
+        });
 
-//                 var server_error_handler = sinon.spy();
-//                 var network_error_handler = sinon.spy();
-//                 session.signup(null, server_error_handler, network_error_handler);
-//                 server.respond();
+        describe("#validate()", function() {
+            // validate() returns nothing if it was successful
+            // otherwise returns something to represent the error
 
-//                 assert(server_error_handler.notCalled);
-//                 assert(network_error_handler.calledOnce);
-//             });
-//         });
+            it("should fail if there is no token", function() {
+                const Session = require('models/session');
+                session.unset(Session.AUTH_TOKEN_KEY);
+                assert.isDefined(session.validate());
+            });
 
-//         describe("#login()", function() {
-//             it("should send an AJAX request", function(){
-//                 session.login();
-//                 assert.lengthOf(server.requests, 1);
-//             });
+            it("should succeed if there is a token", function() {
+                const Session = require('models/session');
+                session.set(Session.AUTH_TOKEN_KEY, TOKEN);
+                assert.isUndefined(session.validate());
+            });
+        });
+    });
 
-//             it("should call _auth_handler on success", function(){
-//                 server.respondWith([200, {}, '']);
+    describe("Authentication Methods", function() {
+        let server;
 
-//                 var auth_handler_spy = sinon.spy(session, '_auth_handler');
-//                 session.login();
-//                 server.respond();
+        beforeEach(function() {
+            server = sinon.fakeServer.create();
+        });
 
-//                 assert(auth_handler_spy.calledOnce);
-//             });
+        afterEach(function() {
+            server.restore();
+        });
 
-//             it("should call network_error_handler on error", function(){
-//                 server.respondWith([404, {}, '']);
+        describe("#signup()", function() {
+            it("should send an AJAX request", function(){
+                session.signup();
+                assert.lengthOf(server.requests, 1);
+            });
 
-//                 var server_error_handler = sinon.spy();
-//                 var network_error_handler = sinon.spy();
-//                 session.login(null, server_error_handler, network_error_handler);
-//                 server.respond();
+            it("should call _authHandler on success", function(){
+                server.respondWith([200, {}, '']);
 
-//                 assert(server_error_handler.notCalled);
-//                 assert(network_error_handler.calledOnce);
-//             });
-//         });
+                let authHandlerSpy = sinon.spy(session, '_authHandler');
+                session.signup();
+                server.respond();
 
-//         describe("#logout()", function() {
-//             it("should send an AJAX request", function(){
-//                 session.logout();
-//                 assert.lengthOf(server.requests, 1);
-//             });
+                assert(authHandlerSpy.calledOnce);
+            });
 
-//             it("should not call destroy() immediately", function(){
-//                 var destroy_spy = sinon.spy(session, 'destroy');
-//                 session.logout();
-//                 assert(destroy_spy.notCalled);
-//             });
+            it("should call networkErrorHandler on error", function(){
+                server.respondWith([404, {}, '']);
 
-//             it("should call destroy() after server returns success", function(){
-//                 var destroy_spy = sinon.spy(session, 'destroy');
+                let serverErrorHandler = sinon.spy();
+                let networkErrorHandler = sinon.spy();
+                session.signup(null, serverErrorHandler, networkErrorHandler);
+                server.respond();
 
-//                 session.logout();
-//                 server.respondWith([200, {}, '']);
-//                 server.respond();
+                assert(serverErrorHandler.notCalled);
+                assert(networkErrorHandler.calledOnce);
+            });
+        });
 
-//                 assert(destroy_spy.calledOnce);
-//             });
+        describe("#login()", function() {
+            it("should send an AJAX request", function(){
+                session.login();
+                assert.lengthOf(server.requests, 1);
+            });
 
-//             it("should call destroy() after server returns error", function(){
-//                 var destroy_spy = sinon.spy(session, 'destroy');
+            it("should call _authHandler on success", function(){
+                server.respondWith([200, {}, '']);
 
-//                 session.logout();
-//                 server.respondWith([401, {}, '']);
-//                 server.respond();
+                let authHandlerSpy = sinon.spy(session, '_authHandler');
+                session.login();
+                server.respond();
 
-//                 assert(destroy_spy.calledOnce);
-//             });
-//         });
-//     });
+                assert(authHandlerSpy.calledOnce);
+            });
 
-//     describe("#constructor()", function() {
-//         it("should have a storage engine", function() {
-//             assert.isObject(session.storage);
-//             assert.strictEqual(session.storage, storage);
-//         });
-//     });
+            it("should call networkErrorHandler on error", function(){
+                server.respondWith([404, {}, '']);
 
-//     describe("#_auth_handler()", function() {
-//         it("should save token if request was successful on the backend", function() {
-//             var save_spy = sinon.spy(session, 'save');
-//             var server_error_handler = sinon.spy();
-//             var response = {
-//                 success: true,
-//                 token: TOKEN,
-//             };
+                let serverErrorHandler = sinon.spy();
+                let networkErrorHandler = sinon.spy();
+                session.login(null, serverErrorHandler, networkErrorHandler);
+                server.respond();
 
-//             session._auth_handler(response, server_error_handler);
+                assert(serverErrorHandler.notCalled);
+                assert(networkErrorHandler.calledOnce);
+            });
+        });
 
-//             assert.strictEqual(session.get(SessionModel.AUTH_TOKEN_KEY), TOKEN);
-//             assert(save_spy.calledOnce);
-//             assert(server_error_handler.notCalled);
-//         });
+        describe("#logout()", function() {
+            it("should send an AJAX request", function(){
+                session.logout();
+                assert.lengthOf(server.requests, 1);
+            });
 
-//         it("should call server_error_handler if request was unsuccessful on the backend", function() {
-//             const ERROR_MESSAGE = 'error';
+            it("should not call destroy() immediately", function(){
+                let sessionDestroySpy = sinon.spy(session, 'destroy');
+                session.logout();
+                assert(sessionDestroySpy.notCalled);
+            });
 
-//             var save_spy = sinon.spy(session, 'save');
-//             var server_error_handler = sinon.spy();
-//             var response = {
-//                 success: false,
-//                 token: TOKEN,
-//                 errors: ERROR_MESSAGE,
-//             };
+            it("should call destroy() after server returns success", function(){
+                let sessionDestroySpy = sinon.spy(session, 'destroy');
 
-//             session._auth_handler(response, server_error_handler);
+                session.logout();
+                server.respondWith([200, {}, '']);
+                server.respond();
 
-//             assert.isUndefined(session.get(SessionModel.AUTH_TOKEN_KEY));
-//             assert(save_spy.notCalled);
-//             assert(server_error_handler.calledOnce);
-//             assert(server_error_handler.calledWith(ERROR_MESSAGE));
-//         });
-//     });
+                assert(sessionDestroySpy.calledOnce);
+            });
 
-//     describe("#_check_token()", function() {
-//         it("should send an AJAX request", function(){
-//             // TODO
-//         });
-//     });
+            it("should call destroy() after server returns error", function(){
+                let sessionDestroySpy = sinon.spy(session, 'destroy');
 
-// });
+                session.logout();
+                server.respondWith([401, {}, '']);
+                server.respond();
+
+                assert(sessionDestroySpy.calledOnce);
+            });
+        });
+    });
+
+    describe("#_authHandler()", function() {
+        it("should save token if request was successful on the backend", function() {
+            const Session = require('models/session');
+
+            let sessionSaveSpy = sinon.spy(session, 'save');
+            let serverErrorHandler = sinon.spy();
+            let response = {
+                success: true,
+                token: TOKEN,
+            };
+
+            session._authHandler(response, serverErrorHandler);
+
+            assert.strictEqual(session.get(Session.AUTH_TOKEN_KEY), TOKEN);
+            assert(sessionSaveSpy.calledOnce);
+            assert(serverErrorHandler.notCalled);
+        });
+
+        it("should call serverErrorHandler if request was unsuccessful on the backend", function() {
+            const Session = require('models/session');
+            const ERROR_MESSAGE = 'error';
+
+            let sessionSaveSpy = sinon.spy(session, 'save');
+            let serverErrorHandler = sinon.spy();
+            let response = {
+                success: false,
+                token: TOKEN,
+                errors: ERROR_MESSAGE,
+            };
+
+            session._authHandler(response, serverErrorHandler);
+
+            assert.isUndefined(session.get(Session.AUTH_TOKEN_KEY));
+            assert(sessionSaveSpy.notCalled);
+            assert(serverErrorHandler.calledOnce);
+            assert(serverErrorHandler.calledWith(ERROR_MESSAGE));
+        });
+    });
+
+});

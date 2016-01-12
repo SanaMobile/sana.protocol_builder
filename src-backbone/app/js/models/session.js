@@ -10,7 +10,7 @@ let SessionModel = Backbone.Model.extend({
     },
 
     url: function() {
-        throw("Session should never use the built-in url() method. All default behaviour that interacts with the server should be overwritten.");
+        throw new ReferenceError("Session should never use the built-in url() method. All default behaviour that interacts with the server should be overwritten.");
     },
 
     fetch: function() {
