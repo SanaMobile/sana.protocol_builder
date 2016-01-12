@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from nose.tools import assert_equals, assert_true
-from utils.decorators import initialize_permissions
+from api.startup import grant_permissions
 from utils.helpers import add_token_to_header
 from utils import factories
 import json
@@ -19,7 +19,7 @@ class ProcedureTest(TestCase):
             'author': 'An Author'
         }
         self.user = factories.UserFactory()
-        initialize_permissions
+        grant_permissions()
 
     def test_created_procedure_has_correct_owner(self):
         response = self.client.post(
