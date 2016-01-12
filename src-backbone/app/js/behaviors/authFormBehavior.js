@@ -8,16 +8,16 @@ module.exports = Marionette.Behavior.extend({
     },
 
     events: {
-        'submit @ui.form': 'auth',
+        'submit @ui.form': '_auth',
     },
 
-    auth: function(event) {
+    _auth: function(event) {
         event.preventDefault();
 
         let self = this;
         let $form = this.ui.form;
 
-        this.options.sessionAuthenticator(
+        this.options.onAuthenticate(
             $form.serializeArray(),
             function(errors) {
                 self._showErrorsInForm($form, errors);
