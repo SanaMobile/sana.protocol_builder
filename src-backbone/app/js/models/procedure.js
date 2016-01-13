@@ -62,18 +62,14 @@ let Procedure = Backbone.Model.extend({
         return json;
     },
 
-    _setPages: function (pageIds) {
+    _setPages: function (pages) {
         let self = this;
         let onPageFetch = function(model, response, options) {
             self._setPage(model);
         };
 
-        for (let i = 0; i < pageIds.length; i++) {
-            let page = new Page({ 
-                id: pageIds[i],
-                display_index: i,
-            });
-
+        for (let i = 0; i < pages.length; i++) {
+            let page = new Page(pages[i]);
             this.pages.add(page, { silent: true });
 
             if (this.loadDetails) {
