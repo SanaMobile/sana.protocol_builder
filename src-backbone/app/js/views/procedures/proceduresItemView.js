@@ -1,3 +1,6 @@
+const Helpers = require('utils/helpers');
+
+
 module.exports = Marionette.ItemView.extend({
 
     template: require('templates/procedures/proceduresItemView'),
@@ -15,7 +18,14 @@ module.exports = Marionette.ItemView.extend({
 
     _onDownloadProcedure: function(event) {
         event.preventDefault();
-        // TODO
+
+        const filename = this.model.get('title') + '.xml';
+
+        this.model.generate(function onSuccess(data, status, jqXHR) {
+            Helpers.downloadXMLFile(data, filename);
+        }, function onError(jqXHR, textStatus, errorThrown) {
+            console.warn('Failed to generate Procedure', textStatus);
+        });
     },
 
     _onDeleteProcedure: function(event) {
