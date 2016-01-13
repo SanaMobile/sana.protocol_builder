@@ -127,6 +127,15 @@ let Procedure = Backbone.Model.extend({
         this.trigger(ACTIVE_PAGE_CHANGE_EVENT, null);
     },
 
+    generate: function(onSuccess, onError) {
+        $.ajax({
+            type: 'GET',
+            url: this.url() + '/generate',
+            success: onSuccess,
+            error: onError,
+        });
+    },
+
 });
 
 Procedure.ACTIVE_PAGE_CHANGE_EVENT = ACTIVE_PAGE_CHANGE_EVENT;

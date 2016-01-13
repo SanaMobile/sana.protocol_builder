@@ -6,6 +6,10 @@
 
 <form id="element-{{ id }}">
     <div class="form-group">
+        <label for="eid-{{ id }}">Element ID</label>
+        <input type="text" id="eid-{{ id }}" name="eid" class="form-control eid" value="{{ eid }}">
+    </div>
+    <div class="form-group">
         <label for="concept-{{ id }}">Concept</label>
         <input type="text" id="concept-{{ id }}" name="concept" class="form-control concept" value="{{ concept }}">
     </div>

@@ -64,4 +64,18 @@ module.exports = {
         ;
     },
 
+    downloadXMLFile: function(domDocument, filename) {
+        let blob = new Blob([(new XMLSerializer()).serializeToString(domDocument)], { type: 'text/xml' });
+        let href = global.URL.createObjectURL(blob);
+
+        let element = document.createElement('a');
+        element.setAttribute('href', href);
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    },
+
 };
