@@ -23,9 +23,11 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     ui: {
+        'eid': 'input.eid',
         'concept': 'input.concept',
         'question': 'input.question',
         'required': 'input.required',
+        'answer': 'input.answer',
         'image': 'input.image',
         'audio': 'input.audio',
     },
@@ -35,9 +37,11 @@ module.exports = Marionette.LayoutView.extend({
         'click a.move-up': '_onMoveElementUp',
         'click a.move-down': '_onMoveElementDown',
 
+        'keyup @ui.eid': '_onFormUpdate',
         'keyup @ui.concept': '_onFormUpdate',
         'keyup @ui.question': '_onFormUpdate',
         'change @ui.required': '_onFormUpdate',
+        'keyup @ui.answer': '_onFormUpdate',
         'keyup @ui.image': '_onFormUpdate',
         'keyup @ui.audio': '_onFormUpdate',
     },
@@ -103,17 +107,21 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     _saveToServer: function() {
-        let concept = this.ui.concept.val();
-        let question = this.ui.question.val();
-        let required = this.ui.required.is(':checked');
-        let image = this.ui.image.val();
-        let audio = this.ui.audio.val();
+        const eid = this.ui.eid.val();
+        const concept = this.ui.concept.val();
+        const question = this.ui.question.val();
+        const required = this.ui.required.is(':checked');
+        const answer = this.ui.answer.val() || '';
+        const image = this.ui.image.val();
+        const audio = this.ui.audio.val();
 
         let self = this;
         this.model.save({
+            eid: eid,
             concept: concept,
             question: question,
             required: required,
+            answer: answer,
             image: image,
             audio: audio,
         }, {
