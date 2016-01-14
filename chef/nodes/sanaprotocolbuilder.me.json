@@ -25,6 +25,6 @@
   },
   "nodejs": {
     "install_method": "binary",
-    "version": "0.12.4"
+    "version": "5.4.1"
   }
 }
