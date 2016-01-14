@@ -87,7 +87,7 @@ gulp.task('js-config', function () {
 
     let data = {
         API_BASE: (Config.DEBUG ? 'http://localhost:8000'
-                                : 'https://www.sanaprotocolbuilder.me'),
+                                : 'https://sanaprotocolbuilder.me'),
         DEBUG: Config.DEBUG,
     };
 
