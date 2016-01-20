@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db import IntegrityError
+import uuid
 
 
 class Procedure(models.Model):
@@ -68,3 +69,31 @@ class Element(models.Model):
     class Meta:
         app_label = 'api'
         ordering = ['page', 'display_index']
+
+
+class Concept(models.Model):
+    TYPES = (
+        ('string', 'string'),
+        ('boolean', 'boolean'),
+        ('number', 'number'),
+        ('complex', 'complex')
+    )
+
+    uuid = models.UUIDField(default=uuid.uuid4, null=False, blank=False, editable=False)
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=255, null=False, blank=False)
+    display_name = models.CharField(max_length=255, null=False, blank=False)
+    description = models.TextField(null=True, blank=True)
+    data_type = models.CharField(max_length=16, choices=TYPES, null=True, blank=True)
+    mime_type = models.CharField(max_length=128, null=True, blank=True)
+    constraint = models.TextField(null=True, blank=True)
+
+    def save(self, **kwargs):
+        if self.data_type and (self.data_type, self.data_type) not in self.TYPES:
+            raise IntegrityError('Invalid data type')
+
+        super(Concept, self).save()
+
+    class Meta:
+        app_label = 'api'
