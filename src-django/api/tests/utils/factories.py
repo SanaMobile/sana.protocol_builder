@@ -41,3 +41,15 @@ class ElementFactory(factory.django.DjangoModelFactory):
     eid = 'checkup_id'
     answer = ''
     page = factory.SubFactory(PageFactory)
+
+
+class ConceptFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Concept
+
+    name = 'SX SITE SWELLING'
+    display_name = 'Swelling at surgical site'
+    description = 'Swelling observed at surgical site post procedure'
+    data_type = 'string'
+    mime_type = 'text/plain'
+    constraint = 'yes;no'
