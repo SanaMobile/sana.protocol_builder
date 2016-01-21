@@ -104,3 +104,20 @@ class ProcedureDetailSerializer(ProcedureSerializer):
         model = models.Procedure
         depth = 1
         fields = ProcedureSerializer.Meta.fields
+
+
+class ConceptSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Concept
+        fields = (
+            'id',
+            'uuid',
+            'created',
+            'last_modified',
+            'name',
+            'display_name',
+            'description',
+            'data_type',
+            'mime_type',
+            'constraint'
+        )

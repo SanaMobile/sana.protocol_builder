@@ -72,3 +72,11 @@ class ElementViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         return models.Element.objects.filter(page__procedure__owner_id__exact=user.id)
+
+
+class ConceptViewSet(viewsets.ModelViewSet):
+    model = models.Concept
+    serializer_class = serializer.ConceptSerializer
+
+    def get_queryset(self):
+        return models.Concept.objects
