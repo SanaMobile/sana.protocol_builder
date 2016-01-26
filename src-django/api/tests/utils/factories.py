@@ -53,3 +53,46 @@ class ConceptFactory(factory.django.DjangoModelFactory):
     data_type = 'string'
     mime_type = 'text/plain'
     constraint = 'yes;no'
+
+
+class CriteriaConditionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ConditionNode
+
+    parent = None
+    criteria_element = factory.SubFactory(ElementFactory)
+    node_type = 'CRITERIA'
+    criteria_type = 'EQUALS'
+    value = 'foot'
+
+
+class AndConditionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ConditionNode
+
+    parent = None
+    node_type = 'AND'
+
+
+class OrConditionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ConditionNode
+
+    parent = None
+    node_type = 'OR'
+
+
+class NotConditionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ConditionNode
+
+    parent = None
+    node_type = 'NOT'
+
+
+class ShowIfFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ShowIf
+
+    page = factory.SubFactory(PageFactory)
+    condition = factory.SubFactory(CriteriaConditionFactory)
