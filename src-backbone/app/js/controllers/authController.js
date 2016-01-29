@@ -1,4 +1,4 @@
-let App            = require('sanaAppInstance');
+let App            = require('utils/sanaAppInstance');
 let Helpers        = require('utils/helpers');
 let AuthLayoutView = require('views/auth/authLayoutView');
 let SignupView     = require('views/auth/signupView');
@@ -20,7 +20,7 @@ module.exports = Marionette.Controller.extend({
         Helpers.arrivedOnView('Sign Up');
 
         let authLayoutView = new AuthLayoutView();
-        App().switchView(authLayoutView);
+        App().switchMainView(authLayoutView);
         authLayoutView.showChildView('authFormArea', new SignupView());
     },
   
@@ -33,7 +33,7 @@ module.exports = Marionette.Controller.extend({
         Helpers.arrivedOnView('Login');
 
         let authLayoutView = new AuthLayoutView();
-        App().switchView(authLayoutView);
+        App().switchMainView(authLayoutView);
         authLayoutView.showChildView('authFormArea', new LoginView());
     },
 

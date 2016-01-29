@@ -1,4 +1,4 @@
-let RootView = require('views/rootLayoutView');
+let RootLayoutView = require('views/rootLayoutView');
 
 let AuthFormBehavior = require('behaviors/authFormBehavior');
 let SortableBehavior = require('behaviors/sortableBehavior');
@@ -18,7 +18,6 @@ module.exports = Marionette.Application.extend({
         this._setupSession();
         this._setupBackboneSync();
         this._setupAjaxPrefilters();
-
         this._setupViews();
         this._setupHistory();
 
@@ -39,13 +38,25 @@ module.exports = Marionette.Application.extend({
         }
     },
 
-    switchView: function(view, bodyClass = null) {
+    switchMainView: function(view, bodyClass = null) {
         if (DEBUG) {
             global.activeView = view;
         }
 
-        this._rootView.getRegion('main').show(view);
+        this._rootView.showChildView('main', view);
         this._rootView.$el.removeClass().addClass(bodyClass);
+    },
+
+    switchNavbar: function(navbarView) {
+        this._rootView.showChildView('navbar', navbarView);
+    },
+
+    clearNotifications: function() {
+        this._rootView.clearNotifications();
+    },
+
+    showNotification: function(alertType, title, desc, timeout) {
+        this._rootView.showNotification(alertType, title, desc, timeout);
     },
 
     _setupSession: function() {
@@ -86,15 +97,16 @@ module.exports = Marionette.Application.extend({
                 switch (xhr.status) {
                     case 401: {
                         // Reloads the page (i.e. resets the App state)
-                        // TODO present user with error message
+                        console.warn('Backbone.sync encountered 401. Resetting user session.');
+                        self.showNotification('danger', 'Your session is invalid!', 'Please login again.');
                         self.session.destroy();
                         break;
                     }
                     default: {
                         console.warn('Cannot globally handle Backbone.sync error');
+                        originalErrorHandler(xhr, ajaxOptions, thrownError);
                     }
                 }
-                originalErrorHandler(xhr, ajaxOptions, thrownError);
             };
             originalSync(method, model, options);
         };
@@ -116,7 +128,8 @@ module.exports = Marionette.Application.extend({
         let self = this;
 
         // Assign root view for modules to render in
-        this._rootView = new RootView();
+        this._rootView = new RootLayoutView();
+        this._rootView.render();
 
         this.session.on('request', function() {
             self._rootView.showSpinner();

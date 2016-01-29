@@ -125,45 +125,4 @@ describe('SanaApp', function() {
             assert.isUndefined(server.requests[0].requestHeaders.Authorization);
         });
     });
-
-    describe('#_setupViews()', function() {
-        let app;
-        let rootViewSpy;
-        let sessionSpy;
-
-        beforeEach(function() {
-            rootViewSpy = sinon.spy();
-
-            let SanaApp = proxyquire('sanaApp', {
-                'views/rootLayoutView'       : rootViewSpy,
-                'behaviors/authFormBehavior' : {},
-                'behaviors/sortableBehavior' : {},
-                'routers/authRouter'         : {},
-                'routers/infoRouter'         : {},
-                'routers/proceduresRouter'   : {},
-                'utils/helpers'              : {},
-            });
-            app = new SanaApp();
-
-            let Session = require('models/session');
-            app.session = new Session();
-            sessionSpy = sinon.spy(app.session, 'on');
-        });
-
-        it('should initialize root view', function() {
-            app._setupViews();
-
-            assert.isObject(app._rootView);
-            assert(rootViewSpy.calledOnce);
-            assert(rootViewSpy.calledWithNew());
-        });
-
-        it('should initialize listeners on session', function() {
-            app._setupViews();
-
-            assert(sessionSpy.calledTwice);
-            assert(sessionSpy.calledWith('request'));
-            assert(sessionSpy.calledWith('complete'));
-        });
-    });
 });

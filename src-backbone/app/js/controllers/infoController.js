@@ -1,4 +1,4 @@
-let App        = require('sanaAppInstance');
+let App        = require('utils/sanaAppInstance');
 let Helpers    = require('utils/helpers');
 let InfoLayout = require('views/info/infoLayoutView');
 
@@ -9,7 +9,7 @@ module.exports = Marionette.Controller.extend({
         Helpers.arrivedOnView('Terms of Service');
 
         let infoLayout = new InfoLayout();
-        App().switchView(infoLayout);
+        App().switchMainView(infoLayout);
         infoLayout.showChildView('infoArea', new Marionette.ItemView({
             template: require('templates/info/termsOfServiceView'),
         }));
@@ -19,7 +19,7 @@ module.exports = Marionette.Controller.extend({
         Helpers.arrivedOnView('Privacy Policy');
 
         let infoLayout = new InfoLayout();
-        App().switchView(infoLayout);
+        App().switchMainView(infoLayout);
         infoLayout.showChildView('infoArea', new Marionette.ItemView({
             template: require('templates/info/privacyPolicyView'),
         }));
@@ -29,7 +29,7 @@ module.exports = Marionette.Controller.extend({
         Helpers.arrivedOnView('404');
 
         let infoLayout = new InfoLayout();
-        App().switchView(infoLayout);
+        App().switchMainView(infoLayout);
         infoLayout.showChildView('infoArea', new Marionette.ItemView({
             template: require('templates/errors/404NotFoundView'),
         }));

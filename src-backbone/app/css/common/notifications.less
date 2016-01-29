@@ -1,0 +1,45 @@
+@import url(utils/constants.less);
+
+
+div#notification-center{
+    position: fixed;
+    top: 50px;
+    left: 0; right: 0;
+    z-index: 1;
+
+    ul{
+        margin: 0;
+        padding: 0;
+
+        li{
+            list-style: none;
+
+            div.alert{
+                @button-size: @container-side-padding - @column-margin;
+
+                border-radius: 0;
+                border-width: 0;
+                border-left-width: @button-size;
+                box-shadow: 0 0 30px hsla(0, 0, 40%, 0.8);
+                line-height: 20px;
+                margin: 0;
+                padding: 20px;
+                padding-left: @column-margin;
+                padding-right: @container-side-padding;
+                position: relative;
+
+                strong{
+                    padding-right: 5px;
+                }
+
+                a.close{
+                    line-height: @button-size;
+                    position: absolute;
+                    text-align: center;
+                    top: 0; left: -@button-size;
+                    width: @button-size; height: 100%;
+                }
+            }
+        }
+    }
+}

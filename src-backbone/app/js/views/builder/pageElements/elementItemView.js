@@ -1,3 +1,4 @@
+let App     = require('utils/sanaAppInstance');
 let Helpers = require('utils/helpers');
 
 let DateItemView        = require('./types/dateView');
@@ -78,8 +79,8 @@ module.exports = Marionette.LayoutView.extend({
                 },
                 error: function(model, response, options) {
                     console.warn('Failed to delete Element', self.model.get('id'), response.responseJSON);
+                    App().showNotification('danger', 'Failed to delete Element!');
                     self.$el.fadeIn();
-                    // TODO show error alert
                 },
             });
         });

@@ -1,3 +1,4 @@
+let App       = require('utils/sanaAppInstance.js');
 let Helpers   = require('utils/helpers');
 let Procedure = require('models/procedure');
 
@@ -35,7 +36,7 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onBeforeShow: function() {
-        this.showChildView('navbar', new NavbarView({ model: this.model }));
+        App().switchNavbar(new NavbarView({ model: this.model }));
         this.showChildView('metaData', new MetaDataView({ model: this.model }));
         this.showChildView('pageList', new PageListCollectionView({ collection: this.model.pages }));
         this.showChildView('pageDetails', new PageDetailsLayoutView({ model: this.model }));

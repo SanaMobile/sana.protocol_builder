@@ -1,4 +1,5 @@
-let Helpers = require('utils/helpers');
+const Helpers = require('utils/helpers');
+const App = require('utils/sanaAppInstance');
 
 
 module.exports = Marionette.Behavior.extend({
@@ -35,7 +36,8 @@ module.exports = Marionette.Behavior.extend({
 
         Object.keys(errors).forEach(function(key) {
             if (key === '__all__') {
-                $form.prepend(Helpers.createAlertHTML(errors[key], 'danger'));
+                App().clearNotifications();
+                App().showNotification('danger', 'Form Error', errors[key]);
             } else {
                 let $input = $form.find('input[name=' + key + ']');
                 if ($input.length) {

@@ -1,20 +1,11 @@
 @import url(utils/constants.less);
 
 
-nav#procedures-navbar{
-    margin-bottom: 0;
-
-    .welcome{
-        color: @grey-text-darkbg;
-        line-height: 50px;
-        margin-right: 15px;
-    }
-}
-
 header#procedures-menu{
-    border-bottom: 1px solid @grey-border;
-    height: 100px;
+    box-shadow: 0 0 20px hsla(0, 0, 40%, 0.2);
     overflow: hidden;
+    padding-top: 30px;
+    padding-bottom: 30px;
 
     h1{
         background-image: url('/img/logo.png');
@@ -42,7 +33,8 @@ header#procedures-menu{
                 display: block;
                 font-weight: bold;
                 font-size: 18px;
-                padding: 10px 15px;
+                line-height: 40px;
+                padding: 0 15px;
                 text-decoration: none;
             }
 
@@ -84,7 +76,7 @@ nav#procedure-list-toolbar{
         padding: 0;
 
         input#procedure-filter{
-            border-radius: 2px;
+            border-radius: 3px;
             box-shadow: none;
             width: 300px;
         }
@@ -110,26 +102,33 @@ section#procedures-list{
     ul{
         list-style: none;
         overflow: hidden;
+        margin: 0;
         padding: 0;
     }
 
     li{
+        @tile-padding: 30px;
+        @icon-margin: 10px;
+        @icon-size: 40px;
+
         box-sizing: border-box;
-        padding: 30px 20px;
+        margin: @tile-padding 0;
+        padding: @tile-padding;
 
         &.empty-procedures{
             display: block;
             background-color: @grey-bg;
             border-left: 5px solid @grey-border;
-            margin-top: 30px;
         }
 
         &.procedure{
-            border-bottom: 1px solid @grey-border-light;
-            padding-right: 140px;
+            border: 1px solid @grey-border-light;
+            border-radius: 3px;
+            padding-right: (@icon-size * 2) + (@tile-padding * 2) + @icon-margin;
             position: relative;
 
             a.title{
+                display: block;
                 font-size: 18px;
                 font-weight: bold;
                 margin-bottom: 10px;
@@ -156,19 +155,19 @@ section#procedures-list{
                 cursor: pointer;
                 display: block;
                 font-size: 15px;
-                line-height: 40px;
+                line-height: @icon-size;
                 position: absolute;
                 text-decoration: none;
                 text-align: center;
-                top: 30px;
-                width: 40px; height: 40px;
+                top: @tile-padding;
+                width: @icon-size; height: @icon-size;
 
                 &.download{
-                    right: 70px;
+                    right: @tile-padding + @icon-size + @icon-margin;
                 }
 
                 &.delete{
-                    right: 20px;
+                    right: @tile-padding;
                 }
 
                 &:hover{
@@ -180,7 +179,7 @@ section#procedures-list{
 }
 
 footer#main-footer{
-    border-top: 1px solid @grey-border;
+    box-shadow: 0 0 20px hsla(0, 0, 40%, 0.2);
     margin-top: 30px;
     padding: 60px 0;
     text-align: center;
