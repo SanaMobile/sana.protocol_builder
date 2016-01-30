@@ -15,7 +15,7 @@ module.exports = Section.extend({
     },
 
     events: {
-        'click ul#new-element-btns li a': '_onCreateNewElement',
+        'click nav#new-element-btns a': '_onCreateNewElement',
     },
 
     onRender: function () {

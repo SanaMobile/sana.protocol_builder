@@ -4,10 +4,8 @@
 
 <h1>Create New Element</h1>
 
-<ul id="new-element-btns">
+<nav id="new-element-btns">
     {{#each elementTypes}}
-    <li>
-        <a class="element-type-{{ sluggify @key }}" data-element-type="{{ @key }}">{{ this }}</a>
-    </li>
+    <a class="element-type-{{ sluggify @key }}" data-element-type="{{ @key }}">{{ this }}</a>
     {{/each}}
-</ul>
+</nav>
