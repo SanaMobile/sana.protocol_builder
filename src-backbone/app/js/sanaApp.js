@@ -19,22 +19,24 @@ module.exports = Marionette.Application.extend({
         this._setupBackboneSync();
         this._setupAjaxPrefilters();
         this._setupViews();
-        this._setupHistory();
 
         this._loadBehaviors();
         this._loadRouters();
     },
 
     onStart: function () {
-        Backbone.history.start({ pushState: true });
-
-        // Do this after Backbone.history has started so the navigate will work
-        if (!this.session.isValid()) {
-            console.info("Started with invalid session");
-            this.session.destroy();
-            if (Helpers.currentPageRequiresAuth()) {
-                Helpers.navigateToDefaultLoggedOut();
+        if (Backbone.history.start({ pushState: true })) {
+            // Do this after Backbone.history has started so the navigate will work
+            if (!this.session.isValid()) {
+                console.info("Started with invalid session");
+                this.session.destroy();
+                if (Helpers.currentPageRequiresAuth()) {
+                    Helpers.navigateToDefaultLoggedOut();
+                }
             }
+        } else {
+            // 404
+            this.routers.infoRouter.controller.routeError404NotFound();
         }
     },
 
@@ -136,26 +138,6 @@ module.exports = Marionette.Application.extend({
         });
         this.session.on('complete', function() {
             self._rootView.hideSpinner();
-        });
-    },
-
-    _setupHistory: function() {
-        const ROUTE_NOT_FOUND_EVENT = 'route-not-found';
-        let self = this;
-
-        let History = Backbone.History.extend({
-            loadUrl: function() {
-                let match = Backbone.History.prototype.loadUrl.apply(this, arguments);
-                if (!match) {
-                    this.trigger(ROUTE_NOT_FOUND_EVENT);
-                }
-                return match;
-            }
-        });
-
-        Backbone.history = new History();
-        Backbone.history.on(ROUTE_NOT_FOUND_EVENT, function() {
-            self.routers.infoRouter.controller.routeError404NotFound();
         });
     },
 
