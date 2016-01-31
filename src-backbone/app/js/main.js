@@ -1,6 +1,4 @@
-let Setup = require('utils/setup');
-Setup.loadConfig();
-Setup.loadLibs();
+require('utils/setup').loadLibs();
 
 
 $(document).ready(function() {

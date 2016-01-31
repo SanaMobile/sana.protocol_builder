@@ -1,3 +1,4 @@
+const Config = require('utils/config');
 let ElementsCollectionView = require('views/builder/pageElements/elementsCollectionView');
 let Section = require('./sectionLayoutView');
 

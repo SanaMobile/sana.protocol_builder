@@ -1,4 +1,5 @@
 const ACTIVE_PAGE_CHANGE_EVENT = 'change:activePage';
+const Config = require('utils/config');
 
 let App     = require('utils/sanaAppInstance');
 let Helpers = require('utils/helpers');
@@ -40,7 +41,7 @@ let Procedure = Backbone.Model.extend({
         // Propagate AJAX events from child to this model so that the status bar can be notified
         Helpers.propagateEvents(this.pages, this, ['request', 'sync', 'destroy', 'error']);
 
-        if (DEBUG) {
+        if (Config.DEBUG) {
             this.listenTo(this.pages, 'all', function(event, subject) {
                 console.debug('Pages event:', event, subject && subject.get('id'));
             });

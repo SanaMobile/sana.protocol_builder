@@ -9,6 +9,7 @@ let ProceduresRouter = require('routers/proceduresRouter');
 
 let Session = require('models/session');
 let Helpers = require('utils/helpers');
+let Config = require('utils/config');
 let Storage = require('utils/storage');
 
 
@@ -41,7 +42,7 @@ module.exports = Marionette.Application.extend({
     },
 
     switchMainView: function(view, bodyClass = null) {
-        if (DEBUG) {
+        if (Config.DEBUG) {
             global.activeView = view;
         }
 

@@ -1,5 +1,6 @@
 let App     = require('utils/sanaAppInstance');
 let Helpers = require('utils/helpers');
+const Config = require('utils/config');
 
 let DateItemView        = require('./types/dateView');
 let EntryItemView       = require('./types/entryView');

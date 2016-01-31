@@ -1,3 +1,4 @@
+const Config = require('utils/config');
 let App = require('utils/sanaAppInstance');
 
 
@@ -19,7 +20,7 @@ module.exports = Marionette.ItemView.extend({
     },
 
     templateHelpers: {
-        DEBUG: DEBUG,
+        DEBUG: Config.DEBUG,
     },
 
     events: {

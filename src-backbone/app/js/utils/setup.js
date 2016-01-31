@@ -1,13 +1,8 @@
-let Config = require('./config');
-let Helpers = require('./helpers');
+const Config = require('./config');
+const Helpers = require('./helpers');
 
 
 module.exports = {
-
-    loadConfig: function() {
-        global.Config = Config;
-        global.DEBUG = Config.DEBUG;
-    },
 
     loadLibs: function() {
         // Loads libraries into global namespace

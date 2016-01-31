@@ -1,3 +1,6 @@
+const Config = require('utils/config');
+
+
 module.exports = function() {
 
     this.backend = localStorage;

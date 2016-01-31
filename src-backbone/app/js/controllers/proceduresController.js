@@ -1,3 +1,5 @@
+const Config = require('utils/config');
+
 let App              = require('utils/sanaAppInstance');
 let Helpers          = require('utils/helpers');
 let Procedure        = require('models/procedure');
@@ -14,7 +16,7 @@ module.exports = Marionette.Controller.extend({
     },
 
     routeBuilder: function(procedureId, pageId) {
-        if (DEBUG) {
+        if (Config.DEBUG) {
             Helpers.arrivedOnView('Builder procedure:' + procedureId + ' page:' + pageId);
         } else {
             Helpers.arrivedOnView('Builder');
