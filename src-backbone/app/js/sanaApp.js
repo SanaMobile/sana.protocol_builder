@@ -45,11 +45,20 @@ module.exports = Marionette.Application.extend({
             global.activeView = view;
         }
 
+        this.switchNavbar(null); // Clear navbar
         this._rootView.showChildView('main', view);
         this._rootView.$el.removeClass().addClass(bodyClass);
     },
 
     switchNavbar: function(navbarView) {
+        if (!navbarView) {
+            navbarView = new Marionette.ItemView({
+                template: '<div></div>',
+                tagName: 'div',
+                className: 'container-fluid spb-container',
+            });
+        }
+
         this._rootView.showChildView('navbar', navbarView);
     },
 
