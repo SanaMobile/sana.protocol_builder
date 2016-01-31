@@ -21,27 +21,7 @@ module.exports = Marionette.Controller.extend({
         }
 
         App().clearNotifications(); // Clear login errors
-
-        let procedure = new Procedure({ 
-            // model attributes
-            id: procedureId,
-        }, {
-            // options passed to constructor
-            loadDetails: true,
-            activePageId: pageId,
-        });
-
-        procedure.fetch({
-            success: function() {
-                console.info('Fetched Procedure', procedureId);
-                App().switchMainView(new BuilderLayout({ model: procedure }), 'builder');
-            },
-            error: function() {
-                console.warn('Failed to fetch Procedure', procedureId);
-                App().showNotification('danger', 'Failed to fetch Procedure!');
-                App().switchMainView(new BuilderLayout({ model: procedure }), 'builder');
-            },
-        });
+        App().switchMainView(new BuilderLayout({ procedureId: procedureId, pageId: pageId }), 'builder');
     },
 
 });

@@ -23,15 +23,39 @@ module.exports = Marionette.LayoutView.extend({
         'click a#create-new-page-btn': 'createNewPage',
     },
 
+    constructor: function(options) {
+        this.model = new Procedure({
+            // model attributes
+            id: options.procedureId,
+        }, {
+            // options passed to model constructor
+            loadDetails: true,
+            activePageId: options.pageId,
+        });
+
+        Marionette.LayoutView.prototype.constructor.call(this, options);
+    },
+
     initialize: function() {
-        let procedureId = this.model.get('id');
+        const procedureId = this.model.get('id');
+
         this.model.on(Procedure.ACTIVE_PAGE_CHANGE_EVENT, function(page) {
             if (page) {
-                let pageId = page.get('id');
+                const pageId = page.get('id');
                 Backbone.history.navigate('procedures/' + procedureId + '/page/' + pageId);
             } else {
                 Backbone.history.navigate('procedures/' + procedureId);
             }
+        });
+
+        this.model.fetch({
+            success: function() {
+                console.info('Fetched Procedure', procedureId);
+            },
+            error: function() {
+                console.warn('Failed to fetch Procedure', procedureId);
+                App().showNotification('danger', 'Failed to fetch Procedure!');
+            },
         });
     },
 
