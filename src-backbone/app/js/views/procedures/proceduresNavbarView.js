@@ -1,3 +1,6 @@
+const EventKeys = require('utils/eventKeys');
+
+
 module.exports = Marionette.ItemView.extend({
 
     template: require('templates/procedures/proceduresNavbarView'),
@@ -6,15 +9,12 @@ module.exports = Marionette.ItemView.extend({
 
     className: 'container-fluid spb-container',
 
-    templateHelpers: function() {
-        let self = this;
+    onShow: function() {
+        const welcomeMessage = 'Welcome Trinovantes'; // TODO fetch username from server
 
-        return {
-            username: function() {
-                // TODO fetch from server
-                return 'Trinovantes';
-            }
-        };
+        // Do this after View is shown so that rootLayoutView can find
+        // p.navbar-text inside this View
+        this.triggerMethod(EventKeys.UPDATE_NAVBAR_TEXT, welcomeMessage);
     },
 
 });

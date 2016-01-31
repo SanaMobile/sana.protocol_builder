@@ -1,6 +1,10 @@
 const Notifications = require('collections/notifications');
 const NotificationsCollectionView = require('views/notifications/notificationsCollectionView');
 
+const EventKeys = require('utils/eventKeys');
+const Helpers = require('utils/helpers');
+const App = require('utils/sanaAppInstance');
+
 
 module.exports = Marionette.LayoutView.extend({
   
@@ -9,9 +13,20 @@ module.exports = Marionette.LayoutView.extend({
     template: require('templates/rootLayoutView'),
 
     regions: {
-        'navbar': 'nav#navbar',
+        'navbar': 'nav#navbar div#navbar-content',
         'notificationCenter': 'div#notification-center',
         'main': 'div#main',
+    },
+
+    events: {
+        'click nav#navbar a.go-back': '_onClickGoBack',
+    },
+
+    childEvents: function() {
+        let eventsHash = {};
+        eventsHash[EventKeys.UPDATE_NAVBAR_TEXT] = this._onUpdateNavbarText;
+
+        return eventsHash;
     },
 
     constructor: function(options) {
@@ -50,6 +65,18 @@ module.exports = Marionette.LayoutView.extend({
         $spinner.fadeOut('fast', function() {
             $spinner.remove();
         });
+    },
+
+    _onClickGoBack: function() {
+        if (App().session.isValid()) {
+            Helpers.navigateToDefaultLoggedIn();
+        } else {
+            Helpers.navigateToDefaultLoggedOut();
+        }
+    },
+
+    _onUpdateNavbarText: function(childView, text) {
+        this.$el.find('p.navbar-text').text(text);
     },
 
 });

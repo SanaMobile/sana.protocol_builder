@@ -1,5 +1,6 @@
-let Helpers = require('utils/helpers');
-let App     = require('utils/sanaAppInstance');
+const EventKeys = require('utils/eventKeys');
+const Helpers = require('utils/helpers');
+let App = require('utils/sanaAppInstance');
 
 
 module.exports = Marionette.ItemView.extend({
@@ -9,10 +10,6 @@ module.exports = Marionette.ItemView.extend({
     tagName: 'div',
 
     className: 'container-fluid spb-container',
-
-    ui: {
-        statusText: 'p.status-text'
-    },
 
     //-------------------------------------------------------------------------
     // File menu
@@ -55,15 +52,15 @@ module.exports = Marionette.ItemView.extend({
     },
 
     saving: function (event) {
-        this.ui.statusText.text('Saving...');
+        this.triggerMethod(EventKeys.UPDATE_NAVBAR_TEXT, 'Saving...');
     },
 
     saved: function(event) {
-        this.ui.statusText.text('All changes saved to server.');
+        this.triggerMethod(EventKeys.UPDATE_NAVBAR_TEXT, 'All changes saved to server.');
     },
 
     error: function(event) {
-        this.ui.statusText.text('Failed to synchronize with server. Please try again.');
+        this.triggerMethod(EventKeys.UPDATE_NAVBAR_TEXT, 'Failed to synchronize with server.');
     },
 
 });

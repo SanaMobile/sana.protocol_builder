@@ -43,13 +43,40 @@ header#procedures-menu{
             }
         }
     }
+
+    @media (max-width: 767px) {
+        h1{
+            float: none;
+            line-height: 30px;
+        }
+
+        ul{
+            float: none;
+            margin-bottom: 0;
+
+            li{
+                float: none;
+                margin-bottom: 15px;
+
+                a{
+                    border: 1px solid @grey-border-light;
+                    border-radius: 3px;
+                }
+
+                &:last-child{
+                    margin-right: 0;
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
 }
 
 header#procedures-list-heading{
     overflow: hidden;
 
     h2,
-    #new-procedure-btn{
+    a#new-procedure-btn{
         margin: 60px 0;
     }
 
@@ -58,37 +85,83 @@ header#procedures-list-heading{
         float: left;
     }
 
-    #new-procedure-btn{
+    a#new-procedure-btn{
         float: right;
         font-weight: bold;
+        display: block;
         height: 40px;
         line-height: 40px;
         padding: 0 20px;
+    }
+
+    @media (max-width: 767px) {
+        h2{
+            float: none;
+            margin: 30px 0 0;
+        }
+
+        a#new-procedure-btn{
+            float: none;
+            margin: 15px 0 30px;
+        }
     }
 }
 
 nav#procedure-list-toolbar{
     border: 1px solid @grey-border;
+    border-radius: 3px;
+    display: flex;
     margin: 0;
 
     form{
-        margin: 8px;
+        flex: 1;
+        margin: 10px;
         padding: 0;
 
-        input#procedure-filter{
-            border-radius: 3px;
-            box-shadow: none;
-            width: 300px;
+        div.form-group{
+            margin: 0;
+
+            input#procedure-filter{
+                border-radius: 3px;
+                box-shadow: none;
+                box-sizing: border-box;
+                height: 30px;
+                padding: 5px;
+            }
         }
     }
 
-    li.dropdown{
-        a{
-            cursor: pointer;
+    div.dropdown{
+        &.open{
+            background: @grey-bg;
+        }
 
-            &.active{
-                background: @link-blue;
-                color: #fff;
+        a.dropdown-toggle{
+            box-sizing: border-box;
+            display: block;
+            height: 50px;
+            line-height: 40px;
+            padding: 5px 20px;
+            text-decoration: none;
+
+            &:hover{
+                background: @grey-bg-light;
+            }
+        }
+
+        ul.dropdown-menu{
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+            left: auto; right: 0;
+            margin-top: 0;
+
+            a{
+                cursor: pointer;
+
+                &.active{
+                    background: @link-blue;
+                    color: #fff;
+                }
             }
         }
     }
@@ -149,6 +222,7 @@ section#procedures-list{
             }
 
             a.glyphicon{
+                background: #fff;
                 border: 1px solid @grey-border;
                 border-radius: 3px;
                 color: @grey-text;
