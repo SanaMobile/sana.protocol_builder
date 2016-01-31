@@ -1,3 +1,5 @@
+const EventKeys = require('utils/eventKeys');
+
 let App        = require('utils/sanaAppInstance');
 let Helpers    = require('utils/helpers');
 let Procedure  = require('models/procedure');
@@ -33,20 +35,7 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     initialize: function() {
-        // Setup data
-        let self = this;
         this.procedures = new Procedures();
-        this.procedures.fetch({
-            beforeSend: function() {
-                App().session.trigger('request'); // TODO
-            },
-            complete: function() {
-                App().session.trigger('complete');
-            },
-            success: function() {
-                self._proceduresCollectionView.render();
-            },
-        });
     },
 
     onBeforeShow: function() {
@@ -63,21 +52,37 @@ module.exports = Marionette.LayoutView.extend({
         this.showChildView('proceduresList', this._proceduresCollectionView);
     },
 
+    onAttach: function() {
+        let self = this;
+        this.procedures.fetch({
+            beforeSend: function() {
+                self.triggerMethod(EventKeys.FETCHING_FROM_SERVER);
+            },
+            complete: function() {
+                self.triggerMethod(EventKeys.RECEIVED_FROM_SERVER);
+            },
+            success: function() {
+                console.info('Fetched Procedures');
+            },
+            error: function() {
+                console.warn('Failed to fetch Procedures');
+                App().showNotification('danger', 'Failed to fetch Procedures!');
+            },
+        });
+    },
+
     _createNewProcedure: function (event) {
         event.preventDefault();
 
-        let self = this;
-
         let procedure = new Procedure(); // Does not need to set 'collection' option because it already has a urlRoot property
         procedure.save({}, {
-            beforeSend: function() {
-                App().session.trigger('request'); // TODO
-            },
-            complete: function() {
-                App().session.trigger('complete');
-            },
             success: function() {
+                console.info('Created Procedure', procedure.id);
                 Backbone.history.navigate('/procedures/' + procedure.id, { trigger: true });
+            },
+            error: function() {
+                console.warn('Failed to create Procedure');
+                App().showNotification('danger', 'Failed to create Procedure');
             },
         });
     },

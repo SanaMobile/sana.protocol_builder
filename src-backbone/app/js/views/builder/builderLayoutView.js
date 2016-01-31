@@ -1,3 +1,5 @@
+const EventKeys = require('utils/eventKeys');
+
 let App       = require('utils/sanaAppInstance.js');
 let Helpers   = require('utils/helpers');
 let Procedure = require('models/procedure');
@@ -23,21 +25,17 @@ module.exports = Marionette.LayoutView.extend({
         'click a#create-new-page-btn': 'createNewPage',
     },
 
-    constructor: function(options) {
+    initialize: function() {
+        const procedureId = this.options.procedureId;
+
         this.model = new Procedure({
             // model attributes
-            id: options.procedureId,
+            id: procedureId,
         }, {
             // options passed to model constructor
             loadDetails: true,
-            activePageId: options.pageId,
+            activePageId: this.options.pageId,
         });
-
-        Marionette.LayoutView.prototype.constructor.call(this, options);
-    },
-
-    initialize: function() {
-        const procedureId = this.model.get('id');
 
         this.model.on(Procedure.ACTIVE_PAGE_CHANGE_EVENT, function(page) {
             if (page) {
@@ -47,8 +45,27 @@ module.exports = Marionette.LayoutView.extend({
                 Backbone.history.navigate('procedures/' + procedureId);
             }
         });
+    },
 
+    onBeforeShow: function() {
+        console.log('onBeforeShow');
+        App().switchNavbar(new NavbarView({ model: this.model }));
+        this.showChildView('metaData', new MetaDataView({ model: this.model }));
+        this.showChildView('pageList', new PageListCollectionView({ collection: this.model.pages }));
+        this.showChildView('pageDetails', new PageDetailsLayoutView({ model: this.model }));
+    },
+
+    onAttach: function() {
+        const procedureId = this.model.get('id');
+
+        let self = this;
         this.model.fetch({
+            beforeSend: function() {
+                self.triggerMethod(EventKeys.FETCHING_FROM_SERVER);
+            },
+            complete: function() {
+                self.triggerMethod(EventKeys.RECEIVED_FROM_SERVER);
+            },
             success: function() {
                 console.info('Fetched Procedure', procedureId);
             },
@@ -57,13 +74,6 @@ module.exports = Marionette.LayoutView.extend({
                 App().showNotification('danger', 'Failed to fetch Procedure!');
             },
         });
-    },
-
-    onBeforeShow: function() {
-        App().switchNavbar(new NavbarView({ model: this.model }));
-        this.showChildView('metaData', new MetaDataView({ model: this.model }));
-        this.showChildView('pageList', new PageListCollectionView({ collection: this.model.pages }));
-        this.showChildView('pageDetails', new PageDetailsLayoutView({ model: this.model }));
     },
 
     createNewPage: function(event) {

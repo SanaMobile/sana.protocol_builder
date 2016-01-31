@@ -136,18 +136,9 @@ module.exports = Marionette.Application.extend({
     },
 
     _setupViews: function() {
-        let self = this;
-
         // Assign root view for modules to render in
         this._rootView = new RootLayoutView();
         this._rootView.render();
-
-        this.session.on('request', function() {
-            self._rootView.showSpinner();
-        });
-        this.session.on('complete', function() {
-            self._rootView.hideSpinner();
-        });
     },
 
     _loadBehaviors: function() {
