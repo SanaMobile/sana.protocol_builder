@@ -19,10 +19,6 @@ module.exports = Marionette.ItemView.extend({
         };
     },
 
-    templateHelpers: {
-        DEBUG: Config.DEBUG,
-    },
-
     events: {
         'click a.delete': '_onDeletePage',
         'click a.page': '_onSelectPage',

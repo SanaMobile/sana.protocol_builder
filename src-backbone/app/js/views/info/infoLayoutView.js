@@ -1,4 +1,5 @@
 let App = require('utils/sanaAppInstance');
+const RightNavbarView = require('views/common/rightNavbarView');
 
 
 module.exports = Marionette.LayoutView.extend({
@@ -10,11 +11,7 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onBeforeShow: function() {
-        App().RootView.switchNavbar(new Marionette.ItemView({
-            template: require('templates/auth/authNavbarView'),
-            tagName: 'div',
-            className: 'container-fluid spb-container',
-        }));
+        App().RootView.switchNavbar(new RightNavbarView());
     },
 
 });

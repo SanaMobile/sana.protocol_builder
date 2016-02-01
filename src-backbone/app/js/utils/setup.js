@@ -23,17 +23,13 @@ module.exports = {
 
     _loadHandlebarsHelpers: function() {
         Handlebars.registerHelper('sluggify', Helpers.sluggify);
-
-        Handlebars.registerHelper('readableElementName', function(str) {
-            return Config.ELEMENT_NAMES[str];
-        });
     },
 
     _setupFormatJS: function() {
         if (global.Intl) {
             // Determine if the built-in `Intl` has the locale data we need.
             let isLocalesSupported = require('intl-locales-supported');
-            if (!isLocalesSupported(Config.LOCALES_SUPPORTED)) {
+            if (!isLocalesSupported(Config.LOCALES_SUPPORTED.map(l => l.code))) {
                 // `Intl` exists, but it doesn't have the data we need, so load the
                 // polyfill and replace the constructors with need with the polyfill's.
                 require('intl');

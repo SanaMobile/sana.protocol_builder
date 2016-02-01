@@ -25,10 +25,16 @@ nav#navbar{
         p.navbar-text{
             @media (min-width:768px) {
                 display: block;
-                margin-left: 0;
-                margin-right: 0;
             }
         }
+    }
+
+    div.navbar-left{
+        margin-left: -@column-margin;
+    }
+
+    a{
+        cursor: pointer;
     }
 
     a.go-back{
@@ -52,18 +58,6 @@ nav#navbar{
 
         &:focus{
             box-shadow: 0 @column-margin @column-margin * 2 rgba(0, 0, 0, 0.4) inset;
-        }
-    }
-
-    ul{
-        margin-left: -@column-margin;
-
-        ul.dropdown-menu{
-            margin-left: 0;
-        }
-
-        a{
-            cursor: pointer;
         }
     }
 }

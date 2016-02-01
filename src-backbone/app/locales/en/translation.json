@@ -13,6 +13,7 @@
     "I have read and accepted the Terms of Service and Privacy Policy.": "I have read and accepted the <a href=\"/terms\">$t(Terms of Service)<\/a> and <a href=\"/privacy\">$t(Privacy Policy)<\/a>.",
     "Sign up": "Sign up",
     "Already have an account? Log in": "Already have an account? <a href=\"/login\">Log in<\/a>",
+    "Language": "Language",
 
     // Log in
     "Remember Me": "Remember Me",
@@ -53,6 +54,7 @@
     "Empty Page": "Empty Page",
     "No elements on this page": "No elements on this page",
     "Create New Page": "Create New Page",
+    "File": "File",
     "Save Changes": "Save Changes",
     "Delete Procedure": "Delete Procedure",
     "Logout": "Logout",
@@ -67,7 +69,6 @@
     "All changes saved to server.": "All changes saved to server.",
     "Drag to re-order this page": "Drag to re-order this page",
     "Delete this page": "Delete this page",
-    "Entry": "Entry",
     "Delete this element": "Delete this element",
     "Move this element up": "Move this element up",
     "Move this element down": "Move this element down",
@@ -77,11 +78,15 @@
     "Required": "Required",
     "Image": "Image",
     "Audio": "Audio",
-    "Selection": "Selection",
-    "Multiple Choice": "Multiple Choice",
-    "Single Choice": "Single Choice",
-    "Picture": "Picture",
     "Default Answer": "Default Answer",
+    "DATE": "Date",
+    "ENTRY": "Entry",
+    "SELECT": "Selection",
+    "MULTI_SELECT": "Multiple Choice",
+    "RADIO": "Single Choice",
+    "PICTURE": "Picture",
+    "PLUGIN": "Plugin (file)",
+    "PLUGIN_ENTRY": "Plugin (entry)",
 
     // Notifications
     "An unknown error has occurred!": "An unknown error has occurred!",

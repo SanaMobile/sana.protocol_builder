@@ -5,7 +5,7 @@
 <h1>{{ i18n "Create New Element" }}</h1>
 
 <nav id="new-element-btns">
-    {{#each elementTypes}}
-    <a class="element-type-{{ sluggify @key }}" data-element-type="{{ @key }}">{{ this }}</a>
+    {{#each ELEMENT_TYPES}}
+    <a class="element-type-{{ sluggify this }}" data-element-type="{{ this }}">{{ i18n this }}</a>
     {{/each}}
 </nav>

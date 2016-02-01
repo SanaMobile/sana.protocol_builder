@@ -11,10 +11,6 @@ module.exports = Section.extend({
         'elementsList': 'div#elements-list',
     },
 
-    templateHelpers: {
-        elementTypes: Config.ELEMENT_NAMES,
-    },
-
     events: {
         'click nav#new-element-btns a': '_onCreateNewElement',
     },

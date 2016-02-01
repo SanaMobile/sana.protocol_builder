@@ -15,10 +15,6 @@ module.exports = Marionette.LayoutView.extend({
         elementsEditor: 'section#elements',
     },
 
-    templateHelpers: {
-        DEBUG: Config.DEBUG,
-    },
-
     initialize: function() {
         this.debugInfo = new DebugInfo();
         this.conditionEditor = new ConditionEditor();

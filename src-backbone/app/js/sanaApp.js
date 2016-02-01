@@ -1,6 +1,7 @@
 let RootLayoutView = require('views/rootLayoutView');
 
 let AuthFormBehavior = require('behaviors/authFormBehavior');
+let RightNavbarBehavior = require('behaviors/rightNavbarBehavior');
 let SortableBehavior = require('behaviors/sortableBehavior');
 
 let AuthRouter = require('routers/authRouter');
@@ -87,7 +88,7 @@ module.exports = Marionette.Application.extend({
         } else {
             // There might be a valid language in URL
             let lang = pathParts[0];
-            let locales = Config.LOCALES_SUPPORTED.map(localeToLang);
+            let locales = Config.LOCALES_SUPPORTED.map(l => l.code).map(localeToLang);
             if (locales.includes(lang)) {
                 return lang;
             }
@@ -166,6 +167,21 @@ module.exports = Marionette.Application.extend({
     },
 
     _setupViews: function() {
+        // Overwrite marionette renderer to add global Config data
+        const originalRenderer = Marionette.Renderer.render;
+        Marionette.Renderer.render = function(template, data) {
+            const mergeToData = function(value, key) {
+                if (!_.has(data, key)) {
+                    data[key] = value;
+                }
+            };
+
+            // Merge in global Config
+            _.each(Config, mergeToData);
+
+            return originalRenderer(template, data);
+        };
+
         // Assign root view for modules to render in
         this.RootView = new RootLayoutView();
         this.RootView.render();
@@ -179,6 +195,7 @@ module.exports = Marionette.Application.extend({
         };
         this.Behaviors = {};
         this.Behaviors.AuthFormBehavior = AuthFormBehavior;
+        this.Behaviors.RightNavbarBehavior = RightNavbarBehavior;
         this.Behaviors.SortableBehavior = SortableBehavior;
     },
 

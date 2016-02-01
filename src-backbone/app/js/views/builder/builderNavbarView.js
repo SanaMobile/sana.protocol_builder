@@ -1,15 +1,22 @@
+const App = require('utils/sanaAppInstance');
 const EventKeys = require('utils/eventKeys');
 const Helpers = require('utils/helpers');
-let App = require('utils/sanaAppInstance');
 
 
-module.exports = Marionette.ItemView.extend({
+module.exports = Marionette.LayoutView.extend({
 
     template: require('templates/builder/builderNavbarView'),
-
     tagName: 'div',
-
     className: 'container-fluid spb-container',
+
+    regions: {
+        'languageSelector': 'div.navbar-right.language-selector',
+        'rightNavbar': 'div.navbar-right.content',
+    },
+
+    behaviors: {
+        RightNavbarBehavior: {},
+    },
 
     //-------------------------------------------------------------------------
     // File menu
