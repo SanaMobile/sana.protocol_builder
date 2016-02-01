@@ -1,9 +1,9 @@
 <header class="container-fluid spb-container" id="procedures-menu">
     <h1>{{ i18n "Sana Protocol Builder" }}</h1>
     <ul>
-        <li><a href="/procedures">{{ i18n "Procedures" }}</a></li>
-        <li><a href="/concepts">{{ i18n "Concepts" }}</a></li>
-        <li><a href="/help">{{ i18n "Help" }}</a></li>
+        <li><a href="/{{ currentLanguage }}/procedures">{{ i18n "Procedures" }}</a></li>
+        <li><a href="/{{ currentLanguage }}/concepts">{{ i18n "Concepts" }}</a></li>
+        <li><a href="/{{ currentLanguage }}/help">{{ i18n "Help" }}</a></li>
     </ul>
 </header>
 
@@ -46,7 +46,7 @@
         {{ i18n "Copyright &copy; 2015-YEAR Sana Protocol Builder" year=copyrightYear }}
     </p>
     <ul>
-        <li><a href="/terms">{{ i18n "Terms of Service" }}</a></li>
-        <li><a href="/privacy">{{ i18n "Privacy Policy" }}</a></li>
+        <li><a href="/{{ currentLanguage }}/terms">{{ i18n "Terms of Service" }}</a></li>
+        <li><a href="/{{ currentLanguage }}/privacy">{{ i18n "Privacy Policy" }}</a></li>
     </ul>
 </footer>

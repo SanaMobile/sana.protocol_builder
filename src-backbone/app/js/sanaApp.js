@@ -176,8 +176,13 @@ module.exports = Marionette.Application.extend({
                 }
             };
 
+            const miscData = {
+                currentLanguage: i18n.language,
+            };
+
             // Merge in global Config
             _.each(Config, mergeToData);
+            _.each(miscData, mergeToData);
 
             return originalRenderer(template, data);
         };
