@@ -36,8 +36,11 @@ module.exports = Marionette.Behavior.extend({
 
         Object.keys(errors).forEach(function(key) {
             if (key === '__all__') {
-                App().clearNotifications();
-                App().showNotification('danger', 'Form Error', errors[key]);
+                App().RootView.clearNotifications();
+                App().RootView.showNotification({
+                    title: 'Form Error',
+                    desc: errors[key],
+                });
             } else {
                 let $input = $form.find('input[name=' + key + ']');
                 if ($input.length) {

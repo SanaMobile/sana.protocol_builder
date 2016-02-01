@@ -11,8 +11,8 @@ module.exports = Marionette.Controller.extend({
 
     routeProcedures: function () {
         Helpers.arrivedOnView('Procedures');
-        App().clearNotifications(); // Clear login errors
-        App().switchMainView(new ProceduresLayout(), 'procedures');
+        App().RootView.clearNotifications(); // Clear login errors
+        App().RootView.switchMainView(new ProceduresLayout(), 'procedures');
     },
 
     routeBuilder: function(procedureId, pageId) {
@@ -22,8 +22,8 @@ module.exports = Marionette.Controller.extend({
             Helpers.arrivedOnView('Builder');
         }
 
-        App().clearNotifications(); // Clear login errors
-        App().switchMainView(new BuilderLayout({ procedureId: procedureId, pageId: pageId }), 'builder');
+        App().RootView.clearNotifications(); // Clear login errors
+        App().RootView.switchMainView(new BuilderLayout({ procedureId: procedureId, pageId: pageId }), 'builder');
     },
 
 });

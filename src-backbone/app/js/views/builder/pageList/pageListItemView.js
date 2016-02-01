@@ -46,7 +46,7 @@ module.exports = Marionette.ItemView.extend({
                 },
                 error: function(model, response, options) {
                     console.warn('Failed to delete Page', self.model.get('id'), response.responseJSON);
-                    App().showNotification('danger', 'Failed delete Page!');
+                    App().RootView.showNotification('Failed to delete Page!');
                     self.$el.fadeIn();
                 },
             });

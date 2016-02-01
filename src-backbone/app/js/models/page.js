@@ -70,7 +70,7 @@ module.exports = Backbone.Model.extend({
             },
             error: function() {
                 console.warn('Failed to create Element', element.get('id'));
-                App().showNotification('danger', 'Failed create Element!');
+                App().RootView.showNotification('Failed to create Element!');
             },
         });
     },

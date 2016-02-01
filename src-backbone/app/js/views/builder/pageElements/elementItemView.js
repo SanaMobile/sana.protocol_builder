@@ -63,8 +63,11 @@ module.exports = Marionette.LayoutView.extend({
             case 'PICTURE':       return PictureItemView;
             case 'PLUGIN':        return PluginItemView;
             case 'ENTRY_PLUGIN':  return PluginEntryItemView;
-            default:
-                console.error('Unrecognized element_type', item.get('element_type'));
+            default: {
+                let errorMessage = 'Unrecognized element_type: ' + item.get('element_type');
+                console.error(errorMessage);
+                throw new ReferenceError(errorMessage);
+            }
         }
     },
 
@@ -80,7 +83,7 @@ module.exports = Marionette.LayoutView.extend({
                 },
                 error: function(model, response, options) {
                     console.warn('Failed to delete Element', self.model.get('id'), response.responseJSON);
-                    App().showNotification('danger', 'Failed to delete Element!');
+                    App().RootView.showNotification('Failed to delete Element!');
                     self.$el.fadeIn();
                 },
             });

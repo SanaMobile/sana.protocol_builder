@@ -9,8 +9,8 @@ module.exports = Marionette.ItemView.extend({
 
     className: 'container-fluid spb-container',
 
-    onShow: function() {
-        const welcomeMessage = 'Welcome Trinovantes'; // TODO fetch username from server
+    onAttach: function() {
+        const welcomeMessage = i18n.t('Hello username', {username: 'Trinovantes'}); // TODO fetch username from server
 
         // Do this after View is shown so that rootLayoutView can find
         // p.navbar-text inside this View

@@ -1,11 +1,11 @@
-<a href="/procedures/{{ id }}" title="Edit this procedure" class="title">
+<a href="/procedures/{{ id }}" title="{{ i18n "Edit this procedure" }}" class="title">
     {{ title }}
 </a>
 <span class="author">
-    <strong>Author:</strong> {{ author }}
+    <strong>{{ i18n "Author" }}:</strong> {{ author }}
 </span>
 <span class="last-modified">
-    <strong>Last Modified:</strong> {{ formatDate last_modified day='numeric' month='long' year='numeric' hour='numeric' minute='numeric' }}
+    <strong>{{ i18n "Last Modified" }}:</strong> {{ formatDate last_modified }}
 </span>
-<a class="download glyphicon glyphicon-download-alt" title="Download this procedure as XML"></a>
-<a class="delete glyphicon glyphicon-remove" title="Delete this procedure"></a>
+<a class="download glyphicon glyphicon-download-alt" title="{{ i18n "Download this procedure as XML" }}"></a>
+<a class="delete glyphicon glyphicon-remove" title="{{ i18n "Delete this procedure" }}"></a>

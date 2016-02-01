@@ -1,3 +1,5 @@
+const App = require('utils/sanaAppInstance');
+
 const AUTH_TOKEN_KEY = 'AUTH_TOKEN_KEY';
 const STORAGE_KEY = AUTH_TOKEN_KEY;
 
@@ -41,17 +43,17 @@ let SessionModel = Backbone.Model.extend({
             data: formData,
             type: 'POST',
             url: '/auth/signup',
-            beforeSend: function(jqXHR, settings) {
-                self.trigger('request');
+            beforeSend: function() {
+                App().RootView.showSpinner();
+            },
+            complete: function() {
+                App().RootView.hideSpinner();
             },
             success: function(response) {
                 self._authHandler(response, serverErrorHandler);
             },
             error: function(error) {
                 networkErrorHandler(error);
-            },
-            complete: function(jqXHR, textStatus) {
-                self.trigger('complete');
             },
         });
     },
@@ -64,17 +66,17 @@ let SessionModel = Backbone.Model.extend({
             data: formData,
             type: 'POST',
             url: '/auth/login',
-            beforeSend: function(jqXHR, settings) {
-                self.trigger('request');
+            beforeSend: function() {
+                App().RootView.showSpinner();
+            },
+            complete: function() {
+                App().RootView.hideSpinner();
             },
             success: function(response) {
                 self._authHandler(response, serverErrorHandler);
             },
             error: function(error) {
                 networkErrorHandler(error);
-            },
-            complete: function(jqXHR, textStatus) {
-                self.trigger('complete');
             },
         });
     },
@@ -84,11 +86,11 @@ let SessionModel = Backbone.Model.extend({
         $.ajax({
             type: 'POST',
             url: '/auth/logout',
-            beforeSend: function(jqXHR, settings) {
-                self.trigger('request');
+            beforeSend: function() {
+                App().RootView.showSpinner();
             },
-            complete: function(jqXHR, textStatus) {
-                self.trigger('complete');
+            complete: function() {
+                App().RootView.hideSpinner();
                 self.destroy();
             },
         });

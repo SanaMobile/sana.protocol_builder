@@ -49,7 +49,7 @@ module.exports = Marionette.LayoutView.extend({
 
     onBeforeShow: function() {
         console.log('onBeforeShow');
-        App().switchNavbar(new NavbarView({ model: this.model }));
+        App().RootView.switchNavbar(new NavbarView({ model: this.model }));
         this.showChildView('metaData', new MetaDataView({ model: this.model }));
         this.showChildView('pageList', new PageListCollectionView({ collection: this.model.pages }));
         this.showChildView('pageDetails', new PageDetailsLayoutView({ model: this.model }));
@@ -61,17 +61,17 @@ module.exports = Marionette.LayoutView.extend({
         let self = this;
         this.model.fetch({
             beforeSend: function() {
-                self.triggerMethod(EventKeys.FETCHING_FROM_SERVER);
+                App().RootView.showSpinner();
             },
             complete: function() {
-                self.triggerMethod(EventKeys.RECEIVED_FROM_SERVER);
+                App().RootView.hideSpinner();
             },
             success: function() {
                 console.info('Fetched Procedure', procedureId);
             },
             error: function() {
                 console.warn('Failed to fetch Procedure', procedureId);
-                App().showNotification('danger', 'Failed to fetch Procedure!');
+                App().RootView.showNotification('Failed to fetch Procedure!');
             },
         });
     },

@@ -9,7 +9,7 @@ module.exports = Marionette.Controller.extend({
         Helpers.arrivedOnView('Terms of Service');
 
         let infoLayout = new InfoLayout();
-        App().switchMainView(infoLayout, 'info');
+        App().RootView.switchMainView(infoLayout, 'info');
         infoLayout.showChildView('infoArea', new Marionette.ItemView({
             template: require('templates/info/termsOfServiceView'),
         }));
@@ -19,7 +19,7 @@ module.exports = Marionette.Controller.extend({
         Helpers.arrivedOnView('Privacy Policy');
 
         let infoLayout = new InfoLayout();
-        App().switchMainView(infoLayout, 'info');
+        App().RootView.switchMainView(infoLayout, 'info');
         infoLayout.showChildView('infoArea', new Marionette.ItemView({
             template: require('templates/info/privacyPolicyView'),
         }));
@@ -29,7 +29,7 @@ module.exports = Marionette.Controller.extend({
         Helpers.arrivedOnView('404');
 
         let infoLayout = new InfoLayout();
-        App().switchMainView(infoLayout, 'info e404');
+        App().RootView.switchMainView(infoLayout, 'info e404');
         infoLayout.showChildView('infoArea', new Marionette.ItemView({
             template: require('templates/errors/404NotFoundView'),
         }));

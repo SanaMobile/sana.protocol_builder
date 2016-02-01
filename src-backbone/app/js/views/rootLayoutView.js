@@ -3,6 +3,7 @@ const NotificationsCollectionView = require('views/notifications/notificationsCo
 
 const EventKeys = require('utils/eventKeys');
 const Helpers = require('utils/helpers');
+const Config = require('utils/config');
 const App = require('utils/sanaAppInstance');
 
 
@@ -24,10 +25,7 @@ module.exports = Marionette.LayoutView.extend({
 
     childEvents: function() {
         let eventsHash = {};
-        eventsHash[EventKeys.FETCHING_FROM_SERVER] = this._onFetchingFromServer;
-        eventsHash[EventKeys.RECEIVED_FROM_SERVER] = this._onReceivedFromServer;
         eventsHash[EventKeys.UPDATE_NAVBAR_TEXT] = this._onUpdateNavbarText;
-
         return eventsHash;
     },
 
@@ -42,20 +40,58 @@ module.exports = Marionette.LayoutView.extend({
         }));
     },
 
+    //--------------------------------------------------------------------------
+    // Public methods
+    //--------------------------------------------------------------------------
+
+    showSpinner: function() {
+        let $spinner = $('<div class="spinner" />').hide();
+        $spinner.appendTo(this.$el).fadeIn('fast');
+    },
+
+    hideSpinner: function() {
+        let $spinner = this.$el.find('.spinner');
+        $spinner.fadeOut('fast', function() {
+            $spinner.remove();
+        });
+    },
+
+    switchMainView: function(view, bodyClass = null) {
+        if (Config.DEBUG) {
+            global.ActiveMainView = view;
+        }
+
+        this.$el.removeClass().addClass(bodyClass);
+        this.showChildView('main', view);
+    },
+
+    switchNavbar: function(navbarView) {
+        if (!navbarView) {
+            navbarView = new Marionette.ItemView({
+                template: '<div></div>',
+                tagName: 'div',
+                className: 'container-fluid spb-container',
+            });
+        }
+
+        this.showChildView('navbar', navbarView);
+    },
+
     clearNotifications: function() {
         this._notifications.reset();
     },
 
-    showNotification: function(alertType, title, desc, timeout) {
-        this._notifications.add([
-            {
-                alertType: alertType,
-                title: title,
-                desc: desc,
-                timeout: timeout,
-            }
-        ]);
+    showNotification: function(attributes, isTranslated = false) {
+        if (typeof attributes === 'string') {
+            attributes = { title: attributes };
+        }
+
+        this._notifications.push(attributes, { isTranslated: isTranslated });
     },
+
+    //--------------------------------------------------------------------------
+    // Event listeners
+    //--------------------------------------------------------------------------
 
     _onClickGoBack: function() {
         if (App().session.isValid()) {
@@ -63,18 +99,6 @@ module.exports = Marionette.LayoutView.extend({
         } else {
             Helpers.navigateToDefaultLoggedOut();
         }
-    },
-
-    _onFetchingFromServer: function() {
-        let $spinner = $('<div class="spinner" />').hide();
-        $spinner.appendTo(this.$el).fadeIn('fast');
-    },
-
-    _onReceivedFromServer: function() {
-        let $spinner = this.$el.find('.spinner');
-        $spinner.fadeOut('fast', function() {
-            $spinner.remove();
-        });
     },
 
     _onUpdateNavbarText: function(childView, text) {

@@ -1,24 +1,24 @@
-<h2>{{ readableElementName element_type }}</h2>
+<h2>{{ i18n (readableElementName element_type) }}</h2>
 
-<a class="delete glyphicon glyphicon-remove" title="Delete this element"></a>
-<a class="move-up glyphicon glyphicon-chevron-up" title="Move this element up"></a>
-<a class="move-down glyphicon glyphicon-chevron-down" title="Move this element down"></a>
+<a class="delete glyphicon glyphicon-remove" title="{{ i18n "Delete this element" }}"></a>
+<a class="move-up glyphicon glyphicon-chevron-up" title="{{ i18n "Move this element up" }}"></a>
+<a class="move-down glyphicon glyphicon-chevron-down" title="{{ i18n "Move this element down" }}"></a>
 
 <form id="element-{{ id }}">
     <div class="form-group">
-        <label for="eid-{{ id }}">Element ID</label>
+        <label for="eid-{{ id }}">{{ i18n "Element ID" }}</label>
         <input type="text" id="eid-{{ id }}" name="eid" class="form-control eid" value="{{ eid }}">
     </div>
     <div class="form-group">
-        <label for="concept-{{ id }}">Concept</label>
+        <label for="concept-{{ id }}">{{ i18n "Concept" }}</label>
         <input type="text" id="concept-{{ id }}" name="concept" class="form-control concept" value="{{ concept }}">
     </div>
     <div class="form-group">
-        <label for="question-{{ id }}">Question</label>
+        <label for="question-{{ id }}">{{ i18n "Question" }}</label>
         <input type="text" id="question-{{ id }}" name="question" class="form-control question" value="{{ question }}">
         <div class="checkbox">
             <label>
-                <input type="checkbox" name="required" class="required"> Required
+                <input type="checkbox" name="required" class="required"> {{ i18n "Required" }}
             </label>
         </div>
     </div>
@@ -26,11 +26,11 @@
     <div class="form-group custom-answer"></div>
 
     <div class="form-group">
-        <label for="image-{{ id }}">Image</label>
+        <label for="image-{{ id }}">{{ i18n "Image" }}</label>
         <input type="text" id="image-{{ id }}" name="image" class="form-control image" value="{{ image }}">
     </div>
     <div class="form-group">
-        <label for="audio-{{ id }}">Audio</label>
+        <label for="audio-{{ id }}">{{ i18n "Audio" }}</label>
         <input type="text" id="audio-{{ id }}" name="audio" class="form-control audio" value="{{ audio }}">
     </div>
 </form>

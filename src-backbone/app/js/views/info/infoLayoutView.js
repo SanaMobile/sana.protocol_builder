@@ -10,7 +10,7 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onBeforeShow: function() {
-        App().switchNavbar(new Marionette.ItemView({
+        App().RootView.switchNavbar(new Marionette.ItemView({
             template: require('templates/auth/authNavbarView'),
             tagName: 'div',
             className: 'container-fluid spb-container',

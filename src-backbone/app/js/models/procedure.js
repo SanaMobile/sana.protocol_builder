@@ -14,8 +14,8 @@ let Procedure = Backbone.Model.extend({
     defaults: function() {
         // These values are only used when we POST /procedures a new procedure
         return {
-            'title': 'Untitled Procedure',
-            'author': 'No author specified', // TODO either fetch user's username or let API allow nullable authors
+            'title': i18n.t('Untitled Procedure'),
+            'author': i18n.t('No author specified'), // TODO either fetch user's username or let API allow nullable authors
         };
     },
 
@@ -114,7 +114,7 @@ let Procedure = Backbone.Model.extend({
             },
             error: function() {
                 console.warn('Failed to create Page', page.get('id'));
-                App().showNotification('danger', 'Failed to create Page!');
+                App().RootView.showNotification('Failed to create Page!');
             },
         });
     },
@@ -140,7 +140,12 @@ let Procedure = Backbone.Model.extend({
             },
             error: function onGenerateError(jqXHR, textStatus, errorThrown) {
                 console.warn('Failed to generate Procedure', textStatus);
-                App().showNotification('danger', 'Failed to generate file for "' + title + '"', jqXHR.responseText);
+                App().RootView.showNotification({
+                    title: i18n.t('Failed to generate Procedure', { procedureTitle: title }),
+                    desc: i18n.t(jqXHR.responseText),
+                }, {
+                    isTranslated: true
+                });
             },
         });
     },

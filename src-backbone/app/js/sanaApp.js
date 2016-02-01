@@ -26,49 +26,75 @@ module.exports = Marionette.Application.extend({
     },
 
     onStart: function () {
-        if (Backbone.history.start({ pushState: true })) {
-            // Do this after Backbone.history has started so the navigate will work
-            if (!this.session.isValid()) {
-                console.info("Started with invalid session");
-                this.session.destroy();
-                if (Helpers.currentPageRequiresAuth()) {
-                    Helpers.navigateToDefaultLoggedOut();
-                }
-            }
-        } else {
-            // 404
-            this.routers.infoRouter.controller.routeError404NotFound();
-        }
-    },
-
-    switchMainView: function(view, bodyClass = null) {
-        if (Config.DEBUG) {
-            global.activeView = view;
+        let lang = this._getCurrentValidLangOrRedirectToDefaultLang();
+        if (typeof lang === 'undefined') {
+            // Currently redirecting...
+            return;
         }
 
-        this.switchNavbar(null); // Clear navbar
-        this._rootView.showChildView('main', view);
-        this._rootView.$el.removeClass().addClass(bodyClass);
-    },
-
-    switchNavbar: function(navbarView) {
-        if (!navbarView) {
-            navbarView = new Marionette.ItemView({
-                template: '<div></div>',
-                tagName: 'div',
-                className: 'container-fluid spb-container',
+        let self = this;
+        i18n.changeLanguage(lang, function() {
+            let foundRoute = Backbone.history.start({
+                pushState: true,
+                root: '/' + lang + '/',
             });
+
+            if (foundRoute) {
+                // Do this after Backbone.history has started so the navigate will work
+                if (!self.session.isValid()) {
+                    console.info("Started with invalid session");
+                    self.session.destroy();
+                    if (Helpers.currentPageRequiresAuth()) {
+                        Helpers.navigateToDefaultLoggedOut();
+                    }
+                }
+            } else {
+                self.routers.infoRouter.controller.routeError404NotFound();
+            }
+        });
+    },
+
+    changeLanguage: function(newLang) {
+        let urlPath = Backbone.history.location.pathname;
+        let oldLang = this._getCurrentValidLangOrRedirectToDefaultLang();
+
+        if (oldLang === newLang) {
+            console.warn('Trying to change to the same language');
+            return;
         }
 
-        this._rootView.showChildView('navbar', navbarView);
+        let newPath = '/' + newLang + '/' + urlPath.substr(('/' + oldLang + '/').length);
+        window.location.pathname = newPath;
     },
 
-    clearNotifications: function() {
-        this._rootView.clearNotifications();
-    },
+    _getCurrentValidLangOrRedirectToDefaultLang: function() {
+        let redirect = function(lang, pathname = '') {
+            // pathname should not have leading '/'
+            window.location.pathname = '/' + lang + '/' + pathname;
+        };
+        let localeToLang = function(locale) {
+            return locale.split('-')[0];
+        };
 
-    showNotification: function(alertType, title, desc, timeout) {
-        this._rootView.showNotification(alertType, title, desc, timeout);
+        // Normalize path such that there's no leading slash
+        let urlPath = Backbone.history.location.pathname;
+        urlPath = (urlPath.charAt(0) === '/') ? urlPath.substr(1) : urlPath;
+        let pathParts = urlPath.split('/');
+
+        if (pathParts.length === 1 && pathParts[0].length === 0) {
+            // Index with no language
+            redirect(localeToLang(Config.DEFAULT_LOCALE));
+        } else {
+            // There might be a valid language in URL
+            let lang = pathParts[0];
+            let locales = Config.LOCALES_SUPPORTED.map(localeToLang);
+            if (locales.includes(lang)) {
+                return lang;
+            }
+
+            // Don't support the lang in url
+            redirect(localeToLang(Config.DEFAULT_LOCALE), urlPath);
+        }
     },
 
     _setupSession: function() {
@@ -110,7 +136,10 @@ module.exports = Marionette.Application.extend({
                     case 401: {
                         // Reloads the page (i.e. resets the App state)
                         console.warn('Backbone.sync encountered 401. Resetting user session.');
-                        self.showNotification('danger', 'Your session is invalid!', 'Please login again.');
+                        self.showNotification({
+                            title: 'Your session is invalid!', 
+                            desc: 'Please login again.',
+                        });
                         self.session.destroy();
                         break;
                     }
@@ -138,8 +167,8 @@ module.exports = Marionette.Application.extend({
 
     _setupViews: function() {
         // Assign root view for modules to render in
-        this._rootView = new RootLayoutView();
-        this._rootView.render();
+        this.RootView = new RootLayoutView();
+        this.RootView.render();
     },
 
     _loadBehaviors: function() {

@@ -20,7 +20,7 @@ module.exports = Marionette.Controller.extend({
         Helpers.arrivedOnView('Sign Up');
 
         let authLayoutView = new AuthLayoutView();
-        App().switchMainView(authLayoutView);
+        App().RootView.switchMainView(authLayoutView);
         authLayoutView.showChildView('authFormArea', new SignupView());
     },
   
@@ -33,7 +33,7 @@ module.exports = Marionette.Controller.extend({
         Helpers.arrivedOnView('Login');
 
         let authLayoutView = new AuthLayoutView();
-        App().switchMainView(authLayoutView);
+        App().RootView.switchMainView(authLayoutView);
         authLayoutView.showChildView('authFormArea', new LoginView());
     },
 

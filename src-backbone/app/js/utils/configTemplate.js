@@ -11,8 +11,11 @@ module.exports = {
     API_BASE: '<%= API_BASE %>',
 
     LOCALES_SUPPORTED: [
-        'en'
+        'en',
+        'fr',
     ],
+
+    DEFAULT_LOCALE: 'en',
 
     NON_AUTH_PAGES: [
         'login',

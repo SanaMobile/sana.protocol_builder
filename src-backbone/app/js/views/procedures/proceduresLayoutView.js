@@ -13,6 +13,12 @@ module.exports = Marionette.LayoutView.extend({
 
     template: require('templates/procedures/proceduresLayoutView'),
 
+    templateHelpers: function() {
+        return {
+            copyrightYear: new Date().getFullYear(),
+        };
+    },
+
     ui: {
         procedureFilterInput: 'input#procedure-filter',
         sortToolbarDropdown: '#procedure-list-toolbar ul.dropdown-menu',
@@ -43,7 +49,7 @@ module.exports = Marionette.LayoutView.extend({
 
         // Account navbar
         let navbarView = new ProceduresNavbarView();
-        App().switchNavbar(navbarView);
+        App().RootView.switchNavbar(navbarView);
 
         // Procedures collection
         this._proceduresCollectionView = new ProceduresCollectionView({
@@ -56,17 +62,17 @@ module.exports = Marionette.LayoutView.extend({
         let self = this;
         this.procedures.fetch({
             beforeSend: function() {
-                self.triggerMethod(EventKeys.FETCHING_FROM_SERVER);
+                App().RootView.showSpinner();
             },
             complete: function() {
-                self.triggerMethod(EventKeys.RECEIVED_FROM_SERVER);
+                App().RootView.hideSpinner();
             },
             success: function() {
                 console.info('Fetched Procedures');
             },
             error: function() {
                 console.warn('Failed to fetch Procedures');
-                App().showNotification('danger', 'Failed to fetch Procedures!');
+                App().RootView.showNotification('Failed to fetch Procedures!');
             },
         });
     },
@@ -81,8 +87,8 @@ module.exports = Marionette.LayoutView.extend({
                 Backbone.history.navigate('/procedures/' + procedure.id, { trigger: true });
             },
             error: function() {
-                console.warn('Failed to create Procedure');
-                App().showNotification('danger', 'Failed to create Procedure');
+                console.warn('Failed to create Procedure!');
+                App().RootView.showNotification('Failed to create Procedure!');
             },
         });
     },

@@ -7,11 +7,12 @@ describe("Signup View", function () {
     beforeEach(function() {
         // Setup app
         let SanaApp = proxyquire('sanaApp', {
-            'views/rootLayoutView'     : {},
-            'routers/authRouter'       : {},
-            'routers/infoRouter'       : {},
-            'routers/proceduresRouter' : {},
-            'utils/helpers'            : {},
+            'behaviors/rightNavbarBehavior': {},
+            'views/rootLayoutView'         : {},
+            'routers/authRouter'           : {},
+            'routers/infoRouter'           : {},
+            'routers/proceduresRouter'     : {},
+            'utils/helpers'                : {},
         });
         app = new SanaApp();
         app._loadBehaviors();

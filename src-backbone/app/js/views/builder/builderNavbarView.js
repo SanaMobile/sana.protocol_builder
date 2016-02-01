@@ -35,7 +35,7 @@ module.exports = Marionette.ItemView.extend({
             },
             error: function() {
                 console.warn('Failed to delete Procedure', self.model.get('id'));
-                App().showNotification('danger', 'Failed delete Procedure!');
+                App().RootView.showNotification('Failed delete Procedure!');
             },
         });
     },
@@ -52,15 +52,15 @@ module.exports = Marionette.ItemView.extend({
     },
 
     saving: function (event) {
-        this.triggerMethod(EventKeys.UPDATE_NAVBAR_TEXT, 'Saving...');
+        this.triggerMethod(EventKeys.UPDATE_NAVBAR_TEXT, i18n.t('Saving...'));
     },
 
     saved: function(event) {
-        this.triggerMethod(EventKeys.UPDATE_NAVBAR_TEXT, 'All changes saved to server.');
+        this.triggerMethod(EventKeys.UPDATE_NAVBAR_TEXT, i18n.t('All changes saved to server.'));
     },
 
     error: function(event) {
-        this.triggerMethod(EventKeys.UPDATE_NAVBAR_TEXT, 'Failed to synchronize with server.');
+        this.triggerMethod(EventKeys.UPDATE_NAVBAR_TEXT, i18n.t('Failed to synchronize with server.'));
     },
 
 });
