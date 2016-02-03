@@ -3,48 +3,30 @@
 
 
 //-----------------------------------------------------------------------------
-// Navbar
+// Main editor
 //-----------------------------------------------------------------------------
 
-nav#builder-navbar{
-    border: none;
-    margin-bottom: 0;
+@pages-list-width: @builder-page-tile-width + @container-side-padding + @column-margin;
 
-    ul{
-        margin-left: -@column-margin;
+body.builder{
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGM6AwAA0gDPuMu6oQAAAABJRU5ErkJggg==);
+    background-repeat: repeat-y;
+    background-position: @pages-list-width 0;
+}
 
-        ul.dropdown-menu{
-            margin-left: 0;
-        }
+div#builder-main{
+    .clearfix;
 
-        a{
-            cursor: pointer;
-        }
+    section#pages-list{
+        box-sizing: border-box;
+        float: left;
+        width: @pages-list-width;
+    }
 
-        li.go-back{
-            position: absolute;
-            top: 0; left: 0;
-
-            a{
-                background: #000;
-                display: block;
-                padding: 0;
-                transition: 0.5s;
-                width: @container-side-padding - @column-margin; height: 50px;
-
-                color: #fff;
-                line-height: 50px;
-                text-align: center;
-
-                &:hover{
-                    background: @sana-red;
-                }
-
-                &:focus{
-                    box-shadow: 0 @column-margin @column-margin * 2 rgba(0, 0, 0, 0.4) inset;
-                }
-            }
-        }
+    section#page-details{
+        float: left;
+        box-sizing: border-box;
+        width: ~'calc(100%' - @pages-list-width ~')';
     }
 }
 
@@ -97,34 +79,5 @@ header#builder-meta-data{
         height: 40px;
         line-height: 40px;
         padding: 0 20px;
-    }
-}
-
-//-----------------------------------------------------------------------------
-// Main editor
-//-----------------------------------------------------------------------------
-
-@pages-list-width: @builder-page-tile-width + @container-side-padding + @column-margin;
-
-body.builder{
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGM6AwAA0gDPuMu6oQAAAABJRU5ErkJggg==);
-    background-repeat: repeat-y;
-    background-position: @pages-list-width 0;
-    padding-top: 50px;
-}
-
-div#builder-main{
-    .clearfix;
-
-    section#pages-list{
-        box-sizing: border-box;
-        float: left;
-        width: @pages-list-width;
-    }
-
-    section#page-details{
-        float: left;
-        box-sizing: border-box;
-        width: ~'calc(100%' - @pages-list-width ~')';
     }
 }

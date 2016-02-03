@@ -1,4 +1,4 @@
-let App              = require('sanaAppInstance');
+let App              = require('utils/sanaAppInstance');
 let Helpers          = require('utils/helpers');
 let Procedure        = require('models/procedure');
 let ProceduresLayout = require('views/procedures/proceduresLayoutView');
@@ -9,7 +9,8 @@ module.exports = Marionette.Controller.extend({
 
     routeProcedures: function () {
         Helpers.arrivedOnView('Procedures');
-        App().switchView(new ProceduresLayout());
+        App().clearNotifications(); // Clear login errors
+        App().switchMainView(new ProceduresLayout(), 'procedures');
     },
 
     routeBuilder: function(procedureId, pageId) {
@@ -18,6 +19,8 @@ module.exports = Marionette.Controller.extend({
         } else {
             Helpers.arrivedOnView('Builder');
         }
+
+        App().clearNotifications(); // Clear login errors
 
         let procedure = new Procedure({ 
             // model attributes
@@ -31,11 +34,12 @@ module.exports = Marionette.Controller.extend({
         procedure.fetch({
             success: function() {
                 console.info('Fetched Procedure', procedureId);
-                App().switchView(new BuilderLayout({ model: procedure }), 'builder');
+                App().switchMainView(new BuilderLayout({ model: procedure }), 'builder');
             },
             error: function() {
                 console.warn('Failed to fetch Procedure', procedureId);
-                // TODO maybe present error alert?
+                App().showNotification('danger', 'Failed to fetch Procedure!');
+                App().switchMainView(new BuilderLayout({ model: procedure }), 'builder');
             },
         });
     },

@@ -1,3 +1,4 @@
+let App      = require('utils/sanaAppInstance');
 let Helpers  = require('utils/helpers');
 let Elements = require('collections/elements');
 let Element  = require('models/element');
@@ -67,7 +68,7 @@ module.exports = Backbone.Model.extend({
             },
             error: function() {
                 console.warn('Failed to create Element', element.get('id'));
-                // TODO show error alert
+                App().showNotification('danger', 'Failed create Element!');
             },
         });
     },

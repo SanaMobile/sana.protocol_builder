@@ -1,4 +1,4 @@
-let App        = require('sanaAppInstance');
+let App        = require('utils/sanaAppInstance');
 let Helpers    = require('utils/helpers');
 let Procedure  = require('models/procedure');
 let Procedures = require('collections/procedures');
@@ -17,7 +17,6 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     regions: {
-        navbar: 'nav#procedures-navbar',
         proceduresList: 'section#procedures-list',
     },
 
@@ -45,7 +44,7 @@ module.exports = Marionette.LayoutView.extend({
                 App().session.trigger('complete');
             },
             success: function() {
-                // self._proceduresCollectionView.render(); // TODO remove?
+                self._proceduresCollectionView.render();
             },
         });
     },
@@ -55,7 +54,7 @@ module.exports = Marionette.LayoutView.extend({
 
         // Account navbar
         let navbarView = new ProceduresNavbarView();
-        this.showChildView('navbar', navbarView);
+        App().switchNavbar(navbarView);
 
         // Procedures collection
         this._proceduresCollectionView = new ProceduresCollectionView({

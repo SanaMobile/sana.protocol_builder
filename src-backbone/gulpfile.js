@@ -235,7 +235,13 @@ gulp.task('js-unit-test', ['js-lint', 'js-config'], function() {
             require: [
                 './tests/setup/globals',
             ],
-        }));
+        }))
+        .once('error', function() {
+            process.exit(1);
+        })
+        .once('end', function() {
+            process.exit();
+        });
 });
 
 gulp.task('test', ['js-unit-test']);

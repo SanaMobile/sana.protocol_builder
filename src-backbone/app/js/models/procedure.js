@@ -1,5 +1,6 @@
 const ACTIVE_PAGE_CHANGE_EVENT = 'change:activePage';
 
+let App     = require('utils/sanaAppInstance');
 let Helpers = require('utils/helpers');
 let Pages   = require('collections/pages');
 let Page    = require('./page');
@@ -112,7 +113,7 @@ let Procedure = Backbone.Model.extend({
             },
             error: function() {
                 console.warn('Failed to create Page', page.get('id'));
-                // TODO show error alert
+                App().showNotification('danger', 'Failed to create Page!');
             },
         });
     },
@@ -127,12 +128,19 @@ let Procedure = Backbone.Model.extend({
         this.trigger(ACTIVE_PAGE_CHANGE_EVENT, null);
     },
 
-    generate: function(onSuccess, onError) {
+    generate: function() {
+        const title = this.get('title');
         $.ajax({
             type: 'GET',
             url: this.url() + '/generate',
-            success: onSuccess,
-            error: onError,
+            success: function onGenerateSuccess(data, status, jqXHR) {
+                const filename = title + '.xml';
+                Helpers.downloadXMLFile(data, filename);
+            },
+            error: function onGenerateError(jqXHR, textStatus, errorThrown) {
+                console.warn('Failed to generate Procedure', textStatus);
+                App().showNotification('danger', 'Failed to generate file for "' + title + '"', jqXHR.responseText);
+            },
         });
     },
 

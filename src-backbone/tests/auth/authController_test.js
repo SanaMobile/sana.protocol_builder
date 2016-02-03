@@ -36,7 +36,7 @@ describe('Auth Controller', function() {
         let getAppInstance = function() {
             return app;
         };
-        appSwitchViewStub = sinon.stub(app, 'switchView');
+        appSwitchViewStub = sinon.stub(app, 'switchMainView');
 
         // Setup authLayoutView
         authLayoutViewShowChildViewStub = sinon.stub();
@@ -59,7 +59,7 @@ describe('Auth Controller', function() {
 
         // Setup authController
         let AuthController = proxyquire('controllers/authController', {
-            'sanaAppInstance'           : getAppInstance,
+            'utils/sanaAppInstance'     : getAppInstance,
             'utils/helpers'             : helpers,
             'views/auth/authLayoutView' : authLayoutViewStub,
             'views/auth/signupView'     : signupViewStub,

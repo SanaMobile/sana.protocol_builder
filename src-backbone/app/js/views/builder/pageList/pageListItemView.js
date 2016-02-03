@@ -1,3 +1,6 @@
+let App = require('utils/sanaAppInstance');
+
+
 module.exports = Marionette.ItemView.extend({
 
     template: require('templates/builder/pageList/pageListItemView'),
@@ -42,8 +45,8 @@ module.exports = Marionette.ItemView.extend({
                 },
                 error: function(model, response, options) {
                     console.warn('Failed to delete Page', self.model.get('id'), response.responseJSON);
+                    App().showNotification('danger', 'Failed delete Page!');
                     self.$el.fadeIn();
-                    // TODO show error alert
                 },
             });
         });

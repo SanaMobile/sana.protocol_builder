@@ -1,4 +1,4 @@
-let App = require('sanaAppInstance');
+let App = require('utils/sanaAppInstance');
 
 
 module.exports = Marionette.ItemView.extend({

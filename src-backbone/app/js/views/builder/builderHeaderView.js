@@ -1,4 +1,5 @@
 const Helpers = require('utils/helpers');
+const App     = require('utils/sanaAppInstance');
 
 
 module.exports = Marionette.ItemView.extend({
@@ -37,7 +38,7 @@ module.exports = Marionette.ItemView.extend({
         }, {
             error: function(model, response, options) {
                 console.warn('Failed to save Procedure meta data:', response.responseJSON);
-                // TODO also show alert
+                App().showNotification('danger', 'Failed save title and author!');
             },
         });
     },

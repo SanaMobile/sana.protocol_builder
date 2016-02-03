@@ -1,3 +1,4 @@
+const App     = require('utils/sanaAppInstance');
 const Helpers = require('utils/helpers');
 
 
@@ -18,14 +19,7 @@ module.exports = Marionette.ItemView.extend({
 
     _onDownloadProcedure: function(event) {
         event.preventDefault();
-
-        const filename = this.model.get('title') + '.xml';
-
-        this.model.generate(function onSuccess(data, status, jqXHR) {
-            Helpers.downloadXMLFile(data, filename);
-        }, function onError(jqXHR, textStatus, errorThrown) {
-            console.warn('Failed to generate Procedure', textStatus);
-        });
+        this.model.generate();
     },
 
     _onDeleteProcedure: function(event) {
@@ -43,8 +37,8 @@ module.exports = Marionette.ItemView.extend({
                 },
                 error: function(model, response, options) {
                     console.warn('Failed to delete Procedure', self.model.get('id'), response.responseJSON);
+                    App().showNotification('danger', 'Failed delete Procedure!');
                     el.fadeIn();
-                    // TODO show error alert
                 },
             });
         });

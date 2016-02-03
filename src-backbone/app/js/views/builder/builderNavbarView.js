@@ -1,9 +1,14 @@
 let Helpers = require('utils/helpers');
+let App     = require('utils/sanaAppInstance');
 
 
 module.exports = Marionette.ItemView.extend({
 
     template: require('templates/builder/builderNavbarView'),
+
+    tagName: 'div',
+
+    className: 'container-fluid spb-container',
 
     ui: {
         statusText: 'p.status-text'
@@ -28,13 +33,12 @@ module.exports = Marionette.ItemView.extend({
         let self = this;
         this.model.destroy({
             success: function() {
-                console.info('Deleted procedure', self.model.get('id'));
+                console.info('Deleted Procedure', self.model.get('id'));
+                Helpers.navigateToDefaultLoggedIn();
             },
             error: function() {
-                console.warn('Failed to delete procedure', self.model.get('id')); // TODO also show error alert
-            },
-            complete: function() {
-                Helpers.navigateToDefaultLoggedIn();
+                console.warn('Failed to delete Procedure', self.model.get('id'));
+                App().showNotification('danger', 'Failed delete Procedure!');
             },
         });
     },
@@ -59,7 +63,7 @@ module.exports = Marionette.ItemView.extend({
     },
 
     error: function(event) {
-        this.ui.statusText.text('Failed to save to server. Please try again.');
+        this.ui.statusText.text('Failed to synchronize with server. Please try again.');
     },
 
 });
