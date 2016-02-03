@@ -58,9 +58,10 @@ module.exports = {
     sluggify: function(str) {
         return str && str
             .toLowerCase()
-            .replace(/\s+/g, '-')           // Replace spaces with -
+            .replace(/\s+/g, '-')           // Replace spaces with '-'
+            .replace(/_/g, '-')             // Replace underscores with '-'
             .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-            .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+            .replace(/\-\-+/g, '-')         // Replace multiple '-' with single '-'
             .replace(/^-+/, '')             // Trim - from start of text
             .replace(/-+$/, '')             // Trim - from end of text
         ;
