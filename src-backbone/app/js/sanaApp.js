@@ -137,7 +137,7 @@ module.exports = Marionette.Application.extend({
                     case 401: {
                         // Reloads the page (i.e. resets the App state)
                         console.warn('Backbone.sync encountered 401. Resetting user session.');
-                        self.showNotification({
+                        self.RootView.showNotification({
                             title: 'Your session is invalid!', 
                             desc: 'Please login again.',
                         });

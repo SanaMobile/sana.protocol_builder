@@ -50,7 +50,6 @@ let SortableBehavior = Marionette.Behavior.extend({
     onRender: function() {
         this._getChildViewContainer()
             .sortable(this.options.sortableOptions)
-            .disableSelection()
         ;
     },
 

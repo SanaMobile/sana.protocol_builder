@@ -35,6 +35,12 @@ div#elements-list ul{
                 margin-bottom: 0;
             }
 
+            h2{
+                line-height: 50px;
+                margin: 0;
+                margin-bottom: 20px;
+            }
+
             div.form-group{
                 margin-bottom: 20px;
 
@@ -47,10 +53,112 @@ div#elements-list ul{
                 }
             }
 
-            h2{
-                line-height: 50px;
-                margin: 0;
-                margin-bottom: 20px;
+            div.custom-answer{
+                div.has-choices{
+                    @margin: 10px;
+                    @toggle-btn-size: 20px;
+                    @drag-btn-size: 30px;
+                    @delete-btn-size: 30px;
+
+                    div.choices-container{
+                        border: 1px solid @grey-border-light;
+                        border-radius: 3px;
+                        padding: 10px 0;
+                    }
+
+                    li.ui-sortable-placeholder{
+                        background: @grey-bg-light;
+                    }
+
+                    li.choice,
+                    div.choice{
+                        background: #fff;
+                        display: flex;
+                        position: relative;
+                        margin: 5px 0;
+
+                        span.handle{
+                            background-image: url('/img/common-icons/drag-handle.png');
+                            background-size: 80%;
+                            background-position: center;
+                            background-repeat: no-repeat;
+                            cursor: move;
+                            display: block;
+                            width: @drag-btn-size; height: @drag-btn-size;
+
+                            position: absolute;
+                            top: 0; left: @margin;
+                        }
+
+                        span.default-answer-toggle{
+                            box-sizing: border-box;
+                            border: 1px solid @grey-border;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            display: inline-block;
+                            width: @toggle-btn-size; height: @toggle-btn-size;
+
+                            position: absolute;
+                            top: 5px; left: @drag-btn-size + (@margin * 2);
+
+                            &.checked{
+                                background: @grey-bg;
+                                box-shadow: 0 0 (@toggle-btn-size / 2) hsla(0, 0, 0, 0.2) inset;
+                            }
+                        }
+
+                        span.delete-choice{
+                            cursor: pointer;
+                            display: block;
+                            line-height: @delete-btn-size;
+                            text-align: center;
+                            width: @delete-btn-size; height: @delete-btn-size;
+
+                            position: absolute;
+                            top: 0; right: @margin;
+                        }
+
+                        input.new-choice,
+                        div.input{
+                            border: none;
+                            border-top: 1px solid #fff;
+                            border-bottom: 1px solid #fff;
+                            box-sizing: border-box;
+                            display: inline-block;
+                            line-height: 20px;
+                            outline: none;
+                            padding: 5px;
+                            padding-left: @toggle-btn-size + @drag-btn-size + (@margin * 3);
+                            padding-right: @delete-btn-size + (@margin * 2);
+                            width: 100%;
+
+                            &:focus{
+                                border-color: @grey-border-light;
+                            }
+                        }
+
+                        &.ui-sortable-helper{
+                            div.input{
+                                border: 1px solid @grey-border-light;
+                            }
+                        }
+
+                        &:hover{
+                            input.new-choice,
+                            div.input{
+                                border-color: @grey-border-light;
+                            }
+                        }
+                    }
+
+                    div.choice{
+                        margin: 0;
+
+                        span.default-answer-toggle{
+                            cursor: default;
+                        }
+                    }
+                }
             }
 
             a.glyphicon{

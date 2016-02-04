@@ -99,16 +99,7 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     _onFormUpdate: function (event) {
-        // Wait until input is finished before saving to server to avoid sending too many requests
-        if (this._timerId !== undefined) {
-            clearTimeout(this._timerId);
-            this._timerId = undefined;
-        }
-
-        let self = this;
-        this._timerId = setTimeout(function() {
-            self._saveToServer();
-        }, Config.INPUT_DELAY_BEFORE_SAVE);
+        Helpers.delaySave(this, this._saveToServer);
     },
 
     _saveToServer: function() {
