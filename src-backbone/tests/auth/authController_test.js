@@ -29,13 +29,14 @@ describe('Auth Controller', function() {
                 this.switchMainView = appSwitchViewStub;
                 this.render = sinon.stub();
             },
-            'behaviors/authFormBehavior'   : {},
-            'behaviors/sortableBehavior'   : {},
+            'behaviors/authFormBehavior': {},
+            'behaviors/choiceBasedElementBehavior': {},
+            'behaviors/sortableBehavior': {},
             'behaviors/rightNavbarBehavior': {},
-            'routers/authRouter'           : {},
-            'routers/infoRouter'           : {},
-            'routers/proceduresRouter'     : {},
-            'utils/helpers'                : helpers,
+            'routers/authRouter': {},
+            'routers/infoRouter': {},
+            'routers/proceduresRouter': {},
+            'utils/helpers': helpers,
         });
         app = new SanaApp();
         app._setupViews();
@@ -64,11 +65,11 @@ describe('Auth Controller', function() {
 
         // Setup authController
         let AuthController = proxyquire('controllers/authController', {
-            'utils/sanaAppInstance'     : getAppInstance,
-            'utils/helpers'             : helpers,
+            'utils/sanaAppInstance': getAppInstance,
+            'utils/helpers': helpers,
             'views/auth/authLayoutView' : authLayoutViewStub,
-            'views/auth/signupView'     : signupViewStub,
-            'views/auth/loginView'      : loginViewStub,
+            'views/auth/signupView': signupViewStub,
+            'views/auth/loginView': loginViewStub,
         });
         authController = new AuthController();
     });

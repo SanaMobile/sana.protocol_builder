@@ -60,7 +60,7 @@ module.exports = Backbone.Collection.extend({
     },
 
     getDefaultAnswer: function() {
-        const defaultChoice = this.findWhere({ isDefault: true });
+        const defaultChoice = this.findWhere({ isDefault: true }); // TODO handle multiple default answers on backend
         return defaultChoice ? defaultChoice.get('text') : '';
     },
 
