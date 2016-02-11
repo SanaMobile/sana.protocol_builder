@@ -55,6 +55,13 @@ class ConceptFactory(factory.django.DjangoModelFactory):
     constraint = 'yes;no'
 
 
+class ShowIfFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ShowIf
+
+    page = factory.SubFactory(PageFactory)
+
+
 class CriteriaConditionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.ConditionNode
@@ -88,11 +95,3 @@ class NotConditionFactory(factory.django.DjangoModelFactory):
 
     parent = None
     node_type = 'NOT'
-
-
-class ShowIfFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = models.ShowIf
-
-    page = factory.SubFactory(PageFactory)
-    condition = factory.SubFactory(CriteriaConditionFactory)

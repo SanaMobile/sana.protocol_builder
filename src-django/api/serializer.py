@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from rest_framework import serializers
 from rest_framework.fields import SkipField
+from rest_framework_recursive.fields import RecursiveField
 import models
 import field
 
@@ -62,8 +63,88 @@ class PageListSerializer(serializers.ListSerializer):
         return result
 
 
+class ConditionNodeSerializer(serializers.ModelSerializer):
+    children = RecursiveField(many=True, required=False)
+
+    class Meta:
+        model = models.ConditionNode
+        fields = (
+            'id',
+            'parent',
+            'criteria_element',
+            'node_type',
+            'criteria_type',
+            'value',
+            'last_modified',
+            'created',
+            'show_if',
+            'children'
+        )
+
+    def create(self, validated_data):
+        if 'children' in validated_data:
+            children_data = validated_data.pop('children')
+            condition = models.ConditionNode.objects.create(**validated_data)
+
+            for child_data in children_data:
+                child_data['parent'] = condition
+                self.create(child_data)
+
+            return condition
+        else:
+            return super(ConditionNodeSerializer, self).create(validated_data)
+
+
+class ShowIfSerializer(serializers.ModelSerializer):
+    conditions = ConditionNodeSerializer(many=True)
+
+    class Meta:
+        model = models.ShowIf
+        fields = (
+            'id',
+            'page',
+            'last_modified',
+            'created',
+            'conditions'
+        )
+
+    def create(self, validated_data):
+        if 'conditions' in validated_data:
+            conditions_data = validated_data.pop('conditions')
+            show_if = models.ShowIf.objects.create(**validated_data)
+
+            for condition_data in conditions_data:
+                self.__create_nested_children(condition_data, show_if)
+
+            return show_if
+        else:
+            return super(ShowIfSerializer, self).create(validated_data)
+
+    def update(self, instance, validated_data):
+        instance.page = validated_data.get('page', instance.page)
+        instance.conditions.all().delete()
+
+        if 'conditions' in validated_data:
+            conditions_data = validated_data.pop('conditions')
+            for condition_data in conditions_data:
+                self.__create_nested_children(condition_data, instance)
+
+        return instance
+
+    def __create_nested_children(self, data, show_if):
+            if 'children' in data:
+                children_data = data.pop('children')
+                condition = models.ConditionNode.objects.create(show_if=show_if, **data)
+                for child_data in children_data:
+                    child_data['parent'] = condition
+                    self.__create_nested_children(child_data, None)
+            else:
+                models.ConditionNode.objects.create(show_if=show_if, **data)
+
+
 class PageSerializer(serializers.ModelSerializer):
     elements = ElementSerializer(many=True, read_only=True)
+    show_if = ShowIfSerializer(many=True, read_only=True)
     id = serializers.IntegerField(read_only=False, required=False)
 
     class Meta:
@@ -75,7 +156,8 @@ class PageSerializer(serializers.ModelSerializer):
             'procedure',
             'elements',
             'last_modified',
-            'created'
+            'created',
+            'show_if'
         )
 
 
