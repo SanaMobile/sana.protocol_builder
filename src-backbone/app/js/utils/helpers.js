@@ -1,3 +1,6 @@
+const Config = require('utils/config');
+
+
 module.exports = {
 
     navigateToDefaultLoggedIn: function() {
@@ -15,10 +18,11 @@ module.exports = {
     },
 
     currentPageRequiresAuth: function() {
-        let nonAuthPages = Config.NON_AUTH_PAGES;
+        const nonAuthPages = Config.NON_AUTH_PAGES;
+        const currentURL = Backbone.history.fragment;
 
         for (let i = nonAuthPages.length - 1; i >= 0; i--) {
-            if (Backbone.history.fragment.substr(0, nonAuthPages[i].length) === nonAuthPages[i]) {
+            if (currentURL.substr(0, nonAuthPages[i].length) === nonAuthPages[i]) {
                 return false;
             }
         }

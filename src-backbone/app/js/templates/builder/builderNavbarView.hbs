@@ -1,21 +1,16 @@
-<ul class="nav navbar-nav">
-    <li class="go-back">
-        <a href="/procedures"><span class="glyphicon glyphicon-home"></span></a>
-    </li>
-    <li id="menu-bar" class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">File <span class="caret"></span></a>
-        <ul class="dropdown-menu file">
-            <li><a class="save">Save Changes</a></li>
-            <li><a class="delete">Delete Procedure</a></li>
-        </ul>
-    </li>
-</ul>
-
-<p class="navbar-text status-text"></p>
-
-<div class="navbar-right">
-    <ul class="nav navbar-nav ">
-        <li><a href="/account">Account Settings</a></li>
-        <li><a href="/logout">Logout</a></li>
+<div class="navbar-left">
+    <ul class="nav navbar-nav">
+        <li id="menu-bar" class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ i18n 'File' }}<span class="caret"></span></a>
+            <ul class="dropdown-menu file">
+                <li><a class="save">{{ i18n "Save Changes" }}</a></li>
+                <li><a class="delete">{{ i18n "Delete Procedure" }}</a></li>
+            </ul>
+        </li>
     </ul>
+
+    <p class="navbar-text"></p>
 </div>
+
+<div class="navbar-right content"></div>
+<div class="navbar-right language-selector"></div>

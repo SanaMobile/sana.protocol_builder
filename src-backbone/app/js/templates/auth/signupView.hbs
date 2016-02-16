@@ -1,33 +1,33 @@
 <form>
     <div class="form-group">
-        <label for="username" class="sr-only">Username</label>
+        <label for="username" class="sr-only">{{ i18n "Username" }}</label>
         <input type="text" class="form-control" id="username" name="username" placeholder="Username">
     </div>
     <div class="form-group">
-        <label for="email" class="sr-only">Email</label>
+        <label for="email" class="sr-only">{{ i18n "Email" }}</label>
         <input type="email" class="form-control" id="email" name="email" placeholder="Email">
     </div>
     <div class="form-group">
-        <label for="password1" class="sr-only">Password</label>
+        <label for="password1" class="sr-only">{{ i18n "Password" }}</label>
         <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
     </div>
     <div class="form-group">
-        <label for="password2" class="sr-only">Re-enter password</label>
+        <label for="password2" class="sr-only">{{ i18n "Re-enter password" }}</label>
         <input type="password" class="form-control" id="password2" name="password2" placeholder="Re-enter Password">
     </div>
     <div class="form-group">
         <div class="checkbox">
             <label>
                 <input type="checkbox" name="accept_tos">
-                I have read and accept the <a href="/terms">terms and conditions</a> and <a href="/privacy">privacy policy</a>.
+                {{ i18n "I have read and accepted the Terms of Service and Privacy Policy." }}
             </label>
         </div>
     </div>
     <div>
-        <button type="submit" class="btn btn-primary btn-block" id="login-btn">Sign up</button>
+        <button type="submit" class="btn btn-primary btn-block" id="login-btn">{{ i18n "Sign up" }}</button>
     </div>
 </form>
 
 <div class="footnote">
-    Already have an account? <a href="/login">Log in</a>
+    {{ i18n "Already have an account? Log in" }}
 </div>

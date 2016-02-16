@@ -1,3 +1,5 @@
+const EventKeys = require('utils/eventKeys');
+
 let App       = require('utils/sanaAppInstance.js');
 let Helpers   = require('utils/helpers');
 let Procedure = require('models/procedure');
@@ -24,10 +26,20 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     initialize: function() {
-        let procedureId = this.model.get('id');
+        const procedureId = this.options.procedureId;
+
+        this.model = new Procedure({
+            // model attributes
+            id: procedureId,
+        }, {
+            // options passed to model constructor
+            loadDetails: true,
+            activePageId: this.options.pageId,
+        });
+
         this.model.on(Procedure.ACTIVE_PAGE_CHANGE_EVENT, function(page) {
             if (page) {
-                let pageId = page.get('id');
+                const pageId = page.get('id');
                 Backbone.history.navigate('procedures/' + procedureId + '/page/' + pageId);
             } else {
                 Backbone.history.navigate('procedures/' + procedureId);
@@ -36,10 +48,32 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onBeforeShow: function() {
-        App().switchNavbar(new NavbarView({ model: this.model }));
+        console.log('onBeforeShow');
+        App().RootView.switchNavbar(new NavbarView({ model: this.model }));
         this.showChildView('metaData', new MetaDataView({ model: this.model }));
         this.showChildView('pageList', new PageListCollectionView({ collection: this.model.pages }));
         this.showChildView('pageDetails', new PageDetailsLayoutView({ model: this.model }));
+    },
+
+    onAttach: function() {
+        const procedureId = this.model.get('id');
+
+        let self = this;
+        this.model.fetch({
+            beforeSend: function() {
+                App().RootView.showSpinner();
+            },
+            complete: function() {
+                App().RootView.hideSpinner();
+            },
+            success: function() {
+                console.info('Fetched Procedure', procedureId);
+            },
+            error: function() {
+                console.warn('Failed to fetch Procedure', procedureId);
+                App().RootView.showNotification('Failed to fetch Procedure!');
+            },
+        });
     },
 
     createNewPage: function(event) {

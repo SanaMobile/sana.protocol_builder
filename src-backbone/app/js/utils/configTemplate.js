@@ -11,8 +11,16 @@ module.exports = {
     API_BASE: '<%= API_BASE %>',
 
     LOCALES_SUPPORTED: [
-        'en'
+        {
+            code: 'en',
+            name: 'English',
+        }, {
+            code: 'fr',
+            name: 'Français',
+        }
     ],
+
+    DEFAULT_LOCALE: 'en',
 
     NON_AUTH_PAGES: [
         'login',
@@ -21,15 +29,15 @@ module.exports = {
         'privacy',
     ],
 
-    ELEMENT_NAMES: {
-        DATE: "Date",
-        ENTRY: "Entry",
-        SELECT: "Selection",
-        MULTI_SELECT: "Multiple Choice",
-        RADIO: "Single Choice",
-        PICTURE: "Picture",
-        PLUGIN: "Plugin (file)",
-        PLUGIN_ENTRY: "Plugin (entry)",
-    },
+    ELEMENT_TYPES: [
+        'DATE',
+        'ENTRY',
+        'SELECT',
+        'MULTI_SELECT',
+        'RADIO',
+        'PICTURE',
+        'PLUGIN',
+        'PLUGIN_ENTRY',
+    ],
 
 };

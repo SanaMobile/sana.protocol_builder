@@ -23,20 +23,25 @@ describe('Auth Controller', function() {
         helpersMock = sinon.mock(helpers);
 
         // Setup app
+        appSwitchViewStub = sinon.stub();
         let SanaApp = proxyquire('sanaApp', {
-            'views/rootLayoutView'       : {},
-            'behaviors/authFormBehavior' : {},
-            'behaviors/sortableBehavior' : {},
-            'routers/authRouter'         : {},
-            'routers/infoRouter'         : {},
-            'routers/proceduresRouter'   : {},
-            'utils/helpers'              : helpers,
+            'views/rootLayoutView'         : function() { 
+                this.switchMainView = appSwitchViewStub;
+                this.render = sinon.stub();
+            },
+            'behaviors/authFormBehavior'   : {},
+            'behaviors/sortableBehavior'   : {},
+            'behaviors/rightNavbarBehavior': {},
+            'routers/authRouter'           : {},
+            'routers/infoRouter'           : {},
+            'routers/proceduresRouter'     : {},
+            'utils/helpers'                : helpers,
         });
         app = new SanaApp();
+        app._setupViews();
         let getAppInstance = function() {
             return app;
         };
-        appSwitchViewStub = sinon.stub(app, 'switchMainView');
 
         // Setup authLayoutView
         authLayoutViewShowChildViewStub = sinon.stub();

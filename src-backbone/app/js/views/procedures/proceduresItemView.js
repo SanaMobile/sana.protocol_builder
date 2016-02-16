@@ -37,7 +37,7 @@ module.exports = Marionette.ItemView.extend({
                 },
                 error: function(model, response, options) {
                     console.warn('Failed to delete Procedure', self.model.get('id'), response.responseJSON);
-                    App().showNotification('danger', 'Failed delete Procedure!');
+                    App().RootView.showNotification('Failed to delete Procedure!');
                     el.fadeIn();
                 },
             });

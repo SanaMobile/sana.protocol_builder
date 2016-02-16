@@ -1,6 +1,6 @@
-<div class="handle" title="Drag to re-order this page"></div>
+<div class="handle" title="{{ i18n "Drag to re-order this page" }}"></div>
 
-<a class="delete" title="Delete this page"><span class="glyphicon glyphicon-remove"></span></a>
+<a class="delete" title="{{ i18n "Delete this page" }}"><span class="glyphicon glyphicon-remove"></span></a>
 
 <a class="page">
     <ul class="element-preview">
@@ -9,7 +9,7 @@
             {{ question }}
         </li>
     {{else}}
-        <li class="empty">Empty Page</li>
+        <li class="empty">{{ i18n "Empty Page" }}</li>
     {{/each}}
     </ul>
 </a>

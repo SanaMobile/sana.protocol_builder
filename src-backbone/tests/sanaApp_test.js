@@ -10,13 +10,14 @@ describe('SanaApp', function() {
             helpersMock = sinon.mock(helpers);
 
             let SanaApp = proxyquire('sanaApp', {
-                'views/rootLayoutView'       : {},
-                'behaviors/authFormBehavior' : {},
-                'behaviors/sortableBehavior' : {},
-                'routers/authRouter'         : {},
-                'routers/infoRouter'         : {},
-                'routers/proceduresRouter'   : {},
-                'utils/helpers'              : helpers,
+                'views/rootLayoutView'         : {},
+                'behaviors/authFormBehavior'   : {},
+                'behaviors/sortableBehavior'   : {},
+                'behaviors/rightNavbarBehavior': {},
+                'routers/authRouter'           : {},
+                'routers/infoRouter'           : {},
+                'routers/proceduresRouter'     : {},
+                'utils/helpers'                : helpers,
             });
             app = new SanaApp();
         });
@@ -75,6 +76,7 @@ describe('SanaApp', function() {
                 'views/rootLayoutView'       : {},
                 'behaviors/authFormBehavior' : {},
                 'behaviors/sortableBehavior' : {},
+                'behaviors/rightNavbarBehavior': {},
                 'routers/authRouter'         : {},
                 'routers/infoRouter'         : {},
                 'routers/proceduresRouter'   : {},

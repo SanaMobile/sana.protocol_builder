@@ -1,3 +1,4 @@
+const Config = require('utils/config');
 let Procedure       = require('models/procedure');
 let DebugInfo       = require('./debugLayoutView');
 let ConditionEditor = require('./conditionLayoutView');
@@ -12,10 +13,6 @@ module.exports = Marionette.LayoutView.extend({
         debugInfo: 'section#debug-info',
         conditionEditor: 'section#conditions',
         elementsEditor: 'section#elements',
-    },
-
-    templateHelpers: {
-        DEBUG: DEBUG,
     },
 
     initialize: function() {

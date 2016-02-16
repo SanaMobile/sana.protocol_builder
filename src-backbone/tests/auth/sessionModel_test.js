@@ -6,9 +6,25 @@ describe("Session Model", function() {
     let session;
     let storage;
 
+    let showSpinnerStub;
+    let hideSpinnerStub;
+
     beforeEach(function() {
+        showSpinnerStub = sinon.stub();
+        hideSpinnerStub = sinon.stub();
+
         const Storage = require('utils/storage');
-        const Session = require('models/session');
+        const Session = proxyquire('models/session', {
+            'utils/sanaAppInstance': function() {
+                return {
+                    RootView: {
+                        showSpinner: showSpinnerStub,
+                        hideSpinner: hideSpinnerStub,
+                    },
+                };
+            },
+        });
+
         storage = new Storage();
         session = new Session({ storage: storage });
     });
@@ -141,6 +157,8 @@ describe("Session Model", function() {
                 server.respond();
 
                 assert(authHandlerSpy.calledOnce);
+                assert(showSpinnerStub.calledOnce);
+                assert(hideSpinnerStub.calledOnce);
             });
 
             it("should call networkErrorHandler on error", function(){
@@ -153,6 +171,8 @@ describe("Session Model", function() {
 
                 assert(serverErrorHandler.notCalled);
                 assert(networkErrorHandler.calledOnce);
+                assert(showSpinnerStub.calledOnce);
+                assert(hideSpinnerStub.calledOnce);
             });
         });
 
@@ -170,6 +190,8 @@ describe("Session Model", function() {
                 server.respond();
 
                 assert(authHandlerSpy.calledOnce);
+                assert(showSpinnerStub.calledOnce);
+                assert(hideSpinnerStub.calledOnce);
             });
 
             it("should call networkErrorHandler on error", function(){
@@ -182,6 +204,8 @@ describe("Session Model", function() {
 
                 assert(serverErrorHandler.notCalled);
                 assert(networkErrorHandler.calledOnce);
+                assert(showSpinnerStub.calledOnce);
+                assert(hideSpinnerStub.calledOnce);
             });
         });
 
@@ -205,6 +229,8 @@ describe("Session Model", function() {
                 server.respond();
 
                 assert(sessionDestroySpy.calledOnce);
+                assert(showSpinnerStub.calledOnce);
+                assert(hideSpinnerStub.calledOnce);
             });
 
             it("should call destroy() after server returns error", function(){
@@ -215,6 +241,8 @@ describe("Session Model", function() {
                 server.respond();
 
                 assert(sessionDestroySpy.calledOnce);
+                assert(showSpinnerStub.calledOnce);
+                assert(hideSpinnerStub.calledOnce);
             });
         });
     });

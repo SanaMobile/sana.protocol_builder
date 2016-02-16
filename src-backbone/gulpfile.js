@@ -34,6 +34,9 @@ let Config = {
     html: [
         'app/index.html',
     ],
+    locales: [
+        'app/locales/**/*.json'
+    ],
 };
 
 //------------------------------------------------------------------------------
@@ -192,11 +195,21 @@ gulp.task('html', function() {
 });
 
 //------------------------------------------------------------------------------
+// Translation Tasks
+//------------------------------------------------------------------------------
+
+gulp.task('locales', function() {
+    gulp.src(Config.locales)
+        .pipe(gulp.dest(Config.output + '/locales'))
+        .pipe(connect.reload());
+});
+
+//------------------------------------------------------------------------------
 // Runner (default)
 // This executes when you run 'gulp' on the command line
 //------------------------------------------------------------------------------
 
-gulp.task('build', ['css', 'js', 'img', 'fonts', 'html']);
+gulp.task('build', ['css', 'js', 'img', 'fonts', 'html', 'locales']);
 
 gulp.task('default', ['build'], function(){
     gulp.watch(Config.stylesheets, ['css']);
@@ -204,6 +217,7 @@ gulp.task('default', ['build'], function(){
     gulp.watch(Config.images, ['img']);
     gulp.watch(Config.fonts, ['fonts']);
     gulp.watch(Config.html, ['html']);
+    gulp.watch(Config.locales, ['locales']);
 
     gulp.start('webserver');
 });

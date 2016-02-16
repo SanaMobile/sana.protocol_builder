@@ -126,69 +126,65 @@ div#elements-list ul{
     }
 }
 
-ul#new-element-btns{
-    .clearfix;
+nav#new-element-btns{
+    display: flex;
 
-    list-style: none;
-    margin: 0 -5px;
-    padding: 0;
+    a{
+        @icon-box-height: 100px;
 
-    li{
-        box-sizing: border-box;
-        padding: 0 5px;
-        width: 100% / 8;
-        float: left;
+        border: 1px solid @grey-border;
+        border-radius: 3px;
+        cursor: pointer;
+        display: block;
+        flex: 1;
+        margin-right: 10px;
+        padding: 10px;
+        padding-top: @icon-box-height + 10px;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        transition: 0.2s;
 
-        a{
-            @icon-box-height: 100px;
-            
-            border: 1px solid @grey-border;
-            cursor: pointer;
+        color: @black-text;
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 20px;
+
+        &:last-child{
+            margin-right: 0;
+        }
+
+        &:before{
+            background-image: url('/img/elements/default-large.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            border-bottom: 1px solid @grey-border;
+            content: '';
             display: block;
-            padding: 10px;
-            padding-top: @icon-box-height + 10px;
-            position: relative;
-            text-align: center;
-            text-decoration: none;
-            transition: 0.2s;
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: @icon-box-height;
+        }
 
-            color: @black-text;
-            font-size: 15px;
-            font-weight: bold;
-            line-height: 20px;
+        &:hover{
+            background-color: @grey-bg;
+        }
 
-            &:before{
-                background-image: url('/img/elements/default-large.png');
-                background-repeat: no-repeat;
-                background-position: center;
-                border-bottom: 1px solid @grey-border;
-                content: '';
-                display: block;
-                position: absolute;
-                top: 0; left: 0; right: 0;
-                height: @icon-box-height;
-            }
-
-            &:hover{
-                background-color: @grey-bg;
-            }
-
-            .icon(@name) {
-                &.element-type-@{name} {
-                    &:before {
-                        background-image: url('/img/elements/@{name}-large.png');
-                    }
+        .icon(@name) {
+            &.element-type-@{name} {
+                &:before {
+                    background-image: url('/img/elements/@{name}-large.png');
                 }
             }
-
-            .icon(date);
-            .icon(entry);
-            .icon(select);
-            .icon(multi-select);
-            .icon(radio);
-            .icon(picture);
-            .icon(plugin);
-            .icon(entry-plugin);
         }
+
+        .icon(date);
+        .icon(entry);
+        .icon(select);
+        .icon(multi-select);
+        .icon(radio);
+        .icon(picture);
+        .icon(plugin);
+        .icon(entry-plugin);
     }
 }

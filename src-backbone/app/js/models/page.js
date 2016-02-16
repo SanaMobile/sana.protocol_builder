@@ -1,3 +1,5 @@
+const Config = require('utils/config');
+
 let App      = require('utils/sanaAppInstance');
 let Helpers  = require('utils/helpers');
 let Elements = require('collections/elements');
@@ -18,7 +20,7 @@ module.exports = Backbone.Model.extend({
         // Propagate AJAX events from child to this model so that the status bar can be notified
         Helpers.propagateEvents(this.elements, this, ['request', 'sync', 'destroy', 'error']);
 
-        if (DEBUG) {
+        if (Config.DEBUG) {
             this.listenTo(this.elements, 'all', function(event, subject) {
                 console.debug('Elements collection event:', event, subject && subject.get('id'));
             });
@@ -68,7 +70,7 @@ module.exports = Backbone.Model.extend({
             },
             error: function() {
                 console.warn('Failed to create Element', element.get('id'));
-                App().showNotification('danger', 'Failed create Element!');
+                App().RootView.showNotification('Failed to create Element!');
             },
         });
     },

@@ -1,6 +1,4 @@
-let Setup = require('utils/setup');
-Setup.loadConfig();
-Setup.loadLibs();
+require('utils/setup').loadLibs();
 
 
 $(document).ready(function() {
@@ -8,5 +6,8 @@ $(document).ready(function() {
     let SanaApp = require('./sanaApp');
     window.App = new SanaApp();
     window.App.init();
-    window.App.start();
+
+    i18n.init(function() {
+        window.App.start();
+    });
 });

@@ -2,49 +2,62 @@
 
 
 nav#navbar{
+    @button-size: @container-side-padding - @column-margin;
+
     border: none;
     margin-bottom: 0;
 
-    .welcome{
+    p.navbar-text{
         color: @grey-text-darkbg;
-        line-height: 50px;
-        margin-right: 15px;
+        display: none;
     }
 
-    ul{
-        margin-left: -@column-margin;
-
-        ul.dropdown-menu{
-            margin-left: 0;
-        }
-
-        a{
-            cursor: pointer;
-        }
-
-        li.go-back{
-            position: absolute;
-            top: 0; left: 0;
-
-            a{
-                background: #000;
+    div.navbar-header{
+        p.navbar-text{
+            @media (max-width:767px) {
                 display: block;
-                padding: 0;
-                transition: 0.5s;
-                width: @container-side-padding - @column-margin; height: 50px;
-
-                color: #fff;
-                line-height: 50px;
-                text-align: center;
-
-                &:hover{
-                    background: @sana-red;
-                }
-
-                &:focus{
-                    box-shadow: 0 @column-margin @column-margin * 2 rgba(0, 0, 0, 0.4) inset;
-                }
+                margin-left: @button-size;
+                padding: 0 @column-margin;
             }
+        }
+    }
+    div#navbar-content{
+        p.navbar-text{
+            @media (min-width:768px) {
+                display: block;
+            }
+        }
+    }
+
+    div.navbar-left{
+        margin-left: -@column-margin;
+    }
+
+    a{
+        cursor: pointer;
+    }
+
+    a.go-back{
+        background: #000;
+        cursor: pointer;
+        display: block;
+        padding: 0;
+        transition: 0.5s;
+        width: @button-size; height: 50px;
+
+        color: #fff;
+        line-height: 50px;
+        text-align: center;
+
+        position: absolute;
+        top: 0; left: 0;
+
+        &:hover{
+            background: @sana-red;
+        }
+
+        &:focus{
+            box-shadow: 0 @column-margin @column-margin * 2 rgba(0, 0, 0, 0.4) inset;
         }
     }
 }

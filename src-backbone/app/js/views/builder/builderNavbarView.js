@@ -1,17 +1,21 @@
-let Helpers = require('utils/helpers');
-let App     = require('utils/sanaAppInstance');
+const App = require('utils/sanaAppInstance');
+const EventKeys = require('utils/eventKeys');
+const Helpers = require('utils/helpers');
 
 
-module.exports = Marionette.ItemView.extend({
+module.exports = Marionette.LayoutView.extend({
 
     template: require('templates/builder/builderNavbarView'),
-
     tagName: 'div',
-
     className: 'container-fluid spb-container',
 
-    ui: {
-        statusText: 'p.status-text'
+    regions: {
+        'languageSelector': 'div.navbar-right.language-selector',
+        'rightNavbar': 'div.navbar-right.content',
+    },
+
+    behaviors: {
+        RightNavbarBehavior: {},
     },
 
     //-------------------------------------------------------------------------
@@ -38,7 +42,7 @@ module.exports = Marionette.ItemView.extend({
             },
             error: function() {
                 console.warn('Failed to delete Procedure', self.model.get('id'));
-                App().showNotification('danger', 'Failed delete Procedure!');
+                App().RootView.showNotification('Failed delete Procedure!');
             },
         });
     },
@@ -55,15 +59,15 @@ module.exports = Marionette.ItemView.extend({
     },
 
     saving: function (event) {
-        this.ui.statusText.text('Saving...');
+        this.triggerMethod(EventKeys.UPDATE_NAVBAR_TEXT, i18n.t('Saving...'));
     },
 
     saved: function(event) {
-        this.ui.statusText.text('All changes saved to server.');
+        this.triggerMethod(EventKeys.UPDATE_NAVBAR_TEXT, i18n.t('All changes saved to server.'));
     },
 
     error: function(event) {
-        this.ui.statusText.text('Failed to synchronize with server. Please try again.');
+        this.triggerMethod(EventKeys.UPDATE_NAVBAR_TEXT, i18n.t('Failed to synchronize with server.'));
     },
 
 });

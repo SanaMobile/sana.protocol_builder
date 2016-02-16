@@ -16,9 +16,7 @@ beforeEach(function() {
     global.navigator = window.navigator;
 
     // Load client libraries
-    let Setup = require('utils/setup');
-    Setup.loadConfig();
-    Setup.loadLibs();
+    require('utils/setup').loadLibs();
 
     // Load sinon
     global.XMLHttpRequest = window.XMLHttpRequest;

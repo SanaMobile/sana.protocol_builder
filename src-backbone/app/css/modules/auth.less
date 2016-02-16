@@ -2,10 +2,13 @@
 
 
 h1.auth-page-logo{
+    @offset-from-heading: 15px;
+    @icon-size: 64px;
+
     font-size: 24px;
     font-weight: bold;
     line-height: 40px;
-    margin: 200px 0 40px;
+    margin: (@icon-size + @offset-from-heading + 120px) 0 60px;
     position: relative;
     text-align: center;
 
@@ -13,9 +16,9 @@ h1.auth-page-logo{
         display: block;
         content: '';
         position: absolute;
-        top: -80px; left: 50%;
-        margin-left: -32px;
-        width: 64px; height: 64px;
+        top: -(@icon-size + @offset-from-heading); left: 50%;
+        margin-left: -(@icon-size / 2);
+        width: @icon-size; height: @icon-size;
 
         background-image: url('../img/logo.png');
         background-repeat: no-repeat;
@@ -26,13 +29,13 @@ h1.auth-page-logo{
 div#auth-form-area{
     form{
         border: 1px solid @grey-border;
-        padding: 40px;
+        padding: 30px;
         border-radius: 5px;
     }
 
     div.footnote{
         color: @grey-text;
-        margin: 40px 0;
+        margin: 60px 0;
         text-align: center;
     }
 }

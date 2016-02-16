@@ -1,3 +1,4 @@
+const Config = require('utils/config');
 let ElementsCollectionView = require('views/builder/pageElements/elementsCollectionView');
 let Section = require('./sectionLayoutView');
 
@@ -10,12 +11,8 @@ module.exports = Section.extend({
         'elementsList': 'div#elements-list',
     },
 
-    templateHelpers: {
-        elementTypes: Config.ELEMENT_NAMES,
-    },
-
     events: {
-        'click ul#new-element-btns li a': '_onCreateNewElement',
+        'click nav#new-element-btns a': '_onCreateNewElement',
     },
 
     onRender: function () {
