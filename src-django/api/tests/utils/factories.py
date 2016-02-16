@@ -30,19 +30,6 @@ class PageFactory(factory.django.DjangoModelFactory):
     procedure = factory.SubFactory(ProcedureFactory)
 
 
-class ElementFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = models.Element
-
-    display_index = 0
-    element_type = 'ENTRY'
-    concept = 'CHECKUP'
-    question = 'Where does it hurt?'
-    eid = 'checkup_id'
-    answer = ''
-    page = factory.SubFactory(PageFactory)
-
-
 class ConceptFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Concept
@@ -53,6 +40,19 @@ class ConceptFactory(factory.django.DjangoModelFactory):
     data_type = 'string'
     mime_type = 'text/plain'
     constraint = 'yes;no'
+
+
+class ElementFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Element
+
+    display_index = 0
+    element_type = 'ENTRY'
+    concept = factory.SubFactory(ConceptFactory)
+    question = 'Where does it hurt?'
+    eid = 'checkup_id'
+    answer = ''
+    page = factory.SubFactory(PageFactory)
 
 
 class ShowIfFactory(factory.django.DjangoModelFactory):

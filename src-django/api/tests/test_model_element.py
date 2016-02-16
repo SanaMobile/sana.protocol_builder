@@ -18,26 +18,27 @@ class ElementTest(TestCase):
 
     def test_elements_all_properties(self):
         page = factories.PageFactory()
+        concept = factories.ConceptFactory()
         Element.objects.create(
             display_index=0,
             eid='eid',
             element_type='SELECT',
             choices='[one]',
             numeric='DIALPAD',
-            concept='TESTCONCEPT',
+            concept=concept,
             question='test question',
             answer='',
             page=page
         )
 
-        element = Element.objects.get(concept='TESTCONCEPT')
+        element = Element.objects.get(concept=concept)
 
         assert_equals(element.display_index, 0)
         assert_equals(element.eid, 'eid')
         assert_equals(element.element_type, 'SELECT')
         assert_equals(element.choices, '[one]')
         assert_equals(element.numeric, 'DIALPAD')
-        assert_equals(element.concept, 'TESTCONCEPT')
+        assert_equals(element.concept, concept)
         assert_equals(element.question, 'test question')
         assert_equals(element.answer, '')
         assert_equals(element.page, page)
