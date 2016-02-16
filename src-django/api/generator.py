@@ -76,7 +76,8 @@ class ElementGenerator:
         props = {
             'type': self.element.element_type,
             'id': self.element.eid,
-            'concept': self.element.concept,
+            # TODO(josh): fix this
+            # 'concept': self.element.concept,
             'question': self.element.question,
             'answer': self.element.answer
         }
