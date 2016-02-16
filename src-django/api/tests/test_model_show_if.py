@@ -6,26 +6,30 @@ from utils import factories
 
 class ShowIfTest(TestCase):
     def test_create_showif(self):
-        condition = factories.CriteriaConditionFactory()
         page = factories.PageFactory()
 
-        ShowIf.objects.create(
-            page=page,
-            condition=condition
+        show_if = ShowIf.objects.create(
+            page=page
         )
 
-        showif = ShowIf.objects.get(page=page)
+        condition = factories.CriteriaConditionFactory(
+            show_if=show_if
+        )
 
-        assert_equals(showif.page, page)
-        assert_equals(showif.condition, condition)
-        assert_not_equals(showif.last_modified, None)
-        assert_not_equals(showif.created, None)
+        show_if = ShowIf.objects.get(page=page)
+
+        assert_equals(show_if.page, page)
+        assert_equals(show_if.conditions.count(), 1)
+        assert_equals(show_if.conditions.all()[0], condition)
+        assert_not_equals(show_if.last_modified, None)
+        assert_not_equals(show_if.created, None)
 
     def test_creates_complex_structure(self):
-        root = factories.OrConditionFactory()
-        showif = factories.ShowIfFactory(
-            condition=root
+        show_if = factories.ShowIfFactory()
+        root = factories.OrConditionFactory(
+            show_if=show_if
         )
+
         lnode = factories.AndConditionFactory(
             parent=root
         )
@@ -48,8 +52,8 @@ class ShowIfTest(TestCase):
             parent=rnode
         )
 
-        showif_db = ShowIf.objects.get(pk=showif.id)
-        condition = showif_db.condition
+        showif_db = ShowIf.objects.get(pk=show_if.id)
+        condition = showif_db.conditions.all()[0]
         assert_equals(condition, root)
         assert_equals(condition.children.count(), 2)
 

@@ -80,3 +80,12 @@ class ConceptViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return models.Concept.objects
+
+
+class ShowIfViewSet(viewsets.ModelViewSet):
+    model = models.ShowIf
+    serializer_class = serializer.ShowIfSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return models.ShowIf.objects.filter(page__procedure__owner_id__exact=user.id)
