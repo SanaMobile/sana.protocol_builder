@@ -110,7 +110,6 @@ class ElementGeneratorTest(TestCase):
             display_index=0,
             eid='1',
             element_type='SELECT',
-            concept='HEART SURGERY',
             question='Which valve',
             answer=''
         )
