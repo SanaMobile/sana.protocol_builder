@@ -80,22 +80,22 @@ module.exports = Marionette.ItemView.extend({
 
     _saveText: function() {
         if (this.isDestroyed) {
+            // In case this callback gets triggered after the view is destroyed
             return;
         }
 
-        let text = this.ui.input.text();
-        this.model.set({ // Do not Choice.save() because it doesn't have an API endpoint
+        let text = this.ui.input.text(); // TODO doesn't get newlines in text
+        this.model.set({
             text: text,
         }, {
-            silent: true,
+            silent: true, // Do not call Choice.save() because it doesn't have an API endpoint
         });
 
         // Always trigger even if there's no change because sometimes we may create
         // a Choice by typing 1 letter and stop. This results in just an 'add' event
-        // and no 'change' event.
-        // 
-        // This won't trigger the Element.save() method listener in element.js because
-        // Element only listens for 'change' and 'destroy' events
+        // and no 'change' event. Thus it won't trigger the Element.save() method
+        // listener in element.js because Element only listens for 'change' and
+        // 'destroy' events
         this.model.trigger('change', this.model);
     },
 
