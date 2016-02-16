@@ -64,13 +64,14 @@ class Concept(models.Model):
 
 class Element(models.Model):
     TYPES = (
+        ('DATE', 'DATE'),
+        ('ENTRY', 'ENTRY'),
         ('SELECT', 'SELECT'),
         ('MULTI_SELECT', 'MULTI_SELECT'),
         ('RADIO', 'RADIO'),
-        ('GPS', 'GPS'),
-        ('SOUND', 'SOUND'),
         ('PICTURE', 'PICTURE'),
-        ('ENTRY', 'ENTRY')
+        ('PLUGIN', 'PLUGIN'),
+        ('ENTRY_PLUGIN', 'ENTRY_PLUGIN')
     )
 
     display_index = models.PositiveIntegerField()
@@ -81,13 +82,21 @@ class Element(models.Model):
     concept = models.ForeignKey(Concept, null=True, related_name='elements')
     question = models.TextField(null=True, blank=True)
     answer = models.TextField(null=True, blank=True)
+
+    required = models.BooleanField(default=False)
+    image = models.TextField(null=True, blank=True)
+    audio = models.TextField(null=True, blank=True)
+    action = models.TextField(null=True, blank=True)
+    mime_type = models.CharField(max_length=128, null=True, blank=True)
+
     page = models.ForeignKey(Page, related_name='elements')
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def save(self, **kwargs):
-        if self.element_type and (self.element_type, self.element_type) not in self.TYPES:
-            raise IntegrityError('Invalid element type')
+        if self.element_type:
+            if (self.element_type, self.element_type) not in self.TYPES:
+                raise IntegrityError('Invalid element type')
 
         super(Element, self).save()
 

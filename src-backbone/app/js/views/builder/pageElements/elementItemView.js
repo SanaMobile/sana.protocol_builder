@@ -32,6 +32,8 @@ module.exports = Marionette.LayoutView.extend({
         'answer': 'input.answer',
         'image': 'input.image',
         'audio': 'input.audio',
+        'action': 'input.action',
+        'mimeType': 'input.mime-type',
     },
 
     events: {
@@ -46,6 +48,8 @@ module.exports = Marionette.LayoutView.extend({
         'keyup @ui.answer': '_onFormUpdate',
         'keyup @ui.image': '_onFormUpdate',
         'keyup @ui.audio': '_onFormUpdate',
+        'keyup @ui.action': '_onFormUpdate',
+        'keyup @ui.mimeType': '_onFormUpdate',
     },
 
     onBeforeShow: function() {
@@ -110,6 +114,8 @@ module.exports = Marionette.LayoutView.extend({
         const answer = this.ui.answer.val() || '';
         const image = this.ui.image.val();
         const audio = this.ui.audio.val();
+        const action = this.ui.action.val() || '';
+        const mimeType = this.ui.mimeType.val() || '';
 
         let self = this;
         this.model.save({
@@ -120,6 +126,8 @@ module.exports = Marionette.LayoutView.extend({
             answer: answer,
             image: image,
             audio: audio,
+            action: action,
+            mimeType: mimeType,
         }, {
             beforeSend: function() {
                 console.info('Saving Element', self.model.get('id'));

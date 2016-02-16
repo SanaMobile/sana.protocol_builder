@@ -20,7 +20,11 @@ class ElementSerializer(serializers.ModelSerializer):
             'answer',
             'page',
             'choices',
-            'numeric',
+            'required',
+            'image',
+            'audio',
+            'action',
+            'mime_type',
             'element_type',
             'last_modified',
             'created'

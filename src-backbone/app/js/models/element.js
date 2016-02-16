@@ -49,7 +49,17 @@ module.exports = Backbone.Model.extend({
     toJSON: function() {
         let json = _.clone(this.attributes);
         json.answer = this.choices.getDefaultAnswer();
-        json.choices = this.choices.getAnswers();
+        let element_type = this.get('element_type');
+
+        if (Config.CHOICE_ELEMENT_TYPES.includes(element_type)) {
+            json.choices = this.choices.getAnswers();
+        }
+
+        if (!Config.PLUGIN_ELEMENT_TYPES.includes(element_type)) {
+            delete json.action;
+            delete json.mimeType;
+        }
+
         return json;
     },
 

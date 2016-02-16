@@ -1,7 +1,6 @@
 from xml.etree import ElementTree
 from django.test import TestCase
-from nose.tools import raises, assert_equals, assert_not_equals, assert_true, assert_false
-from nose.plugins.skip import SkipTest
+from nose.tools import raises, assert_equals, assert_is_not_none, assert_true, assert_false
 from api.generator import ProcedureGenerator, PageGenerator, ElementGenerator, ProtocolBuilder
 from utils import factories
 import uuid
@@ -110,7 +109,7 @@ class ElementGeneratorTest(TestCase):
         self.element = factories.ElementFactory(
             display_index=0,
             eid='1',
-            element_type='SELECT',
+            element_type='ENTRY',
             question='Which valve',
             answer=''
         )
@@ -165,14 +164,10 @@ class ElementGeneratorTest(TestCase):
 
         ElementGenerator(element).generate(ElementTree.Element('test'))
 
-    # TODO(josh): fix this
-    @SkipTest
     def test_element_has_concept(self):
         assert_true('concept' in self.attribs)
-        assert_equals(self.attribs['concept'], self.element.concept)
+        assert_equals(self.attribs['concept'], self.element.concept.name)
 
-    # TODO(josh): fix this
-    @SkipTest
     @raises(ValueError)
     def test_error_if_no_concept(self):
         element = factories.ElementFactory(
@@ -213,25 +208,89 @@ class ElementGeneratorTest(TestCase):
 
         ElementGenerator(element).generate(ElementTree.Element('test'))
 
+    @raises(ValueError)
+    def test_error_if_no_choices(self):
+        element = factories.ChoiceElementFactory(
+            choices=[]
+        )
+
+        ElementGenerator(element).generate(ElementTree.Element('test'))
+
+    @raises(ValueError)
+    def test_error_if_no_action(self):
+        element = factories.PluginElementFactory(
+            action=None
+        )
+
+        ElementGenerator(element).generate(ElementTree.Element('test'))
+
+    @raises(ValueError)
+    def test_error_if_no_mime_type(self):
+        element = factories.PluginElementFactory(
+            mime_type=None
+        )
+
+        ElementGenerator(element).generate(ElementTree.Element('test'))
+
     def test_element_has_no_numeric(self):
         assert_false('numeric' in self.attribs)
 
     def test_element_has_no_choices(self):
         assert_false('choices' in self.attribs)
 
-    def test_element_has_numeric(self):
-        self.element.numeric = 'DIALPAD'
-        self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
-
-        assert_true('numeric' in self.element_etree_element.attrib)
-        assert_equals(self.element_etree_element.attrib['numeric'], self.element.numeric)
-
     def test_element_has_choices(self):
         self.element.choices = '["left","right","center"]'
+        self.element.element_type = 'SELECT'
         self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
 
         assert_true('choices' in self.element_etree_element.attrib)
         assert_equals(self.element_etree_element.attrib['choices'], 'left,right,center')
+
+    def test_element_has_no_required(self):
+        assert_false('required' in self.attribs)
+
+    def test_element_has_required(self):
+        self.element.required = True
+        self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
+
+        assert_true('required' in self.element_etree_element.attrib)
+        assert_equals(self.element_etree_element.attrib['required'], 'true')
+
+    def test_element_has_no_image(self):
+        assert_false('image' in self.attribs)
+
+    def test_element_has_image(self):
+        self.element.image = 'image'
+        self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
+
+        assert_true('image' in self.element_etree_element.attrib)
+        assert_equals(self.element_etree_element.attrib['image'], 'image')
+
+    def test_element_has_no_audio(self):
+        assert_false('audio' in self.attribs)
+
+    def test_element_has_audio(self):
+        self.element.audio = 'audio'
+        self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
+
+        assert_true('audio' in self.element_etree_element.attrib)
+        assert_equals(self.element_etree_element.attrib['audio'], 'audio')
+
+    def test_element_has_no_plugin_attributes(self):
+        assert_false('action' in self.attribs)
+        assert_false('mime_type' in self.attribs)
+
+    def test_element_has_plugin_attributes(self):
+        self.element.action = 'action'
+        self.element.mime_type = 'mime_type'
+        self.element.element_type = 'PLUGIN'
+        self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
+
+        assert_true('action' in self.element_etree_element.attrib)
+        assert_equals(self.element_etree_element.attrib['action'], 'action')
+
+        assert_true('mime_type' in self.element_etree_element.attrib)
+        assert_equals(self.element_etree_element.attrib['mime_type'], 'mime_type')
 
 
 class ProtocolBuilderTestCase(TestCase):
@@ -262,7 +321,7 @@ class ProtocolBuilderTestCase(TestCase):
 
     def test_generates_string_output(self):
         protocol = ProtocolBuilder.generate(factories.UserFactory(), self.procedure.id)
-        assert_not_equals(protocol, None)
+        assert_is_not_none(protocol)
 
     @raises(ValueError)
     def test_invalid_owner(self):
