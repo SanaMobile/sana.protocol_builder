@@ -1,5 +1,14 @@
-module.exports = Marionette.ItemView.extend({
+module.exports = Marionette.LayoutView.extend({
 
-    template: require('templates/builder/pageElements/types/multiSelectView'),
+    template: require('templates/builder/pageElements/types/choicesView'),
+    className: 'has-choices multi-select',
+
+    regions: {
+        choicesList: 'div.choices-list',
+    },
+
+    behaviors: {
+        ChoiceBasedElementBehavior: { }
+    },
 
 });

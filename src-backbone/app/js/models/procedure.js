@@ -43,7 +43,7 @@ let Procedure = Backbone.Model.extend({
 
         if (Config.DEBUG) {
             this.listenTo(this.pages, 'all', function(event, subject) {
-                console.debug('Pages event:', event, subject && subject.get('id'));
+                console.debug('Pages collection event:', event, subject && subject.get('id'));
             });
         }
     },

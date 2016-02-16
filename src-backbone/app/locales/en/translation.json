@@ -87,6 +87,12 @@
     "PICTURE": "Picture",
     "PLUGIN": "Plugin (file)",
     "PLUGIN_ENTRY": "Plugin (entry)",
+    "Choices": "Choices",
+    "Type here to create a new choice": "Type here to create a new choice",
+    "Drag to re-order this choice": "Drag to re-order this choice",
+    "Delete this choice": "Delete this choice",
+    "Click here to set this choice as a default answer": "Click here to set this choice as a default answer",
+    "Click here to remove this choice as a default answer": "Click here to remove this choice as a default answer",
 
     // Notifications
     "An unknown error has occurred!": "An unknown error has occurred!",

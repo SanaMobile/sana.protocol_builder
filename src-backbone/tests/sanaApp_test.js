@@ -10,14 +10,15 @@ describe('SanaApp', function() {
             helpersMock = sinon.mock(helpers);
 
             let SanaApp = proxyquire('sanaApp', {
-                'views/rootLayoutView'         : {},
-                'behaviors/authFormBehavior'   : {},
-                'behaviors/sortableBehavior'   : {},
+                'views/rootLayoutView': {},
+                'behaviors/authFormBehavior': {},
+                'behaviors/choiceBasedElementBehavior': {},
+                'behaviors/sortableBehavior': {},
                 'behaviors/rightNavbarBehavior': {},
-                'routers/authRouter'           : {},
-                'routers/infoRouter'           : {},
-                'routers/proceduresRouter'     : {},
-                'utils/helpers'                : helpers,
+                'routers/authRouter': {},
+                'routers/infoRouter': {},
+                'routers/proceduresRouter': {},
+                'utils/helpers': helpers,
             });
             app = new SanaApp();
         });
@@ -73,14 +74,15 @@ describe('SanaApp', function() {
             server = sinon.fakeServer.create();
 
             let SanaApp = proxyquire('sanaApp', {
-                'views/rootLayoutView'       : {},
-                'behaviors/authFormBehavior' : {},
-                'behaviors/sortableBehavior' : {},
+                'views/rootLayoutView': {},
+                'behaviors/authFormBehavior': {},
+                'behaviors/choiceBasedElementBehavior': {},
+                'behaviors/sortableBehavior': {},
                 'behaviors/rightNavbarBehavior': {},
-                'routers/authRouter'         : {},
-                'routers/infoRouter'         : {},
-                'routers/proceduresRouter'   : {},
-                'utils/helpers'              : {},
+                'routers/authRouter': {},
+                'routers/infoRouter': {},
+                'routers/proceduresRouter': {},
+                'utils/helpers': {},
             });
             app = new SanaApp();
 

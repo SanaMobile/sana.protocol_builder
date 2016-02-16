@@ -1,6 +1,7 @@
 let RootLayoutView = require('views/rootLayoutView');
 
 let AuthFormBehavior = require('behaviors/authFormBehavior');
+let ChoiceBasedElementBehavior = require('behaviors/choiceBasedElementBehavior');
 let RightNavbarBehavior = require('behaviors/rightNavbarBehavior');
 let SortableBehavior = require('behaviors/sortableBehavior');
 
@@ -137,7 +138,7 @@ module.exports = Marionette.Application.extend({
                     case 401: {
                         // Reloads the page (i.e. resets the App state)
                         console.warn('Backbone.sync encountered 401. Resetting user session.');
-                        self.showNotification({
+                        self.RootView.showNotification({
                             title: 'Your session is invalid!', 
                             desc: 'Please login again.',
                         });
@@ -201,6 +202,7 @@ module.exports = Marionette.Application.extend({
         this.Behaviors = {};
         this.Behaviors.AuthFormBehavior = AuthFormBehavior;
         this.Behaviors.RightNavbarBehavior = RightNavbarBehavior;
+        this.Behaviors.ChoiceBasedElementBehavior = ChoiceBasedElementBehavior;
         this.Behaviors.SortableBehavior = SortableBehavior;
     },
 
