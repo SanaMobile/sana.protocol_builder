@@ -56,6 +56,7 @@ INSTALLED_APPS = (
     # Our apps
     'api',
     'authentication',
+    'mailer',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -127,6 +128,28 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     )
 }
+
+# ------------------------------------------------------------------------------
+# Email Configuration
+# https://docs.djangoproject.com/en/1.9/topics/email/
+# ------------------------------------------------------------------------------
+
+DEFAULT_FROM_EMAIL = os.environ['EMAIL_FROM']
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# ------------------------------------------------------------------------------
+# Celery Configuration
+# http://docs.celeryproject.org/en/latest/configuration.html
+# ------------------------------------------------------------------------------
+
+BROKER_URL = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 # ------------------------------------------------------------------------------
 # Logging

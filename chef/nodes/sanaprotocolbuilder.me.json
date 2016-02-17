@@ -8,6 +8,8 @@
     "recipe[postgres_password]",
     "recipe[postgresql::client]",
     "recipe[postgresql::server]",
+    "recipe[redisio]",
+    "recipe[redisio::enable]",
     "recipe[nginx]",
     "recipe[python]",
     "recipe[supervisor]",

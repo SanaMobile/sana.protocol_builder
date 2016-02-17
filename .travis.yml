@@ -3,7 +3,7 @@ language: python
 python:
   - '2.7'
 env:
-  - DJANGO_DB_NAME='sana_test' DJANGO_DB_USER='test_db_user' DJANGO_DB_PASSWORD='test_db_password'
+  - DJANGO_DB_NAME='sana_test' DJANGO_DB_USER='test_db_user' DJANGO_DB_PASSWORD='test_db_password' EMAIL_FROM='Sample Name <name@email.com>' EMAIL_HOST='smtp.example.com' EMAIL_HOST_USER='name@email.com' EMAIL_HOST_PASSWORD='sample_password'
 services:
   - postgresql
 addons:
