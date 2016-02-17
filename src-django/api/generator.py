@@ -49,6 +49,9 @@ class PageGenerator:
 
 
 class ElementGenerator:
+    CHOICE_TYPES = ('SELECT', 'MULTI_SELECT', 'RADIO')
+    PLUGIN_TYPES = ('PLUGIN', 'ENTRY_PLUGIN')
+
     def __init__(self, element):
         self.name = 'Element'
         self.element = element
@@ -68,6 +71,16 @@ class ElementGenerator:
         if self.element.answer is None:
             self.__raise_error('Element has no answer')
 
+        if self.element.element_type in self.CHOICE_TYPES and not self.element.choices:
+            self.__raise_error('Element has no choices')
+
+        if self.element.element_type in self.PLUGIN_TYPES:
+            if not self.element.action:
+                self.__raise_error('Element needs action')
+
+            if not self.element.mime_type:
+                self.__raise_error('Element needs mime_type')
+
     def __raise_error(self, error_string):
         page = self.element.page
         raise ValueError('Error on page %d with display_index %d: %s' % (page.id, page.display_index, error_string))
@@ -76,16 +89,25 @@ class ElementGenerator:
         props = {
             'type': self.element.element_type,
             'id': self.element.eid,
-            # TODO(josh): fix this
-            # 'concept': self.element.concept,
+            'concept': self.element.concept.name,
             'question': self.element.question,
             'answer': self.element.answer
         }
 
-        if self.element.numeric:
-            props['numeric'] = self.element.numeric
+        if self.element.required:
+            props['required'] = str(self.element.required).lower()
 
-        if self.element.choices:
+        if self.element.image:
+            props['image'] = self.element.image
+
+        if self.element.audio:
+            props['audio'] = self.element.audio
+
+        if self.element.element_type in self.PLUGIN_TYPES:
+            props['action'] = self.element.action
+            props['mime_type'] = self.element.mime_type
+
+        if self.element.element_type in self.CHOICE_TYPES:
             props['choices'] = self.__parse_choices()
 
         return props

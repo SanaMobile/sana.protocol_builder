@@ -40,4 +40,14 @@ module.exports = {
         'PLUGIN_ENTRY',
     ],
 
+    CHOICE_ELEMENT_TYPES: [
+        'SELECT',
+        'MULTI_SELECT',
+        'RADIO',
+    ],
+
+    PLUGIN_ELEMENT_TYPES: [
+        'PLUGIN',
+        'ENTRY_PLUGIN',
+    ],
 };

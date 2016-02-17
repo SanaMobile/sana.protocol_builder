@@ -55,6 +55,35 @@ class ElementFactory(factory.django.DjangoModelFactory):
     page = factory.SubFactory(PageFactory)
 
 
+class ChoiceElementFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Element
+
+    display_index = 0
+    element_type = 'SELECT'
+    concept = factory.SubFactory(ConceptFactory)
+    question = 'Where does it hurt?'
+    eid = 'checkup_id'
+    answer = ''
+    choices = '[one, two, three]'
+    page = factory.SubFactory(PageFactory)
+
+
+class PluginElementFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.Element
+
+    display_index = 0
+    element_type = 'PLUGIN'
+    concept = factory.SubFactory(ConceptFactory)
+    question = 'Where does it hurt?'
+    eid = 'checkup_id'
+    answer = ''
+    action = 'fire the laser',
+    mime_type = 'text/javascript'
+    page = factory.SubFactory(PageFactory)
+
+
 class ShowIfFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.ShowIf

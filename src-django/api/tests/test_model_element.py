@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.db import IntegrityError
-from nose.tools import raises, assert_equals, assert_not_equals
+from nose.tools import raises, assert_equals, assert_true, assert_is_not_none
 from api.models import Element
 from utils import factories
 
@@ -8,26 +8,38 @@ from utils import factories
 class ElementTest(TestCase):
     def test_elements_required(self):
         page = factories.PageFactory()
+        concept = factories.ConceptFactory()
         element = Element.objects.create(
             display_index=0,
-            page=page
+            page=page,
+            element_type='ENTRY',
+            answer='',
+            question='What does the fox say?',
+            concept=concept
         )
 
         assert_equals(element.display_index, 0)
         assert_equals(element.page, page)
+        assert_equals(element.element_type, 'ENTRY')
+        assert_equals(element.answer, '')
+        assert_equals(element.question, 'What does the fox say?')
+        assert_equals(element.concept, concept)
+        assert_equals(element.required, False)
 
-    def test_elements_all_properties(self):
+    def test_elements_all_select_properties(self):
         page = factories.PageFactory()
         concept = factories.ConceptFactory()
         Element.objects.create(
             display_index=0,
             eid='eid',
             element_type='SELECT',
-            choices='[one]',
-            numeric='DIALPAD',
+            choices='[one, two, three]',
             concept=concept,
             question='test question',
             answer='',
+            required=True,
+            image='test',
+            audio='ping',
             page=page
         )
 
@@ -36,50 +48,87 @@ class ElementTest(TestCase):
         assert_equals(element.display_index, 0)
         assert_equals(element.eid, 'eid')
         assert_equals(element.element_type, 'SELECT')
-        assert_equals(element.choices, '[one]')
-        assert_equals(element.numeric, 'DIALPAD')
+        assert_equals(element.choices, '[one, two, three]')
         assert_equals(element.concept, concept)
         assert_equals(element.question, 'test question')
         assert_equals(element.answer, '')
         assert_equals(element.page, page)
-        assert_not_equals(element.last_modified, None)
-        assert_not_equals(element.created, None)
+        assert_true(element.required)
+        assert_equals(element.image, 'test')
+        assert_equals(element.audio, 'ping')
+        assert_is_not_none(element.last_modified, None)
+        assert_is_not_none(element.created, None)
+
+    def test_elements_all_plugin_properties(self):
+        page = factories.PageFactory()
+        concept = factories.ConceptFactory()
+        Element.objects.create(
+            display_index=0,
+            eid='eid',
+            element_type='PLUGIN',
+            concept=concept,
+            question='test question',
+            answer='',
+            required=True,
+            image='test',
+            audio='ping',
+            action='action',
+            mime_type='text/javascript',
+            page=page
+        )
+
+        element = Element.objects.get(concept=concept)
+
+        assert_equals(element.display_index, 0)
+        assert_equals(element.eid, 'eid')
+        assert_equals(element.element_type, 'PLUGIN')
+        assert_equals(element.concept, concept)
+        assert_equals(element.question, 'test question')
+        assert_equals(element.answer, '')
+        assert_equals(element.page, page)
+        assert_true(element.required)
+        assert_equals(element.image, 'test')
+        assert_equals(element.audio, 'ping')
+        assert_equals(element.action, 'action')
+        assert_equals(element.mime_type, 'text/javascript')
+        assert_is_not_none(element.last_modified, None)
+        assert_is_not_none(element.created, None)
 
     @raises(IntegrityError)
     def test_display_index_negative(self):
-        Element.objects.create(
-            display_index=-1,
-            page=factories.PageFactory()
+        factories.ElementFactory(
+            display_index=-1
         )
 
     @raises(IntegrityError)
     def test_element_type_invalid(self):
-        Element.objects.create(
-            display_index=0,
-            page=factories.PageFactory(),
+        factories.ElementFactory(
             element_type='BAD'
         )
 
     def test_element_type_select(self):
-        self.assert_element_type_valid('SELECT')
+        self.assert_choice_element_type_valid('SELECT')
 
     def test_element_type_multi_select(self):
-        self.assert_element_type_valid('MULTI_SELECT')
+        self.assert_choice_element_type_valid('MULTI_SELECT')
 
     def test_element_type_radio(self):
-        self.assert_element_type_valid('RADIO')
+        self.assert_choice_element_type_valid('RADIO')
 
-    def test_element_type_gps(self):
-        self.assert_element_type_valid('SOUND')
+    def test_element_type_plugin(self):
+        self.assert_plugin_element_type_valid('PLUGIN')
 
-    def test_element_type_sound(self):
-        self.assert_element_type_valid('SOUND')
+    def test_element_type_entry_plugin(self):
+        self.assert_plugin_element_type_valid('ENTRY_PLUGIN')
 
     def test_element_type_picture(self):
         self.assert_element_type_valid('PICTURE')
 
     def test_element_type_entry(self):
         self.assert_element_type_valid('ENTRY')
+
+    def test_element_type_date(self):
+        self.assert_element_type_valid('DATE')
 
     def test_orders_properly(self):
         page = factories.PageFactory()
@@ -102,9 +151,29 @@ class ElementTest(TestCase):
 
 # HELPERS
 
+    def create_empty_choice_element(self, element_type):
+        factories.ChoiceElementFactory(
+            element_type=element_type,
+            choices=None
+        )
+
+    def assert_choice_element_type_valid(self, element_type):
+        element = factories.ChoiceElementFactory(
+            element_type=element_type
+        )
+
+        assert_is_not_none(element)
+
+    def assert_plugin_element_type_valid(self, element_type):
+        element = factories.PluginElementFactory(
+            element_type=element_type
+        )
+
+        assert_is_not_none(element)
+
     def assert_element_type_valid(self, element_type):
         element = factories.ElementFactory(
             element_type=element_type
         )
 
-        assert_not_equals(element, None)
+        assert_is_not_none(element)
