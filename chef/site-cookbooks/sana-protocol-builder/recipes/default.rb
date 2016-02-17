@@ -91,7 +91,11 @@ template '/root/.virtualenvs/postactivate' do
     :django_secret_key => secrets['django_secret_key'],
     :django_db_name => secrets['django_db_name'],
     :django_db_user => secrets['django_db_user'],
-    :django_db_password => secrets['django_db_password']
+    :django_db_password => secrets['django_db_password'],
+    :email_from => secrets['email_from'],
+    :email_host => secrets['email_host'],
+    :email_host_user => secrets['email_host_user'],
+    :email_host_password => secrets['email_host_password']
   )
   action :create
 end
@@ -132,8 +136,33 @@ supervisor_service 'gunicorn' do
     'DJANGO_SECRET_KEY' => secrets['django_secret_key'],
     'DJANGO_DB_NAME' => secrets['django_db_name'],
     'DJANGO_DB_USER' => secrets['django_db_user'],
-    'DJANGO_DB_PASSWORD' => secrets['django_db_password']
+    'DJANGO_DB_PASSWORD' => secrets['django_db_password'],
+    'EMAIL_FROM' => secrets['email_from'],
+    'EMAIL_HOST' => secrets['email_host'],
+    'EMAIL_HOST_USER' => secrets['email_host_user'],
+    'EMAIL_HOST_PASSWORD' => secrets['email_host_password']
   )
 
   redirect_stderr true
+end
+
+directory '/var/log/celery' do
+  action :create
+end
+
+supervisor_service 'sanaprotocolbuilder-celery' do
+  autostart true
+  autorestart true
+
+  startsecs 10
+  stopwaitsecs 60
+  killasgroup true
+  command '/root/.virtualenvs/sana_protocol_builder/bin/celery --app=sanaprotocolbuilder.celery:app worker --loglevel=INFO'
+  directory '/opt/sana.protocol_builder/src-django'
+  environment(
+    'PATH' => '/root/.virtualenvs/sana_protocol_builder/bin',
+  )
+
+  stdout_logfile '/var/log/celery/worker.log'
+  stderr_logfile '/var/log/celery/worker.log'
 end
