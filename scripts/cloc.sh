@@ -6,4 +6,5 @@ cloc \
     --exclude-dir=dist,node_modules,bower_components \
     \
     ../src-django \
-    ../src-backbone
+    ../src-backbone \
+    ../chef
