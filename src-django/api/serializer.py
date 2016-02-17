@@ -50,9 +50,9 @@ class ElementSerializer(serializers.ModelSerializer):
         return ret
 
     def validate(self, data):
-        if 'element_type' in data and data['element_type'] in ('SELECT', 'MULTI_SELECT', 'RADIO'):
-            if 'answer' in data and data['answer'] and data['answer'] not in data['choices']:
-                raise serializers.ValidationError('Answer must be one of the choices')
+        if (data['element_type'] in models.Element.CHOICE_TYPES and
+           'answer' in data and data['answer'] not in data['choices']):
+            raise serializers.ValidationError('Answer must be one of the choices')
 
         return data
 
@@ -85,7 +85,6 @@ class ConditionNodeSerializer(serializers.ModelSerializer):
             'parent',
             'criteria_element',
             'node_type',
-            'criteria_type',
             'value',
             'last_modified',
             'created',
@@ -118,10 +117,8 @@ class ConditionNodeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Do not specify show_if, use nested creation')
 
     def validate(self, data):
-        if data['node_type'] == 'CRITERIA':
-            if 'criteria_type' not in data:
-                raise serializers.ValidationError('"CRITERIA" node type requires a criteria type')
-
+        # node type is already validated to be in ConditionNode.NODE_TYPES
+        if data['node_type'] in models.ConditionNode.CRITERIA_TYPES:
             if 'children' in data:
                 raise serializers.ValidationError('CRITERIA node must have no children')
 
@@ -137,14 +134,11 @@ class ConditionNodeSerializer(serializers.ModelSerializer):
             if 'criteria_element' in data:
                 raise serializers.ValidationError('Only "CRITERIA" should have an element')
 
-            if 'criteria_type' in data:
-                raise serializers.ValidationError('Only "CRITERIA" should have a criteria type')
+            if data['node_type'] == 'NOT' and 'children' in data and len(data['children']) > 1:
+                raise serializers.ValidationError('NOT nodes can not have multiple children')
 
-        if data['node_type'] == 'NOT' and 'children' in data and len(data['children']) > 1:
-            raise serializers.ValidationError('NOT nodes can not have multiple children')
-
-        if data['node_type'] in ('AND', 'OR') and 'children' in data and len(data['children']) > 2:
-            raise serializers.ValidationError('AND and OR nodes can not have more than two children')
+            if data['node_type'] in ('AND', 'OR') and 'children' in data and len(data['children']) > 2:
+                raise serializers.ValidationError('AND and OR nodes can not have more than two children')
 
         return data
 
@@ -201,16 +195,7 @@ class ShowIfSerializer(serializers.ModelSerializer):
 
         return value
 
-    def validate_page(self, value):
-        page = models.Page.objects.get(pk=value.pk)
-
-        if not page:
-            raise serializers.ValidationError('Invalid page')
-
-        if page.show_if.count() != 0:
-            raise serializers.ValidationError('Page already has a show_if')
-
-        return value
+    # TODO: Find a way to validate number of these that pages can have
 
 
 class PageSerializer(serializers.ModelSerializer):

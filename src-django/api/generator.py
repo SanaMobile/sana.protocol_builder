@@ -1,6 +1,6 @@
 from xml.etree import ElementTree
 from xml.dom import minidom
-from models import Procedure
+from models import Procedure, Element
 import json
 
 
@@ -49,15 +49,9 @@ class PageGenerator:
 
 
 class ElementGenerator:
-    CHOICE_TYPES = ('SELECT', 'MULTI_SELECT', 'RADIO')
-    PLUGIN_TYPES = ('PLUGIN', 'ENTRY_PLUGIN')
-
     def __init__(self, element):
         self.name = 'Element'
         self.element = element
-
-        if not self.element.element_type:
-            self.__raise_error('Element has no type')
 
         if not self.element.eid:
             self.__raise_error('Element has no id')
@@ -71,10 +65,10 @@ class ElementGenerator:
         if self.element.answer is None:
             self.__raise_error('Element has no answer')
 
-        if self.element.element_type in self.CHOICE_TYPES and not self.element.choices:
+        if self.element.element_type in Element.CHOICE_TYPES and not self.element.choices:
             self.__raise_error('Element has no choices')
 
-        if self.element.element_type in self.PLUGIN_TYPES:
+        if self.element.element_type in Element.PLUGIN_TYPES:
             if not self.element.action:
                 self.__raise_error('Element needs action')
 
@@ -103,11 +97,11 @@ class ElementGenerator:
         if self.element.audio:
             props['audio'] = self.element.audio
 
-        if self.element.element_type in self.PLUGIN_TYPES:
+        if self.element.element_type in Element.PLUGIN_TYPES:
             props['action'] = self.element.action
             props['mime_type'] = self.element.mime_type
 
-        if self.element.element_type in self.CHOICE_TYPES:
+        if self.element.element_type in Element.CHOICE_TYPES:
             props['choices'] = self.__parse_choices()
 
         return props

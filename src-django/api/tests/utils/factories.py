@@ -97,8 +97,7 @@ class CriteriaConditionFactory(factory.django.DjangoModelFactory):
 
     parent = None
     criteria_element = factory.SubFactory(ElementFactory)
-    node_type = 'CRITERIA'
-    criteria_type = 'EQUALS'
+    node_type = 'EQUALS'
     value = 'foot'
     show_if = factory.SubFactory(ShowIfFactory)
 
