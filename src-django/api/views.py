@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
+from django.contrib.auth.models import User
 from generator import ProtocolBuilder
 import models
 import json
@@ -35,6 +36,34 @@ class ProcedureViewSet(viewsets.ModelViewSet):
         response['Content-Disposition'] = 'attachment; filename="procedure.xml"'
 
         return response
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    model = User
+    queryset = User.objects.all()
+    serializer_class = serializer.UserSerializer
+    allowed_changes = ['first_name', 'last_name', 'email', 'password']
+
+    @detail_route(methods=['patch'])
+    def update_details(self, request, pk=None):
+        if pk is None or not request.body:
+            return HttpResponseBadRequest()
+        user = User.objects.get()
+
+        body = json.loads(request.body)
+        if not any([key in body for key in self.allowed_changes]):
+            return HttpResponseBadRequest()
+
+        serializer = self.get_serializer(
+            instance=user,
+            data=json.loads(request.body),
+            partial=True
+        )
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
 
 
 class PageViewSet(viewsets.ModelViewSet):
