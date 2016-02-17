@@ -102,17 +102,19 @@ class ConditionTest(TestCase):
     def test_creates_criteria_greater_condition(self):
         self.assert_creates_criteria('GREATER')
 
-    def test_creates_criteria_lesser_condition(self):
-        self.assert_creates_criteria('LESSER')
+    def test_creates_criteria_less_condition(self):
+        self.assert_creates_criteria('LESS')
 
     def test_creates_simple_and(self):
         root = factories.AndConditionFactory(
             show_if=factories.ShowIfFactory()
         )
         factories.CriteriaConditionFactory(
+            show_if=None,
             parent=root
         )
         factories.CriteriaConditionFactory(
+            show_if=None,
             parent=root
         )
 
@@ -125,9 +127,11 @@ class ConditionTest(TestCase):
             show_if=factories.ShowIfFactory()
         )
         factories.CriteriaConditionFactory(
+            show_if=None,
             parent=root
         )
         factories.CriteriaConditionFactory(
+            show_if=None,
             parent=root
         )
 
@@ -140,6 +144,7 @@ class ConditionTest(TestCase):
             show_if=factories.ShowIfFactory()
         )
         factories.CriteriaConditionFactory(
+            show_if=None,
             parent=root
         )
 
@@ -152,25 +157,31 @@ class ConditionTest(TestCase):
             show_if=factories.ShowIfFactory()
         )
         lnode = factories.AndConditionFactory(
+            show_if=None,
             parent=root
         )
         rnode = factories.AndConditionFactory(
+            show_if=None,
             parent=root
         )
 
         for x in range(0, 3):
             factories.CriteriaConditionFactory(
+                show_if=None,
                 parent=lnode
             )
 
         factories.CriteriaConditionFactory(
             parent=factories.NotConditionFactory(
+                show_if=None,
                 parent=rnode
-            )
+            ),
+            show_if=None
         )
 
         factories.CriteriaConditionFactory(
-            parent=rnode
+            parent=rnode,
+            show_if=None
         )
 
         condition = ConditionNode.objects.get(pk=root.id)

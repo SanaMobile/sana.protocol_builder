@@ -124,7 +124,7 @@ class ConditionNode(models.Model):
     CRITERIA_TYPES = (
         ('EQUALS', 'EQUALS'),
         ('GREATER', 'GREATER'),
-        ('LESSER', 'LESSER')
+        ('LESS', 'LESS')
     )
 
     NODE_TYPES = (
@@ -172,12 +172,6 @@ class ConditionNode(models.Model):
 
         if self.show_if and self.parent or (not self.show_if and not self.parent):
             raise IntegrityError('Condition node must have a parent or show_if, but not both')
-
-        # if self.node_type is 'NOT' and len(self.children) is not 1:
-        #     raise IntegrityError('NOT must have exactly one child node')
-
-        # if self.children.count < 2:
-        #     raise IntegrityError('AND and OR nodes must have at least two children')
 
         super(ConditionNode, self).save()
 

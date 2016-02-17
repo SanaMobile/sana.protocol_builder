@@ -31,24 +31,30 @@ class ShowIfTest(TestCase):
         )
 
         lnode = factories.AndConditionFactory(
+            show_if=None,
             parent=root
         )
         rnode = factories.AndConditionFactory(
+            show_if=None,
             parent=root
         )
 
         for x in range(0, 3):
             factories.CriteriaConditionFactory(
+                show_if=None,
                 parent=lnode
             )
 
         factories.CriteriaConditionFactory(
+            show_if=None,
             parent=factories.NotConditionFactory(
+                show_if=None,
                 parent=rnode
             )
         )
 
         factories.CriteriaConditionFactory(
+            show_if=None,
             parent=rnode
         )
 
