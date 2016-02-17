@@ -30,14 +30,12 @@ class ConditionalTest(TestCase):
                             'children': [
                                 {
                                     'criteria_element': self.element.pk,
-                                    'node_type': 'CRITERIA',
-                                    'criteria_type': 'EQUALS',
+                                    'node_type': 'EQUALS',
                                     'value': 'foo'
                                 },
                                 {
                                     'criteria_element': self.element.pk,
-                                    'node_type': 'CRITERIA',
-                                    'criteria_type': 'EQUALS',
+                                    'node_type': 'LESS',
                                     'value': 'bar'
                                 }
                             ]
@@ -62,7 +60,6 @@ class ConditionalTest(TestCase):
 
                 for body_cond_3, data_cond_3 in zip(body_cond_2['children'], data_cond_2['children']):
                     assert_equals(body_cond_3['node_type'], data_cond_3['node_type'])
-                    assert_equals(body_cond_3['criteria_type'], data_cond_3['criteria_type'])
                     assert_equals(body_cond_3['criteria_element'], data_cond_3['criteria_element'])
                     assert_equals(body_cond_3['value'], data_cond_3['value'])
 
@@ -76,14 +73,12 @@ class ConditionalTest(TestCase):
             'conditions': [
                 {
                     'criteria_element': self.element.pk,
-                    'node_type': 'CRITERIA',
-                    'criteria_type': 'EQUALS',
+                    'node_type': 'EQUALS',
                     'value': 'foo'
                 },
                 {
                     'criteria_element': self.element.pk,
-                    'node_type': 'CRITERIA',
-                    'criteria_type': 'EQUALS',
+                    'node_type': 'LESS',
                     'value': 'bar'
                 }
             ]
@@ -105,7 +100,6 @@ class ConditionalTest(TestCase):
                 {
                     'criteria_element': self.element.pk,
                     'node_type': 'FOO',
-                    'criteria_type': 'EQUALS',
                     'value': 'foo'
                 }
             ]
@@ -120,35 +114,11 @@ class ConditionalTest(TestCase):
             'page': self.element.page.pk,
             'conditions': [
                 {
-                    'criteria_element': self.element.pk,
-                    'node_type': 'CRITERIA',
+                    'node_type': 'GREATER',
                     'value': 'foo'
                 }
             ]
         }
-
-        conditions = self.get_conditions()
-        assert_equals(conditions['non_field_errors'], ['"CRITERIA" node type requires a criteria type'])
-
-        self.data['conditions'] = [
-            {
-                'criteria_element': self.element.pk,
-                'node_type': 'CRITERIA',
-                'criteria_type': 'BLAH',
-                'value': 'foo'
-            }
-        ]
-
-        conditions = self.get_conditions()
-        assert_equals(conditions['criteria_type'], ['"BLAH" is not a valid choice.'])
-
-        self.data['conditions'] = [
-            {
-                'node_type': 'CRITERIA',
-                'criteria_type': 'EQUALS',
-                'value': 'foo'
-            }
-        ]
 
         conditions = self.get_conditions()
         assert_equals(conditions['non_field_errors'], ['CRITERIA must have an element'])
@@ -156,8 +126,7 @@ class ConditionalTest(TestCase):
         self.data['conditions'] = [
             {
                 'criteria_element': self.element.pk,
-                'node_type': 'CRITERIA',
-                'criteria_type': 'EQUALS',
+                'node_type': 'EQUALS',
             }
         ]
 
@@ -167,8 +136,7 @@ class ConditionalTest(TestCase):
         self.data['conditions'] = [
             {
                 'criteria_element': self.element.pk,
-                'node_type': 'CRITERIA',
-                'criteria_type': 'EQUALS',
+                'node_type': 'LESS',
                 'value': 'foo',
                 'children': []
             }
@@ -204,19 +172,6 @@ class ConditionalTest(TestCase):
         conditions = self.get_conditions()
         assert_equals(conditions['non_field_errors'], ['Only "CRITERIA" should have an element'])
 
-        self.data = {
-            'page': self.element.page.pk,
-            'conditions': [
-                {
-                    'node_type': 'AND',
-                    'criteria_type': 'EQUALS'
-                }
-            ]
-        }
-
-        conditions = self.get_conditions()
-        assert_equals(conditions['non_field_errors'], ['Only "CRITERIA" should have a criteria type'])
-
     def test_number_of_children_for_not(self):
         self.data = {
             'page': self.element.page.pk,
@@ -226,14 +181,12 @@ class ConditionalTest(TestCase):
                     'children': [
                         {
                             'criteria_element': self.element.pk,
-                            'node_type': 'CRITERIA',
-                            'criteria_type': 'EQUALS',
+                            'node_type': 'EQUALS',
                             'value': 'foo'
                         },
                         {
                             'criteria_element': self.element.pk,
-                            'node_type': 'CRITERIA',
-                            'criteria_type': 'EQUALS',
+                            'node_type': 'LESS',
                             'value': 'bar'
                         }
                     ]
@@ -253,20 +206,17 @@ class ConditionalTest(TestCase):
                     'children': [
                         {
                             'criteria_element': self.element.pk,
-                            'node_type': 'CRITERIA',
-                            'criteria_type': 'EQUALS',
+                            'node_type': 'EQUALS',
                             'value': 'foo'
                         },
                         {
                             'criteria_element': self.element.pk,
-                            'node_type': 'CRITERIA',
-                            'criteria_type': 'EQUALS',
+                            'node_type': 'LESS',
                             'value': 'bar'
                         },
                         {
                             'criteria_element': self.element.pk,
-                            'node_type': 'CRITERIA',
-                            'criteria_type': 'EQUALS',
+                            'node_type': 'GREATER',
                             'value': 'baz'
                         }
                     ]
@@ -285,20 +235,17 @@ class ConditionalTest(TestCase):
                     'children': [
                         {
                             'criteria_element': self.element.pk,
-                            'node_type': 'CRITERIA',
-                            'criteria_type': 'EQUALS',
+                            'node_type': 'EQUALS',
                             'value': 'foo'
                         },
                         {
                             'criteria_element': self.element.pk,
-                            'node_type': 'CRITERIA',
-                            'criteria_type': 'EQUALS',
+                            'node_type': 'LESS',
                             'value': 'bar'
                         },
                         {
                             'criteria_element': self.element.pk,
-                            'node_type': 'CRITERIA',
-                            'criteria_type': 'EQUALS',
+                            'node_type': 'GREATER',
                             'value': 'baz'
                         }
                     ]
@@ -316,8 +263,7 @@ class ConditionalTest(TestCase):
             'conditions': [
                 {
                     'criteria_element': self.element.pk,
-                    'node_type': 'CRITERIA',
-                    'criteria_type': 'EQUALS',
+                    'node_type': 'EQUALS',
                     'value': 'foo',
                     'parent': node.pk
                 }
@@ -332,8 +278,7 @@ class ConditionalTest(TestCase):
             'conditions': [
                 {
                     'criteria_element': self.element.pk,
-                    'node_type': 'CRITERIA',
-                    'criteria_type': 'EQUALS',
+                    'node_type': 'LESS',
                     'value': 'foo',
                     'show_if': node.show_if.pk
                 }

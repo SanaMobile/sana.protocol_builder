@@ -50,7 +50,7 @@ class ElementSerializer(serializers.ModelSerializer):
         return ret
 
     def validate(self, data):
-        if 'element_type' in data and data['element_type'] in ('SELECT', 'MULTI_SELECT', 'RADIO'):
+        if 'element_type' in data and data['element_type'] in models.Element.CHOICE_TYPES:
             if 'answer' in data and data['answer'] and data['answer'] not in data['choices']:
                 raise serializers.ValidationError('Answer must be one of the choices')
 
@@ -85,7 +85,6 @@ class ConditionNodeSerializer(serializers.ModelSerializer):
             'parent',
             'criteria_element',
             'node_type',
-            'criteria_type',
             'value',
             'last_modified',
             'created',
@@ -118,10 +117,7 @@ class ConditionNodeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Do not specify show_if, use nested creation')
 
     def validate(self, data):
-        if data['node_type'] == 'CRITERIA':
-            if 'criteria_type' not in data:
-                raise serializers.ValidationError('"CRITERIA" node type requires a criteria type')
-
+        if data['node_type'] in models.ConditionNode.CRITERIA_TYPES:
             if 'children' in data:
                 raise serializers.ValidationError('CRITERIA node must have no children')
 
@@ -136,9 +132,6 @@ class ConditionNodeSerializer(serializers.ModelSerializer):
 
             if 'criteria_element' in data:
                 raise serializers.ValidationError('Only "CRITERIA" should have an element')
-
-            if 'criteria_type' in data:
-                raise serializers.ValidationError('Only "CRITERIA" should have a criteria type')
 
         if data['node_type'] == 'NOT' and 'children' in data and len(data['children']) > 1:
             raise serializers.ValidationError('NOT nodes can not have multiple children')
