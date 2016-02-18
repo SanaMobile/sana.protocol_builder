@@ -25,6 +25,11 @@ module.exports = Marionette.Application.extend({
 
         this._loadBehaviors();
         this._loadRouters();
+
+        // Load any existing tokens
+        // Do this before Backbone.history has started so that the model change
+        // events don't redirect the user yet
+        this.session.fetch();
     },
 
     onStart: function () {
@@ -118,11 +123,6 @@ module.exports = Marionette.Application.extend({
                 Helpers.navigateToDefaultLoggedOut();
             }
         });
-
-        // Load any existing tokens
-        // Do this before Backbone.history has started so that the model change
-        // events don't redirect the user yet
-        this.session.fetch();
     },
 
     _setupBackboneSync: function() {
