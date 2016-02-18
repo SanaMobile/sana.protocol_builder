@@ -63,11 +63,37 @@ class ConditionalTest(TestCase):
                     assert_equals(body_cond_3['criteria_element'], data_cond_3['criteria_element'])
                     assert_equals(body_cond_3['value'], data_cond_3['value'])
 
-    def test_show_if_error_conditions(self):
-        factories.ShowIfFactory(
-            page=self.element.page
+    def test_update(self):
+        show_if = factories.ShowIfFactory()
+
+        self.data = {
+            'page': show_if.page.pk,
+            'conditions': [
+                {
+                    'criteria_element': self.element.pk,
+                    'node_type': 'EQUALS',
+                    'value': 'foo'
+                }
+            ]
+        }
+
+        response = self.client.put(
+            path=self.conditional_url + '/{id}'.format(id=show_if.pk),
+            data=json.dumps(self.data),
+            content_type='application/json',
+            HTTP_AUTHORIZATION=add_token_to_header(self.user, self.token)
         )
 
+        assert_equals(response.status_code, status.HTTP_200_OK)
+        body = json.loads(response.content)
+
+        assert_equals(body['page'], self.data['page'])
+        assert_equals(len(body['conditions']), len(self.data['conditions']))
+        assert_equals(body['conditions'][0]['node_type'], self.data['conditions'][0]['node_type'])
+        assert_equals(body['conditions'][0]['criteria_element'], self.data['conditions'][0]['criteria_element'])
+        assert_equals(body['conditions'][0]['value'], self.data['conditions'][0]['value'])
+
+    def test_show_if_error_conditions(self):
         self.data = {
             'page': self.element.page.pk,
             'conditions': [
@@ -91,7 +117,6 @@ class ConditionalTest(TestCase):
         body = json.loads(response.content)
 
         assert_equals(body['conditions'], ['Can only have one condition!'])
-        assert_equals(body['page'], ['Page already has a show_if'])
 
     def test_invalid_node_type(self):
         self.data = {

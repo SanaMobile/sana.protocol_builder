@@ -53,9 +53,6 @@ class ElementGenerator:
         self.name = 'Element'
         self.element = element
 
-        if not self.element.element_type:
-            self.__raise_error('Element has no type')
-
         if not self.element.eid:
             self.__raise_error('Element has no id')
 

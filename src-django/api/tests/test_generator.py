@@ -148,22 +148,6 @@ class ElementGeneratorTest(TestCase):
         assert_true('type' in self.attribs)
         assert_equals(self.attribs['type'], self.element.element_type)
 
-    @raises(ValueError)
-    def test_error_if_no_type(self):
-        element = factories.ElementFactory(
-            element_type=None
-        )
-
-        ElementGenerator(element).generate(ElementTree.Element('test'))
-
-    @raises(ValueError)
-    def test_error_if_blank_type(self):
-        element = factories.ElementFactory(
-            element_type=''
-        )
-
-        ElementGenerator(element).generate(ElementTree.Element('test'))
-
     def test_element_has_concept(self):
         assert_true('concept' in self.attribs)
         assert_equals(self.attribs['concept'], self.element.concept.name)
