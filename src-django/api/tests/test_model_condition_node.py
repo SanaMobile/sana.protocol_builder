@@ -28,25 +28,28 @@ class ConditionTest(TestCase):
         )
 
     @raises(IntegrityError)
-    def test_equals_has_no_element(self):
+    def test_no_criteria_type(self):
         ConditionNode.objects.create(
-            node_type='EQUALS',
-            criteria_element=None,
+            node_type='CRITERIA',
+            criteria_type=None,
+            criteria_element=factories.ElementFactory(),
             parent=factories.NotConditionFactory()
         )
 
     @raises(IntegrityError)
-    def test_less_has_no_element(self):
+    def test_invalid_criteria_type(self):
         ConditionNode.objects.create(
-            node_type='LESS',
-            criteria_element=None,
+            node_type='CRITERIA',
+            criteria_type='foo',
+            criteria_element=factories.ElementFactory(),
             parent=factories.NotConditionFactory()
         )
 
     @raises(IntegrityError)
-    def test_greater_has_no_element(self):
+    def test_criteria_has_no_element(self):
         ConditionNode.objects.create(
-            node_type='GREATER',
+            node_type='CRITERIA',
+            criteria_type='EQUALS',
             criteria_element=None,
             parent=factories.NotConditionFactory()
         )
@@ -199,16 +202,18 @@ class ConditionTest(TestCase):
         element = factories.ElementFactory()
         show_if = factories.ShowIfFactory()
         ConditionNode.objects.create(
-            node_type=criteria_type,
+            node_type='CRITERIA',
             criteria_element=element,
+            criteria_type=criteria_type,
             value='value',
             show_if=show_if
         )
 
         condition = ConditionNode.objects.get(value='value')
 
-        assert_equals(condition.node_type, criteria_type)
+        assert_equals(condition.node_type, 'CRITERIA')
         assert_equals(condition.criteria_element, element)
+        assert_equals(condition.criteria_type, criteria_type)
         assert_equals(condition.value, 'value')
         assert_equals(condition.show_if, show_if)
         assert_is_not_none(condition.last_modified)

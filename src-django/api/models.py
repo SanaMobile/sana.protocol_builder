@@ -74,17 +74,6 @@ class Element(models.Model):
         ('ENTRY_PLUGIN', 'ENTRY_PLUGIN')
     )
 
-    CHOICE_TYPES = (
-        'SELECT',
-        'MULTI_SELECT',
-        'RADIO'
-    )
-
-    PLUGIN_TYPES = (
-        'PLUGIN',
-        'ENTRY_PLUGIN'
-    )
-
     display_index = models.PositiveIntegerField()
     eid = models.CharField(max_length=255, null=True, blank=True)
     element_type = models.CharField(max_length=12, choices=TYPES, null=True, blank=True)
@@ -132,31 +121,24 @@ class ShowIf(models.Model):
 
 
 class ConditionNode(models.Model):
-    NODE_TYPES = (
-        ('AND', 'AND'),
-        ('OR', 'OR'),
-        ('NOT', 'NOT'),
+    CRITERIA_TYPES = (
         ('EQUALS', 'EQUALS'),
         ('GREATER', 'GREATER'),
         ('LESS', 'LESS')
     )
 
-    LOGICAL_TYPES = (
-        'AND',
-        'OR',
-        'NOT'
-    )
-
-    CRITERIA_TYPES = (
-        'EQUALS',
-        'GREATER',
-        'LESS'
+    NODE_TYPES = (
+        ('AND', 'AND'),
+        ('OR', 'OR'),
+        ('NOT', 'NOT'),
+        ('CRITERIA', 'CRITERIA')
     )
 
     parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children', blank=True, null=True)
     show_if = models.ForeignKey(ShowIf, on_delete=models.CASCADE, related_name='conditions', blank=True, null=True)
     criteria_element = models.ForeignKey(Element, blank=True, null=True)
     node_type = models.CharField(max_length=8, choices=NODE_TYPES)
+    criteria_type = models.CharField(max_length=8, choices=CRITERIA_TYPES, null=True, blank=True)
     value = models.TextField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -165,9 +147,15 @@ class ConditionNode(models.Model):
         if (self.node_type, self.node_type) not in self.NODE_TYPES:
             raise IntegrityError('Invalid condition node type')
 
-        if self.node_type in self.CRITERIA_TYPES:
-            if not self.value:
-                raise IntegrityError('"CRITERIA" node type requires a value')
+        if self.node_type == 'CRITERIA':
+            if not self.criteria_type:
+                raise IntegrityError('"CRITERIA" node type requires a criteria type')
+
+            if (self.criteria_type, self.criteria_type) not in self.CRITERIA_TYPES:
+                raise IntegrityError('Invalid criteria_type for condition')
+
+            # if self.parent.count() is not 0:
+            #     raise IntegrityError('CRITERIA can not have child nodes')
 
             if not self.criteria_element:
                 raise IntegrityError('CRITERIA must have an element')
@@ -178,6 +166,9 @@ class ConditionNode(models.Model):
 
             if self.criteria_element:
                 raise IntegrityError('Only "CRITERIA" should have an element')
+
+            if self.criteria_type:
+                raise IntegrityError('Only "CRITERIA" should have a criteria type')
 
         if self.show_if and self.parent or (not self.show_if and not self.parent):
             raise IntegrityError('Condition node must have a parent or show_if, but not both')
