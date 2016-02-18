@@ -34,8 +34,9 @@ describe("Login View", function () {
         });
 
         it("should call App().session.login() inside AuthFormBehavior.onAuthenticate", function() {
+            let Storage = require('utils/storage');
             let Session = require('models/session');
-            app.session = new Session();
+            app.session = new Session({ storage: new Storage() });
             let sessionLoginStub = sinon.stub(app.session, 'login');
 
             let formData = 'formData';
