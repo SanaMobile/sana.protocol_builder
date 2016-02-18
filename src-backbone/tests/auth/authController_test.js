@@ -88,8 +88,9 @@ describe('Auth Controller', function() {
 
     describe('#routeSignup()', function() {
         it('should redirect if user is already logged in', function() {
+            let Storage = require('utils/storage');
             let Session = require('models/session');
-            app.session = new Session();
+            app.session = new Session({ storage: new Storage() });
             let sessionStub = sinon.stub(app.session, 'isValid', function() {
                 return true;
             });
@@ -104,8 +105,9 @@ describe('Auth Controller', function() {
         });
 
         it('should render in root view if user is not logged in', function() {
+            let Storage = require('utils/storage');
             let Session = require('models/session');
-            app.session = new Session();
+            app.session = new Session({ storage: new Storage() });
             let sessionStub = sinon.stub(app.session, 'isValid', function() {
                 return false;
             });
@@ -126,8 +128,9 @@ describe('Auth Controller', function() {
 
     describe('#routeLogin()', function() {
         it('should redirect if user is already logged in', function() {
+            let Storage = require('utils/storage');
             let Session = require('models/session');
-            app.session = new Session();
+            app.session = new Session({ storage: new Storage() });
             let sessionStub = sinon.stub(app.session, 'isValid', function() {
                 return true;
             });
@@ -142,8 +145,9 @@ describe('Auth Controller', function() {
         });
 
         it('should render in root view if user is not logged in', function() {
+            let Storage = require('utils/storage');
             let Session = require('models/session');
-            app.session = new Session();
+            app.session = new Session({ storage: new Storage() });
             let sessionStub = sinon.stub(app.session, 'isValid', function() {
                 return false;
             });
@@ -164,8 +168,9 @@ describe('Auth Controller', function() {
 
     describe('#routeLogout()', function() {
         it('should clear session', function() {
+            let Storage = require('utils/storage');
             let Session = require('models/session');
-            app.session = new Session();
+            app.session = new Session({ storage: new Storage() });
             let sessionStub = sinon.stub(app.session, 'logout');
 
             authController.routeLogout();
