@@ -25,6 +25,10 @@
     "404: Page Not Found": "404: Page Not Found",
     "Click here to go back home": "Click here to go back home",
 
+    // Account Settings
+    "Successfuly updated account details!": "Successfuly updated account details!",
+    "There was a problem": "There was a problem",
+
     // Procedures
     "Hello username": "Hello {{ username }}",
     "Account Settings": "Account Settings",

@@ -3,12 +3,21 @@ let Helpers        = require('utils/helpers');
 let AuthLayoutView = require('views/auth/authLayoutView');
 let SignupView     = require('views/auth/signupView');
 let LoginView      = require('views/auth/loginView');
+let SettingsView   = require('views/auth/settingsView');
 
 
 module.exports = Marionette.Controller.extend({
 
     routeIndex: function() {
         Helpers.navigateToDefaultLoggedOut();
+    },
+
+    routeSettings: function() {
+        Helpers.arrivedOnView('Settings');
+
+        let authLayoutView = new AuthLayoutView();
+        App().RootView.switchMainView(authLayoutView);
+        authLayoutView.showChildView('authFormArea', new SettingsView());
     },
 
     routeSignup: function () {

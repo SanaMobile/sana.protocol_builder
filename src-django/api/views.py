@@ -44,19 +44,32 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = serializer.UserSerializer
     allowed_changes = ['first_name', 'last_name', 'email', 'password']
 
-    @detail_route(methods=['patch'])
-    def update_details(self, request, pk=None):
-        if pk is None or not request.body:
-            return HttpResponseBadRequest()
-        user = User.objects.get()
+    def json_msg(self, key, message):
+        return json.dumps({key: [message]})
+
+    @list_route(methods=['patch'])
+    def update_details(self, request):
+        if not request.body:
+            return HttpResponseBadRequest(self.json_msg('all', "There was nothing submitted"))
 
         body = json.loads(request.body)
-        if not any([key in body for key in self.allowed_changes]):
-            return HttpResponseBadRequest()
+        user = User.objects.get(auth_token=body['auth'])
+
+        if 'current-password' not in body:
+            return HttpResponseBadRequest(self.json_msg('current-password', "No password provided"))
+
+        if not user.check_password(body['current-password']):
+            return HttpResponseBadRequest(self.json_msg('current-password', "The password provided isn't correct."))
+
+        # Need to explicitly set password to have Django hash it
+        if 'password' in body and body['password']:
+            user.set_password(str(body['password']))
+            body.pop('password', None)
+            user.save()
 
         serializer = self.get_serializer(
             instance=user,
-            data=json.loads(request.body),
+            data=body,
             partial=True
         )
 

@@ -17,6 +17,9 @@ describe('Auth Controller', function() {
     let loginView;
     let loginViewStub;
 
+    let settingsView;
+    let settingsViewStub;
+
     beforeEach(function() {
         // Setup helpers
         let helpers = require('utils/helpers');
@@ -63,6 +66,12 @@ describe('Auth Controller', function() {
         };
         loginViewStub = sinon.stub().returns(loginView);
 
+        // Setup settingsView
+        settingsView = {
+            name: 'settingsView',
+        };
+        settingsViewStub = sinon.stub().returns(settingsView);
+
         // Setup authController
         let AuthController = proxyquire('controllers/authController', {
             'utils/sanaAppInstance': getAppInstance,
@@ -70,6 +79,7 @@ describe('Auth Controller', function() {
             'views/auth/authLayoutView' : authLayoutViewStub,
             'views/auth/signupView': signupViewStub,
             'views/auth/loginView': loginViewStub,
+            'views/auth/settingsView': settingsViewStub,
         });
         authController = new AuthController();
     });
