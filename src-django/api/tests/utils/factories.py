@@ -97,9 +97,9 @@ class CriteriaConditionFactory(factory.django.DjangoModelFactory):
 
     parent = None
     criteria_element = factory.SubFactory(ElementFactory)
-    node_type = 'CRITERIA'
-    criteria_type = 'EQUALS'
+    node_type = 'EQUALS'
     value = 'foot'
+    show_if = factory.SubFactory(ShowIfFactory)
 
 
 class AndConditionFactory(factory.django.DjangoModelFactory):
@@ -108,6 +108,7 @@ class AndConditionFactory(factory.django.DjangoModelFactory):
 
     parent = None
     node_type = 'AND'
+    show_if = factory.SubFactory(ShowIfFactory)
 
 
 class OrConditionFactory(factory.django.DjangoModelFactory):
@@ -116,6 +117,7 @@ class OrConditionFactory(factory.django.DjangoModelFactory):
 
     parent = None
     node_type = 'OR'
+    show_if = factory.SubFactory(ShowIfFactory)
 
 
 class NotConditionFactory(factory.django.DjangoModelFactory):
@@ -124,3 +126,4 @@ class NotConditionFactory(factory.django.DjangoModelFactory):
 
     parent = None
     node_type = 'NOT'
+    show_if = factory.SubFactory(ShowIfFactory)

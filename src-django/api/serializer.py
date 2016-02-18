@@ -2,6 +2,7 @@ from collections import OrderedDict
 from rest_framework import serializers
 from rest_framework.fields import SkipField
 from rest_framework_recursive.fields import RecursiveField
+from django.db import IntegrityError
 import models
 import field
 
@@ -48,6 +49,13 @@ class ElementSerializer(serializers.ModelSerializer):
 
         return ret
 
+    def validate(self, data):
+        if 'element_type' in data and data['element_type'] in models.Element.CHOICE_TYPES:
+            if 'answer' in data and data['answer'] and data['answer'] not in data['choices']:
+                raise serializers.ValidationError('Answer must be one of the choices')
+
+        return data
+
 
 class PageListSerializer(serializers.ListSerializer):
 
@@ -77,7 +85,6 @@ class ConditionNodeSerializer(serializers.ModelSerializer):
             'parent',
             'criteria_element',
             'node_type',
-            'criteria_type',
             'value',
             'last_modified',
             'created',
@@ -88,7 +95,10 @@ class ConditionNodeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         if 'children' in validated_data:
             children_data = validated_data.pop('children')
-            condition = models.ConditionNode.objects.create(**validated_data)
+            try:
+                condition = models.ConditionNode.objects.create(**validated_data)
+            except IntegrityError, e:
+                raise serializers.ValidationError(str(e))
 
             for child_data in children_data:
                 child_data['parent'] = condition
@@ -97,6 +107,39 @@ class ConditionNodeSerializer(serializers.ModelSerializer):
             return condition
         else:
             return super(ConditionNodeSerializer, self).create(validated_data)
+
+    def validate_parent(self, value):
+        if value:
+            raise serializers.ValidationError('Do not specify parent, use nested creation')
+
+    def validate_show_if(self, value):
+        if value:
+            raise serializers.ValidationError('Do not specify show_if, use nested creation')
+
+    def validate(self, data):
+        if data['node_type'] in models.ConditionNode.CRITERIA_TYPES:
+            if 'children' in data:
+                raise serializers.ValidationError('CRITERIA node must have no children')
+
+            if 'criteria_element' not in data:
+                raise serializers.ValidationError('CRITERIA must have an element')
+
+            if 'value' not in data:
+                raise serializers.ValidationError('CRITERIA must have a value')
+        else:
+            if 'value' in data:
+                raise serializers.ValidationError('Only "CRITERIA" should have a value')
+
+            if 'criteria_element' in data:
+                raise serializers.ValidationError('Only "CRITERIA" should have an element')
+
+        if data['node_type'] == 'NOT' and 'children' in data and len(data['children']) > 1:
+            raise serializers.ValidationError('NOT nodes can not have multiple children')
+
+        if data['node_type'] in ('AND', 'OR') and 'children' in data and len(data['children']) > 2:
+            raise serializers.ValidationError('AND and OR nodes can not have more than two children')
+
+        return data
 
 
 class ShowIfSerializer(serializers.ModelSerializer):
@@ -144,6 +187,23 @@ class ShowIfSerializer(serializers.ModelSerializer):
                     self.__create_nested_children(child_data, None)
             else:
                 models.ConditionNode.objects.create(show_if=show_if, **data)
+
+    def validate_conditions(self, value):
+        if len(value) > 1:
+            raise serializers.ValidationError('Can only have one condition!')
+
+        return value
+
+    def validate_page(self, value):
+        page = models.Page.objects.get(pk=value.pk)
+
+        if not page:
+            raise serializers.ValidationError('Invalid page')
+
+        if page.show_if.count() != 0:
+            raise serializers.ValidationError('Page already has a show_if')
+
+        return value
 
 
 class PageSerializer(serializers.ModelSerializer):
