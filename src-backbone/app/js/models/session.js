@@ -1,4 +1,5 @@
 const App = require('utils/sanaAppInstance');
+const Helpers = require('utils/helpers');
 
 const AUTH_TOKEN_KEY = 'AUTH_TOKEN_KEY';
 const STORAGE_KEY = AUTH_TOKEN_KEY;
@@ -92,6 +93,46 @@ let SessionModel = Backbone.Model.extend({
             complete: function() {
                 App().RootView.hideSpinner();
                 self.destroy();
+            },
+        });
+    },
+
+    updateInformation: function(formData) {
+        let self = this;
+        let json = {};
+        formData.forEach(function(item) {
+            if (item.value !== "") {
+                json[item.name] = item.value;
+            }
+        });
+        json.auth = self.get(AUTH_TOKEN_KEY);
+        $.ajax({
+            type: 'PATCH',
+            data: JSON.stringify(json),
+            url: '/api/users/update_details',
+            beforeSend: function() {
+                App().RootView.showSpinner();
+            },
+            complete: function() {
+                App().RootView.hideSpinner();
+            },
+            success: function(response) {
+                App().RootView.clearNotifications();
+                App().RootView.showNotification({
+                    title: 'Success!',
+                    desc: 'Successfuly updated account details!',
+                    alertType: 'success',
+                });
+            },
+            error: function(errors) {
+                App().RootView.clearNotifications();
+                let parsedErrors = JSON.parse(errors.responseText)
+                Object.keys(parsedErrors).forEach(function(key) {
+                    App().RootView.showNotification({
+                        title: 'There was a problem',
+                        desc: parsedErrors[key]
+                    });
+                });
             },
         });
     },

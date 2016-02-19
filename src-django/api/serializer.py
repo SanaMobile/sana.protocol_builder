@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_framework.fields import SkipField
 from rest_framework_recursive.fields import RecursiveField
 from django.db import IntegrityError
+from django.contrib.auth.models import User
 import models
 import field
 
@@ -55,6 +56,12 @@ class ElementSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Answer must be one of the choices')
 
         return data
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
 
 
 class PageListSerializer(serializers.ListSerializer):

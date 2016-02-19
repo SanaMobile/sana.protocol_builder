@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
+from django.contrib.auth.models import User
 from generator import ProtocolBuilder
 import models
 import json
@@ -35,6 +36,47 @@ class ProcedureViewSet(viewsets.ModelViewSet):
         response['Content-Disposition'] = 'attachment; filename="procedure.xml"'
 
         return response
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    model = User
+    queryset = User.objects.all()
+    serializer_class = serializer.UserSerializer
+    allowed_changes = ['first_name', 'last_name', 'email', 'password']
+
+    def json_msg(self, key, message):
+        return json.dumps({key: [message]})
+
+    @list_route(methods=['patch'])
+    def update_details(self, request):
+        if not request.body:
+            return HttpResponseBadRequest(self.json_msg('all', "There was nothing submitted"))
+
+        body = json.loads(request.body)
+        user = User.objects.get(auth_token=body['auth'])
+
+        if 'current-password' not in body:
+            return HttpResponseBadRequest(self.json_msg('current-password', "No password provided"))
+
+        if not user.check_password(body['current-password']):
+            return HttpResponseBadRequest(self.json_msg('current-password', "The password provided isn't correct."))
+
+        # Need to explicitly set password to have Django hash it
+        if 'password' in body and body['password']:
+            user.set_password(str(body['password']))
+            body.pop('password', None)
+            user.save()
+
+        serializer = self.get_serializer(
+            instance=user,
+            data=body,
+            partial=True
+        )
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
 
 
 class PageViewSet(viewsets.ModelViewSet):
