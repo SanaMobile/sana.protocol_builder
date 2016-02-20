@@ -1,6 +1,7 @@
 from datetime import timedelta
-from django.http import JsonResponse
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
@@ -124,4 +125,27 @@ def logout(request):
 
     return JsonResponse({
         'success': success,
+    })
+
+
+# ------------------------------------------------------------------------------
+# Confirm Email
+# ------------------------------------------------------------------------------
+
+@csrf_exempt
+@require_http_methods(['GET'])
+def confirm_email(request, key):
+    email_confirmation_key = get_object_or_404(EmailConfirmationKey, key=key)
+
+    if email_confirmation_key.expiration < timezone.now():
+        return HttpResponseBadRequest("Key expired")
+
+    user_profile = email_confirmation_key.user.profile
+    user_profile.is_email_confirmed = True
+    user_profile.save()
+
+    email_confirmation_key.delete()
+
+    return JsonResponse({
+        'success': True,
     })
