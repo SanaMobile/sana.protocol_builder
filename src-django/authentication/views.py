@@ -4,6 +4,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
+from mailer.tasks import send_email
+from models import EmailConfirmationKey
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -50,6 +52,15 @@ def signup(request):
         user = form.save()
         token_key = Token.objects.get(user=user).key
         logger.info("Signup Success: u:{0} e:{0}".format(user.username, user.email))
+
+        email_confirmation_key = EmailConfirmationKey.create_from_user(user)
+        email_confirmation_key.save()
+
+        # TODO(connor): Use an HTML template for emails
+        send_email.delay(user.email,
+                         "Account Confirmation for Sana Protocol Builder",
+                         ("Please visit http://sanaprotocolbuilder.me/auth/confirm_email/{0} "
+                          "to confirm your email address.").format(email_confirmation_key.key))
     else:
         logger.info("Signup Failed: {0}".format(_flattenFormErrors(form)))
 
