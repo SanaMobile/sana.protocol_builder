@@ -1,9 +1,11 @@
 from xml.etree import ElementTree
 from django.test import TestCase
-from nose.tools import raises, assert_equals, assert_is_not_none, assert_true, assert_false
-from api.generator import ProcedureGenerator, PageGenerator, ElementGenerator, ProtocolBuilder
+from nose.tools import raises, assert_equals, assert_is_not_none, assert_true, assert_false, assert_is_none
+from api.models import Element
+import api.generator as generators
 from utils import factories
 import uuid
+import json
 
 
 class ProcedureGeneratorTest(TestCase):
@@ -13,7 +15,7 @@ class ProcedureGeneratorTest(TestCase):
             title='test procedure'
         )
 
-        self.generator = ProcedureGenerator(self.procedure)
+        self.generator = generators.ProcedureGenerator(self.procedure)
         self.procedure_etree_element = self.generator.generate()
         self.attribs = self.procedure_etree_element.attrib
 
@@ -33,7 +35,7 @@ class ProcedureGeneratorTest(TestCase):
         procedure = factories.ProcedureFactory()
         procedure.title = None
 
-        ProcedureGenerator(procedure).generate()
+        generators.ProcedureGenerator(procedure).generate()
 
     @raises(ValueError)
     def test_error_if_blank_title(self):
@@ -41,14 +43,14 @@ class ProcedureGeneratorTest(TestCase):
             title=''
         )
 
-        ProcedureGenerator(procedure).generate()
+        generators.ProcedureGenerator(procedure).generate()
 
     @raises(ValueError)
     def test_error_if_no_author(self):
         procedure = factories.ProcedureFactory()
         procedure.author = None
 
-        ProcedureGenerator(procedure).generate()
+        generators.ProcedureGenerator(procedure).generate()
 
     @raises(ValueError)
     def test_error_if_blank_author(self):
@@ -56,7 +58,7 @@ class ProcedureGeneratorTest(TestCase):
             author=''
         )
 
-        ProcedureGenerator(procedure).generate()
+        generators.ProcedureGenerator(procedure).generate()
 
     def test_element_has_no_version_attrib(self):
         assert_false('version' in self.attribs, self.attribs)
@@ -89,13 +91,13 @@ class PageGeneratorTest(TestCase):
             page=self.page
         )
 
-        self.generator = PageGenerator(self.page)
+        self.generator = generators.PageGenerator(self.page)
         self.page_etree_element = self.generator.generate(ElementTree.Element('test'))
 
     @raises(ValueError)
     def test_error_if_no_elements(self):
         self.page.elements.all().delete()
-        PageGenerator(self.page).generate(ElementTree.Element('test'))
+        generators.PageGenerator(self.page).generate(ElementTree.Element('test'))
 
     def test_element_has_correct_name(self):
         assert_equals(self.page_etree_element.tag, self.generator.name)
@@ -114,7 +116,7 @@ class ElementGeneratorTest(TestCase):
             answer=''
         )
 
-        self.generator = ElementGenerator(self.element)
+        self.generator = generators.ElementGenerator(self.element)
         self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
         self.attribs = self.element_etree_element.attrib
 
@@ -134,7 +136,7 @@ class ElementGeneratorTest(TestCase):
             eid=None
         )
 
-        ElementGenerator(element).generate(ElementTree.Element('test'))
+        generators.ElementGenerator(element).generate(ElementTree.Element('test'))
 
     @raises(ValueError)
     def test_error_if_blank_id(self):
@@ -142,7 +144,7 @@ class ElementGeneratorTest(TestCase):
             eid=''
         )
 
-        ElementGenerator(element).generate(ElementTree.Element('test'))
+        generators.ElementGenerator(element).generate(ElementTree.Element('test'))
 
     def test_element_has_type(self):
         assert_true('type' in self.attribs)
@@ -158,7 +160,7 @@ class ElementGeneratorTest(TestCase):
             concept=None
         )
 
-        ElementGenerator(element).generate(ElementTree.Element('test'))
+        generators.ElementGenerator(element).generate(ElementTree.Element('test'))
 
     def test_element_has_question(self):
         assert_true('question' in self.attribs)
@@ -170,7 +172,7 @@ class ElementGeneratorTest(TestCase):
             question=None
         )
 
-        ElementGenerator(element).generate(ElementTree.Element('test'))
+        generators.ElementGenerator(element).generate(ElementTree.Element('test'))
 
     @raises(ValueError)
     def test_error_if_blank_question(self):
@@ -178,7 +180,7 @@ class ElementGeneratorTest(TestCase):
             question=''
         )
 
-        ElementGenerator(element).generate(ElementTree.Element('test'))
+        generators.ElementGenerator(element).generate(ElementTree.Element('test'))
 
     def test_element_has_answer(self):
         assert_true('answer' in self.attribs)
@@ -190,7 +192,7 @@ class ElementGeneratorTest(TestCase):
             answer=None
         )
 
-        ElementGenerator(element).generate(ElementTree.Element('test'))
+        generators.ElementGenerator(element).generate(ElementTree.Element('test'))
 
     @raises(ValueError)
     def test_error_if_no_choices(self):
@@ -198,7 +200,7 @@ class ElementGeneratorTest(TestCase):
             choices=[]
         )
 
-        ElementGenerator(element).generate(ElementTree.Element('test'))
+        generators.ElementGenerator(element).generate(ElementTree.Element('test'))
 
     @raises(ValueError)
     def test_error_if_no_action(self):
@@ -206,7 +208,7 @@ class ElementGeneratorTest(TestCase):
             action=None
         )
 
-        ElementGenerator(element).generate(ElementTree.Element('test'))
+        generators.ElementGenerator(element).generate(ElementTree.Element('test'))
 
     @raises(ValueError)
     def test_error_if_no_mime_type(self):
@@ -214,7 +216,7 @@ class ElementGeneratorTest(TestCase):
             mime_type=None
         )
 
-        ElementGenerator(element).generate(ElementTree.Element('test'))
+        generators.ElementGenerator(element).generate(ElementTree.Element('test'))
 
     def test_element_has_no_numeric(self):
         assert_false('numeric' in self.attribs)
@@ -277,6 +279,223 @@ class ElementGeneratorTest(TestCase):
         assert_equals(self.element_etree_element.attrib['mime_type'], 'mime_type')
 
 
+class ShowIfGeneratorTest(TestCase):
+    def setUp(self):
+        self.show_if = factories.ShowIfFactory(conditions=json.dumps({
+            'node_type': 'NOT',
+            'children': [
+                {
+                    'node_type': 'AND',
+                    'children': [
+                        {
+                            'criteria_element': factories.ElementFactory().pk,
+                            'node_type': 'EQUALS',
+                            'value': 'foo'
+                        },
+                        {
+                            'criteria_element': factories.ElementFactory().pk,
+                            'node_type': 'LESS',
+                            'value': 'bar'
+                        },
+                        {
+                            'node_type': 'AND',
+                            'children': [
+                                {
+                                    'criteria_element': factories.ElementFactory().pk,
+                                    'node_type': 'GREATER',
+                                    'value': 'bar'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }))
+
+        self.generator = generators.ShowIfGenerator(self.show_if)
+        self.show_if_etree_element = self.generator.generate_show_if(ElementTree.Element('test'))
+
+    @raises(ValueError)
+    def test_error_if_no_conditions(self):
+        self.show_if.conditions = None
+        generators.ShowIfGenerator(self.show_if).generate(ElementTree.Element('test'))
+
+    def test_element_has_correct_name(self):
+        assert_equals(self.show_if_etree_element.tag, self.generator.name)
+
+    def test_full_generate(self):
+        assert_is_not_none(self.show_if_etree_element)
+
+
+class ConditionNodeGeneratorTest(TestCase):
+    def setUp(self):
+        self.conditions = {
+            'node_type': 'NOT',
+            'children': [
+                {
+                    'node_type': 'AND',
+                    'children': [
+                        {
+                            'criteria_element': factories.ElementFactory().pk,
+                            'node_type': 'EQUALS',
+                            'value': 'foo'
+                        },
+                        {
+                            'criteria_element': factories.ElementFactory().pk,
+                            'node_type': 'LESS',
+                            'value': 'bar'
+                        },
+                        {
+                            'node_type': 'AND',
+                            'children': [
+                                {
+                                    'criteria_element': factories.ElementFactory().pk,
+                                    'node_type': 'GREATER',
+                                    'value': 'bar'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+
+        self.generator = generators.ConditionNodeGenerator(self.conditions, factories.ShowIfFactory())
+        self.node_etree_element = self.generator.generate(ElementTree.Element('test'))
+
+    def test_generates(self):
+        assert_is_not_none(self.node_etree_element)
+
+
+class LogicalNodeGeneratorTest(TestCase):
+    def setUp(self):
+        self.page = factories.PageFactory()
+
+    @raises(ValueError)
+    def test_error_if_wrong_type(self):
+        data = {
+            'criteria_element': factories.ElementFactory().pk,
+            'node_type': 'GREATER',
+            'value': 'bar'
+        }
+        generators.LogicalNodeGenerator(data, self.page).generate(ElementTree.Element('test'))
+
+    def test_generates_no_node(self):
+        data = {
+            'node_type': 'AND',
+            'children': [
+                {
+                    'criteria_element': factories.ElementFactory().pk,
+                    'node_type': 'GREATER',
+                    'value': 'bar'
+                }
+            ]
+        }
+
+        generator = generators.LogicalNodeGenerator(data, factories.PageFactory())
+        assert_is_none(generator.get_etree_node(ElementTree.Element('test')), None)
+
+    def test_generates_not_node(self):
+        data = {
+            'node_type': 'NOT',
+            'children': [
+                {
+                    'criteria_element': factories.ElementFactory().pk,
+                    'node_type': 'GREATER',
+                    'value': 'bar'
+                }
+            ]
+        }
+
+        generator = generators.LogicalNodeGenerator(data, factories.PageFactory())
+        assert_is_not_none(generator.get_etree_node(ElementTree.Element('test')))
+
+    def test_generates_and_or_node(self):
+        data = {
+            'node_type': 'AND',
+            'children': [
+                {
+                    'criteria_element': factories.ElementFactory().pk,
+                    'node_type': 'GREATER',
+                    'value': 'bar'
+                },
+                {
+                    'criteria_element': factories.ElementFactory().pk,
+                    'node_type': 'GREATER',
+                    'value': 'bar'
+                }
+            ]
+        }
+
+        generator = generators.LogicalNodeGenerator(data, factories.PageFactory())
+        assert_is_not_none(generator.get_etree_node(ElementTree.Element('test')))
+
+    def test_has_correct_name(self):
+        generator = generators.LogicalNodeGenerator({
+            'node_type': 'NOT',
+            'children': [
+                {
+                    'criteria_element': factories.ElementFactory().pk,
+                    'node_type': 'GREATER',
+                    'value': 'bar'
+                }
+            ]
+        }, factories.PageFactory())
+        assert_equals(generator.name, 'not')
+
+
+class CriteriaNodeGeneratorTest(TestCase):
+    def setUp(self):
+        self.element = factories.ElementFactory()
+        self.data = {
+            'criteria_element': self.element.pk,
+            'node_type': 'GREATER',
+            'value': 'bar'
+        }
+
+    @raises(ValueError)
+    def test_error_if_wrong_type(self):
+        self.data['node_type'] = 'AND'
+        generators.CriteriaNodeGenerator(self.data, factories.PageFactory()).generate(ElementTree.Element('test'))
+
+    @raises(ValueError)
+    def test_error_if_no_value(self):
+        del self.data['value']
+        generators.CriteriaNodeGenerator(self.data, factories.PageFactory()).generate(ElementTree.Element('test'))
+
+    @raises(ValueError)
+    def test_error_if_empty_value(self):
+        self.data['value'] = ''
+        generators.CriteriaNodeGenerator(self.data, factories.PageFactory()).generate(ElementTree.Element('test'))
+
+    @raises(ValueError)
+    def test_error_if_no_element(self):
+        del self.data['criteria_element']
+        generators.CriteriaNodeGenerator(self.data, factories.PageFactory()).generate(ElementTree.Element('test'))
+
+    @raises(ValueError)
+    def test_error_if_invalid_element(self):
+        self.data['criteria_element'] = 99999
+        generators.CriteriaNodeGenerator(self.data, factories.PageFactory()).generate(ElementTree.Element('test'))
+
+    def test_props(self):
+        generator = generators.CriteriaNodeGenerator(self.data, factories.PageFactory())
+        expected = {
+            'value': self.data['value'],
+            'id': self.element.eid,
+            'type': self.data['node_type']
+        }
+        assert_equals(generator.get_properties(), expected)
+
+    def test_has_correct_name(self):
+        generator = generators.CriteriaNodeGenerator(self.data, factories.PageFactory())
+        assert_equals(generator.name, 'Criteria')
+
+    def test_generates_node(self):
+        generator = generators.CriteriaNodeGenerator(self.data, factories.PageFactory())
+        assert_is_not_none(generator.get_etree_node(ElementTree.Element('test')))
+
+
 class ProtocolBuilderTestCase(TestCase):
     def setUp(self):
         self.procedure = factories.ProcedureFactory(
@@ -293,18 +512,55 @@ class ProtocolBuilderTestCase(TestCase):
                 page=page
             )
 
+        elements = Element.objects.all()
+
+        factories.ShowIfFactory(
+            page=page,
+            conditions=json.dumps({
+                'node_type': 'NOT',
+                'children': [
+                    {
+                        'node_type': 'AND',
+                        'children': [
+                            {
+                                'criteria_element': elements[0].pk,
+                                'node_type': 'EQUALS',
+                                'value': 'foo'
+                            },
+                            {
+                                'criteria_element': elements[1].pk,
+                                'node_type': 'LESS',
+                                'value': 'bar'
+                            },
+                            {
+                                'node_type': 'AND',
+                                'children': [
+                                    {
+                                        'criteria_element': elements[2].pk,
+                                        'node_type': 'GREATER',
+                                        'value': 'bar'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }))
+
         self.procedure.save()
 
     def test_generates_tree(self):
-        tree = ProtocolBuilder.generate_etree(factories.UserFactory(), self.procedure.id)
+        tree = generators.ProtocolBuilder.generate_etree(factories.UserFactory(), self.procedure.id)
 
         assert_equals(len(tree), 4)
 
-        for child in tree:
+        for child in [tree[index] for index in [0, 1, 2]]:
             assert_equals(len(child), 1)
 
+        assert_equals(len(tree[3]), 2)
+
     def test_generates_string_output(self):
-        protocol = ProtocolBuilder.generate(factories.UserFactory(), self.procedure.id)
+        protocol = generators.ProtocolBuilder.generate(factories.UserFactory(), self.procedure.id)
         assert_is_not_none(protocol)
 
     @raises(ValueError)
@@ -313,8 +569,8 @@ class ProtocolBuilderTestCase(TestCase):
             username='baduser'
         )
 
-        ProtocolBuilder.generate(bad_user, self.procedure.id)
+        generators.ProtocolBuilder.generate(bad_user, self.procedure.id)
 
     @raises(ValueError)
     def test_procedure_does_not_exist(self):
-        ProtocolBuilder.generate(factories.UserFactory(), -1)
+        generators.ProtocolBuilder.generate(factories.UserFactory(), -1)
