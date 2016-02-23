@@ -2,7 +2,7 @@ from collections import OrderedDict
 from rest_framework import serializers
 from rest_framework.fields import SkipField
 from rest_framework_recursive.fields import RecursiveField
-from django.db import IntegrityError
+from django.db import transaction
 from django.contrib.auth.models import User
 import models
 import field
@@ -99,14 +99,11 @@ class ConditionNodeSerializer(serializers.ModelSerializer):
             'children'
         )
 
+    @transaction.atomic
     def create(self, validated_data):
         if 'children' in validated_data:
             children_data = validated_data.pop('children')
-            try:
-                condition = models.ConditionNode.objects.create(**validated_data)
-            except IntegrityError, e:
-                raise serializers.ValidationError(str(e))
-
+            condition = models.ConditionNode.objects.create(**validated_data)
             for child_data in children_data:
                 child_data['parent'] = condition
                 self.create(child_data)
@@ -163,6 +160,7 @@ class ShowIfSerializer(serializers.ModelSerializer):
             'conditions'
         )
 
+    @transaction.atomic
     def create(self, validated_data):
         if 'conditions' in validated_data:
             conditions_data = validated_data.pop('conditions')
@@ -175,6 +173,7 @@ class ShowIfSerializer(serializers.ModelSerializer):
         else:
             return super(ShowIfSerializer, self).create(validated_data)
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         instance.page = validated_data.get('page', instance.page)
         instance.conditions.all().delete()
