@@ -128,7 +128,7 @@ module.exports = Marionette.Application.extend({
     _setupBackboneSync: function() {
         let self = this;
 
-        // When Backbone.sync hits an 401, then it means the user token is 
+        // When Backbone.sync hits an 401, then it means the user token is
         // no longer valid and they need to relog in
         let originalSync = Backbone.sync;
         Backbone.sync = function(method, model, options) {
@@ -139,7 +139,7 @@ module.exports = Marionette.Application.extend({
                         // Reloads the page (i.e. resets the App state)
                         console.warn('Backbone.sync encountered 401. Resetting user session.');
                         self.RootView.showNotification({
-                            title: 'Your session is invalid!', 
+                            title: 'Your session is invalid!',
                             desc: 'Please login again.',
                         });
                         self.session.destroy();
