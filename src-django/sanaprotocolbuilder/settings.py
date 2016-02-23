@@ -75,6 +75,13 @@ ROOT_URLCONF = 'sanaprotocolbuilder.urls'
 
 WSGI_APPLICATION = 'sanaprotocolbuilder.wsgi.application'
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'localhost:6379',
+    },
+}
+
 # ------------------------------------------------------------------------------
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
