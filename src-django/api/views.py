@@ -4,8 +4,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
 from django.contrib.auth.models import User
 from django.db.utils import DatabaseError
-from generator import ProtocolBuilder
 from postgres_copy import CopyMapping
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.core.cache import cache
+from generator import ProtocolBuilder
+from mailer import templater, tasks
 import models
 import json
 import os
@@ -81,6 +84,63 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save()
 
         return Response(serializer.data)
+
+
+class UserPasswordViewSet(viewsets.GenericViewSet):
+    model = User
+    queryset = User.objects.all()
+    serializer_class = serializer.UserSerializer
+    authentication_classes = (())
+    permission_classes = (())
+    PASSWORD_RESET_EXPIRY = 86400*2  # 2 days
+
+    @list_route(methods=['POST'])
+    def reset_password(self, request):
+        if not request.body:
+            return HttpResponseBadRequest()
+
+        body = json.loads(request.body)
+        print(body)
+        user = User.objects.get(email=body['email'])
+
+        token_gen = PasswordResetTokenGenerator()
+        token = token_gen.make_token(user)
+        url_base = "https://sanaprotocolbuilder.me/"
+        url = "{base}/account/reset_password?reset_token={token}".format(base=url_base, token=token)
+
+        env = templater.get_environment('api', 'templates')
+        template = env.get_template('password_reset_template')
+        email = template.render(first_name=user.first_name, url=url)
+
+        tasks.send_email.delay(user.email, 'Reset Your Password', email)
+
+        cache.set(user.email, token, self.PASSWORD_RESET_EXPIRY)
+        if cache.get(user.email) == token:
+            return HttpResponse(status=status.HTTP_201_CREATED)
+        else:
+            return HttpResponseBadRequest()
+
+    @list_route(methods=['POST'])
+    def reset_password_complete(self, request):
+        if not request.body:
+            return HttpResponseBadRequest()
+
+        body = json.loads(request.body)
+
+        user = User.objects.get(email=body['email'])
+        reset_token = body['password_reset_token']
+
+        token = cache.get(user.email)
+
+        if token is not None and reset_token == token:
+            user.set_password(body['new_password1'])
+            user.save()
+            cache.delete(user.email)
+            return HttpResponse(status=status.HTTP_200_OK)
+        else:
+            return HttpResponseBadRequest(
+                self.json_msg('Email Token', "It seems the email token has expired. Please reset your password again")
+            )
 
 
 class PageViewSet(viewsets.ModelViewSet):
