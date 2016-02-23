@@ -21,7 +21,7 @@ class SignupTest(TestCase):
 
     def test_new_user_can_signup(self):
         response = self.client.post('/auth/signup', self.valid_fields)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        assert_equals(response.status_code, status.HTTP_200_OK)
 
         r = json.loads(response.content)
         assert_true(r['success'])
@@ -30,14 +30,15 @@ class SignupTest(TestCase):
 
     def test_new_user_is_unconfirmed(self):
         response = self.client.post('/auth/signup', self.valid_fields)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        assert_equals(response.status_code, status.HTTP_200_OK)
 
         user = User.objects.get(username='admin')
         assert_false(user.profile.is_email_confirmed)
 
+    @override_settings(BROKER_BACKEND='memory')
     def test_email_confirmation_key_is_created(self):
         response = self.client.post('/auth/signup', self.valid_fields)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        assert_equals(response.status_code, status.HTTP_200_OK)
 
         user = User.objects.get(username='admin')
         email_confirmation_key = EmailConfirmationKey.objects.get(user=user)
@@ -48,7 +49,7 @@ class SignupTest(TestCase):
                        BROKER_BACKEND='memory')
     def test_email_is_sent(self):
         response = self.client.post('/auth/signup', self.valid_fields)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        assert_equals(response.status_code, status.HTTP_200_OK)
 
         assert_equals(len(mail.outbox), 1)
         assert_equals(mail.outbox[0].subject, "Account Confirmation for Sana Protocol Builder")

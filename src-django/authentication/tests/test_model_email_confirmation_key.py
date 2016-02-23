@@ -14,4 +14,4 @@ class EmailConfirmationKeyTest(TestCase):
 
         assert_equals(email_confirmation_key.user, user)
         assert_equals(len(email_confirmation_key.key), 40)
-        assert_equals(email_confirmation_key.expiration, datetime.datetime(2016, 02, 21))
+        assert_equals(email_confirmation_key.expiration, datetime.datetime(2016, 2, 21))

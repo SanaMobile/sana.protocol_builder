@@ -1,5 +1,5 @@
 from api.tests.utils import factories
-from authentication.models import EMAIL_CONFIRMATION_KEY_TTL_DAYS, UserProfile, EmailConfirmationKey
+from authentication.models import UserProfile, EmailConfirmationKey
 import datetime
 import factory
 
@@ -20,4 +20,4 @@ class EmailConfirmationKeyFactory(factory.django.DjangoModelFactory):
 
     user = factory.SubFactory(factories.UserFactory)
     key = '84bff1c64351a616828596f01b4e0d3155190eb5'
-    expiration = datetime.datetime.today() + datetime.timedelta(EMAIL_CONFIRMATION_KEY_TTL_DAYS)
+    expiration = datetime.datetime.today() + datetime.timedelta(EmailConfirmationKey.EMAIL_CONFIRMATION_KEY_TTL_DAYS)

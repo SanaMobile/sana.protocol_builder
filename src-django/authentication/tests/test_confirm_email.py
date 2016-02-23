@@ -14,7 +14,7 @@ class ConfirmEmailTest(TestCase):
     def test_valid_key(self):
         email_confirmation_key = factories.EmailConfirmationKeyFactory()
         response = self.client.get('/auth/confirm_email/{0}'.format(email_confirmation_key.key))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        assert_equals(response.status_code, status.HTTP_200_OK)
 
         r = json.loads(response.content)
         assert_true(r['success'])
@@ -38,7 +38,7 @@ class ConfirmEmailTest(TestCase):
         assert_false(user_profile.is_email_confirmed)
 
         response = self.client.get('/auth/confirm_email/{0}'.format(email_confirmation_key.key))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        assert_equals(response.status_code, status.HTTP_200_OK)
 
         user_profile.refresh_from_db()
         assert_true(user_profile.is_email_confirmed)
@@ -46,7 +46,7 @@ class ConfirmEmailTest(TestCase):
     def test_key_is_deleted(self):
         email_confirmation_key = factories.EmailConfirmationKeyFactory()
         response = self.client.get('/auth/confirm_email/{0}'.format(email_confirmation_key.key))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        assert_equals(response.status_code, status.HTTP_200_OK)
 
         assert_raises(
             EmailConfirmationKey.DoesNotExist, EmailConfirmationKey.objects.get, key=email_confirmation_key.key
