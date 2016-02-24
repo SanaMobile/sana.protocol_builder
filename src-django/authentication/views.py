@@ -1,17 +1,25 @@
 from datetime import timedelta
 from django.http import JsonResponse
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
+from forms import SignupForm
+from mailer import templater
+from mailer.tasks import send_email
+from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
-
-from forms import SignupForm
-
+import datetime
+import hashlib
 import logging
+import random
+
+EMAIL_CONFIRMATION_KEY_TTL_DAYS = 2
 logger = logging.getLogger('auth')
 
 
@@ -29,6 +37,17 @@ def _flattenFormErrors(form):
         for error in fieldErrors:
             error_messages += str(error)
     return error_messages.strip()
+
+
+def _generateEmailConfirmationKey(email):
+    salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
+    key = hashlib.sha1(salt + email).hexdigest()
+
+    return key
+
+
+def _emailConfirmationKeyTimeout():
+    return datetime.timedelta(EMAIL_CONFIRMATION_KEY_TTL_DAYS).total_seconds()
 
 
 # ------------------------------------------------------------------------------
@@ -50,6 +69,16 @@ def signup(request):
         user = form.save()
         token_key = Token.objects.get(user=user).key
         logger.info("Signup Success: u:{0} e:{0}".format(user.username, user.email))
+
+        key = _generateEmailConfirmationKey(user.email)
+        timeout = _emailConfirmationKeyTimeout()
+        cache.set(key, user.pk, timeout)
+
+        # TODO(connor): remove hard-coded url: https://github.com/SanaMobile/sana.protocol_builder/issues/325
+        env = templater.get_environment("authentication", "templates")
+        template = env.get_template("confirmation_email.html")
+        body = template.render(url="https://sanaprotocolbuilder.me/auth/confirm_email/{0}".format(key))
+        send_email.delay(user.email, "Account Confirmation for Sana Protocol Builder", body)
     else:
         logger.info("Signup Failed: {0}".format(_flattenFormErrors(form)))
 
@@ -113,4 +142,35 @@ def logout(request):
 
     return JsonResponse({
         'success': success,
+    })
+
+
+# ------------------------------------------------------------------------------
+# Confirm Email
+# ------------------------------------------------------------------------------
+
+@csrf_exempt
+@require_http_methods(['GET'])
+def confirm_email(request, key):
+    user_id = cache.get(key)
+
+    if user_id is None:
+        return JsonResponse(
+            status=status.HTTP_404_NOT_FOUND,
+            data={
+                'success': False,
+                'errors': ["Invalid or expired key"]
+            }
+        )
+
+    user = User.objects.get(pk=user_id)
+
+    user_profile = user.profile
+    user_profile.is_email_confirmed = True
+    user_profile.save()
+
+    cache.delete(key)
+
+    return JsonResponse({
+        'success': True,
     })
