@@ -120,27 +120,6 @@ class Element(models.Model):
 
 
 class ShowIf(models.Model):
-    page = models.ForeignKey(Page, related_name='show_if')
-    last_modified = models.DateTimeField(auto_now=True)
-    created = models.DateTimeField(auto_now_add=True)
-
-    def save(self, **kwargs):
-        super(ShowIf, self).save()
-
-        self.page.last_modified = self.last_modified
-        self.page.save()
-
-
-class ConditionNode(models.Model):
-    NODE_TYPES = (
-        ('AND', 'AND'),
-        ('OR', 'OR'),
-        ('NOT', 'NOT'),
-        ('EQUALS', 'EQUALS'),
-        ('GREATER', 'GREATER'),
-        ('LESS', 'LESS')
-    )
-
     LOGICAL_TYPES = (
         'AND',
         'OR',
@@ -153,43 +132,16 @@ class ConditionNode(models.Model):
         'LESS'
     )
 
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children', blank=True, null=True)
-    show_if = models.ForeignKey(ShowIf, on_delete=models.CASCADE, related_name='conditions', blank=True, null=True)
-    criteria_element = models.ForeignKey(Element, blank=True, null=True)
-    node_type = models.CharField(max_length=8, choices=NODE_TYPES)
-    value = models.TextField(blank=True, null=True)
+    page = models.ForeignKey(Page, related_name='show_if')
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    conditions = models.TextField()
 
     def save(self, **kwargs):
-        if (self.node_type, self.node_type) not in self.NODE_TYPES:
-            raise IntegrityError('Invalid condition node type')
+        super(ShowIf, self).save()
 
-        if self.node_type in self.CRITERIA_TYPES:
-            if not self.value:
-                raise IntegrityError('"CRITERIA" node type requires a value')
-
-            if not self.criteria_element:
-                raise IntegrityError('CRITERIA must have an element')
-
-        else:
-            if self.value:
-                raise IntegrityError('Only "CRITERIA" should have a value')
-
-            if self.criteria_element:
-                raise IntegrityError('Only "CRITERIA" should have an element')
-
-        if self.show_if and self.parent or (not self.show_if and not self.parent):
-            raise IntegrityError('Condition node must have a parent or show_if, but not both')
-
-        super(ConditionNode, self).save()
-
-        if self.parent:
-            self.parent.last_modified = self.last_modified
-            self.parent.save()
-        elif self.show_if:
-            self.show_if.last_modified = self.last_modified
-            self.show_if.save()
+        self.page.last_modified = self.last_modified
+        self.page.save()
 
     class Meta:
         app_label = 'api'
