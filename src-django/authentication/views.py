@@ -1,5 +1,5 @@
 from datetime import timedelta
-from django.http import HttpResponseNotFound, JsonResponse
+from django.http import JsonResponse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.cache import cache
@@ -9,6 +9,7 @@ from django.utils import timezone
 from forms import SignupForm
 from mailer import templater
 from mailer.tasks import send_email
+from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -154,7 +155,13 @@ def confirm_email(request, key):
     user_id = cache.get(key)
 
     if user_id is None:
-        return HttpResponseNotFound("Invalid or expired key")
+        return JsonResponse(
+            status=status.HTTP_404_NOT_FOUND,
+            data={
+                'success': False,
+                'errors': ["Invalid or expired key"]
+            }
+        )
 
     user = User.objects.get(pk=user_id)
 
