@@ -1,13 +1,24 @@
-from authentication.models import EmailConfirmationKey
 from django.contrib.auth.models import User
 from django.core import mail
+from django.core.cache import cache
 from django.test import TestCase, Client
 from django.test.utils import override_settings
-from nose.tools import assert_equals, assert_true, assert_false, assert_is_not_none
+from mock import patch
+from nose.tools import assert_equals, assert_true, assert_false
 from rest_framework import status
 import json
 
 
+@override_settings(
+    CACHES={
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    },
+    CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+    CELERY_ALWAYS_EAGER=True,
+    BROKER_BACKEND='memory'
+)
 class SignupTest(TestCase):
     def setUp(self):
         self.client = Client()
@@ -35,18 +46,15 @@ class SignupTest(TestCase):
         user = User.objects.get(username='admin')
         assert_false(user.profile.is_email_confirmed)
 
-    @override_settings(BROKER_BACKEND='memory')
-    def test_email_confirmation_key_is_created(self):
+    @patch('authentication.views._generateEmailConfirmationKey')
+    def test_email_confirmation_key_is_created(self, _generateEmailConfirmationKeyMock):
+        _generateEmailConfirmationKeyMock.return_value = 'abc'
         response = self.client.post('/auth/signup', self.valid_fields)
         assert_equals(response.status_code, status.HTTP_200_OK)
 
         user = User.objects.get(username='admin')
-        email_confirmation_key = EmailConfirmationKey.objects.get(user=user)
-        assert_is_not_none(email_confirmation_key)
+        assert_equals(cache.get('abc'), user.pk)
 
-    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
-                       CELERY_ALWAYS_EAGER=True,
-                       BROKER_BACKEND='memory')
     def test_email_is_sent(self):
         response = self.client.post('/auth/signup', self.valid_fields)
         assert_equals(response.status_code, status.HTTP_200_OK)
