@@ -74,7 +74,7 @@ module.exports = Marionette.ItemView.extend({
         this._saveText();
     },
 
-    _onKeyDownInput: _.debounce(this._saveText(), Config.INPUT_DELAY_BEFORE_SAVE),
+    _onKeyDownInput: _.debounce(function() { this._saveText(); }, Config.INPUT_DELAY_BEFORE_SAVE),
 
     _saveText: function() {
         if (this.isDestroyed) {

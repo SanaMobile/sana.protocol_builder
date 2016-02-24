@@ -102,7 +102,7 @@ module.exports = Marionette.LayoutView.extend({
         this.model.collection.moveDown(this.model);
     },
 
-    _onFormUpdate: _.debounce(this._saveToServer(), Config.INPUT_DELAY_BEFORE_SAVE),
+    _onFormUpdate: _.debounce(function() { this._saveToServer(); }, Config.INPUT_DELAY_BEFORE_SAVE),
 
     _saveToServer: function() {
         const eid = this.ui.eid.val();
