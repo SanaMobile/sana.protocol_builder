@@ -45,11 +45,14 @@ module.exports = Marionette.LayoutView.extend({
         'keyup @ui.concept': '_onFormUpdate',
         'keyup @ui.question': '_onFormUpdate',
         'change @ui.required': '_onFormUpdate',
-        'keyup @ui.answer': '_onFormUpdate',
         'keyup @ui.image': '_onFormUpdate',
-        'keyup @ui.audio': '_onFormUpdate',
-        'keyup @ui.action': '_onFormUpdate',
-        'keyup @ui.mimeType': '_onFormUpdate',
+        'keyup @ui.audio': '_onFormUpdate'
+    },
+
+    childEvents: {
+        'update_answer': '_onUpdateAnswer',
+        'update_action': '_onPluginViewUpdate',
+        'update_mimeType': '_onPluginViewUpdate',
     },
 
     onBeforeShow: function() {
@@ -104,6 +107,26 @@ module.exports = Marionette.LayoutView.extend({
 
     _onFormUpdate: _.debounce(function() { this._saveToServer(); }, Config.INPUT_DELAY_BEFORE_SAVE),
 
+    _onUpdateAnswer: function(childView) {
+        if (this.ui.answer.length === 0) {
+            this.ui.answer = childView.ui.answer;
+        }
+
+        this._onFormUpdate();
+    },
+
+    _onPluginViewUpdate: function(childView) {
+        if (this.ui.action.length === 0) {
+            this.ui.action = childView.ui.action;
+        }
+
+        if (this.ui.mimeType.length === 0) {
+            this.ui.mimeType = childView.ui.mimeType;
+        }
+
+        this._onFormUpdate();
+    },
+
     _saveToServer: function() {
         const eid = this.ui.eid.val();
         const concept = this.ui.concept.val();
@@ -125,7 +148,7 @@ module.exports = Marionette.LayoutView.extend({
             image: image,
             audio: audio,
             action: action,
-            mimeType: mimeType,
+            mime_type: mimeType,
         }, {
             beforeSend: function() {
                 console.info('Saving Element', self.model.get('id'));

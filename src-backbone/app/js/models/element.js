@@ -41,14 +41,17 @@ module.exports = Backbone.Model.extend({
 
         this.choices.setAnswers(response.choices, response.answer);
         delete response.choices;
-        delete response.answer;
 
         return response;
     },
 
     toJSON: function() {
         let json = _.clone(this.attributes);
-        json.answer = this.choices.getDefaultAnswer();
+
+        if (!json.answer) {
+            json.answer = this.choices.getDefaultAnswer();
+        }
+
         let element_type = this.get('element_type');
 
         if (Config.CHOICE_ELEMENT_TYPES.includes(element_type)) {
@@ -57,7 +60,7 @@ module.exports = Backbone.Model.extend({
 
         if (!Config.PLUGIN_ELEMENT_TYPES.includes(element_type)) {
             delete json.action;
-            delete json.mimeType;
+            delete json.mime_type;
         }
 
         return json;
