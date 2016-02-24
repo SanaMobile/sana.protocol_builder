@@ -7,6 +7,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from forms import SignupForm
+from mailer import templater
 from mailer.tasks import send_email
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
@@ -72,11 +73,11 @@ def signup(request):
         timeout = _emailConfirmationKeyTimeout()
         cache.set(key, user.pk, timeout)
 
-        # TODO(connor): Use an HTML template for emails
-        send_email.delay(user.email,
-                         "Account Confirmation for Sana Protocol Builder",
-                         ("Please visit http://sanaprotocolbuilder.me/auth/confirm_email/{0} "
-                          "to confirm your email address.").format(key))
+        # TODO(connor): remove hard-coded url: https://github.com/SanaMobile/sana.protocol_builder/issues/325
+        env = templater.get_environment("authentication", "templates")
+        template = env.get_template("confirmation_email.html")
+        body = template.render(url="https://sanaprotocolbuilder.me/auth/confirm_email/{0}".format(key))
+        send_email.delay(user.email, "Account Confirmation for Sana Protocol Builder", body)
     else:
         logger.info("Signup Failed: {0}".format(_flattenFormErrors(form)))
 
