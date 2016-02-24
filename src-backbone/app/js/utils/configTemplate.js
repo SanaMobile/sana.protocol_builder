@@ -37,7 +37,7 @@ module.exports = {
         'RADIO',
         'PICTURE',
         'PLUGIN',
-        'PLUGIN_ENTRY',
+        'ENTRY_PLUGIN',
     ],
 
     CHOICE_ELEMENT_TYPES: [
