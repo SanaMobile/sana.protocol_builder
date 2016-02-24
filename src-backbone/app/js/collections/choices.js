@@ -41,16 +41,17 @@ module.exports = Backbone.Collection.extend({
         }
 
         for (let modelText of modelTexts) {
-            let existingModel = this.findWhere({ text: modelText });
+            // Need to manually merge the choice because there's no way to uniquely identify choices (no ids)
+            let existingModel = this.findWhere({ text: modelText }); // WARNING: this only returns the first choice that matches
             if (existingModel) {
-                let isDefault = (existingModel.get('text') === defaultAnswer);
+                let isDefault = (existingModel.get('text') === defaultAnswer); // TODO handle multi-choice's possibility of multiple default answers
                 existingModel.set('isDefault', isDefault);
                 continue;
             }
 
             this.add(new Choice({
                 text: modelText,
-                isDefault: (modelText === defaultAnswer), // TODO handle multi-choice's possiblity of multiple defualt answers
+                isDefault: (modelText === defaultAnswer), // TODO handle multi-choice's possiblity of multiple default answers
             }));
         }
     },

@@ -1,46 +1,59 @@
 const Config = require('utils/config');
+const App = require('utils/sanaAppInstance');
+const Helpers = require('utils/helpers');
 
-let App      = require('utils/sanaAppInstance');
-let Helpers  = require('utils/helpers');
-let Elements = require('collections/elements');
-let Element  = require('models/element');
+const Elements = require('collections/elements');
+const Element = require('models/element');
+const ShowIfs = require('collections/conditionals/showIfs');
+const ShowIf = require('models/conditionals/showIf');
 
 
 module.exports = Backbone.Model.extend({
 
     urlRoot: '/api/pages',
 
-    constructor: function(attributes, options = {}) {
+    constructor: function(attributes, options) {
         // See model/procedure.js for explaination
         this.elements = new Elements(null, { parentPage: this });
+        this.showIfs = new ShowIfs(null, { parentPage: this });
+
         Backbone.Model.prototype.constructor.call(this, attributes, options);
     },
 
     initialize: function() {
         // Propagate AJAX events from child to this model so that the status bar can be notified
-        Helpers.propagateEvents(this.elements, this, ['request', 'sync', 'destroy', 'error']);
 
-        if (Config.DEBUG) {
-            this.listenTo(this.elements, 'all', function(event, subject) {
-                console.debug('Elements collection event:', event, subject && subject.get('id'));
-            });
-        }
+        let self = this;
+        this.listenTo(this.elements, 'add', function(model, collection, options) {
+            Helpers.propagateEvents(model, self);
+        });
+        this.listenTo(this.elements, 'reset', function(collection, options) {
+            for (let model of collection.models) {
+                Helpers.propagateEvents(model, self);
+            }
+        });
+
+        this.listenTo(this.showIfs, 'add', function(model, collection, options) {
+            Helpers.propagateEvents(model, self);
+        });
+        this.listenTo(this.showIfs, 'reset', function(collection, options) {
+            for (let model of collection.models) {
+                Helpers.propagateEvents(model, self);
+            }
+        });
     },
 
     parse: function(response, options) {
-        response.created       = new Date(Date.parse(response.created));
+        response.created = new Date(Date.parse(response.created));
         response.last_modified = new Date(Date.parse(response.last_modified));
 
         this.elements.reset(response.elements);
         delete response.elements;
+
+        this.showIfs.reset(response.show_if);
+        delete response.show_if;
         
         return response;
-    },
-
-    toJSON: function() {
-        let json = _.clone(this.attributes);
-        json.elements = this.elements.toJSON();
-        return json;
     },
 
     isActive: function() {
@@ -50,7 +63,6 @@ module.exports = Backbone.Model.extend({
 
     createNewElement: function(type) {
         let position = 0;
-
         if (!_.isEmpty(this.elements.models)) {
             let lastElement = _.max(this.elements.models, element => element.get('display_index'));
             position = lastElement.get('display_index') + 1;
@@ -64,6 +76,10 @@ module.exports = Backbone.Model.extend({
 
         let self = this;
         element.save({}, {
+            beforeSend: function() {
+                console.info('Creating Element');
+                self.trigger('request');
+            },
             success: function() {
                 console.info('Created Element', element.get('id'));
                 self.elements.add(element);
@@ -73,6 +89,38 @@ module.exports = Backbone.Model.extend({
                 App().RootView.showNotification('Failed to create Element!');
             },
         });
+    },
+
+    createNewCriteria: function() {
+        let showIf = new ShowIf({
+            page: this.get('id'),
+            conditions: {
+                node_type: 'EQUALS',
+            },
+        });
+
+        let self = this;
+        let pageId = this.get('id');
+        showIf.save({}, {
+            beforeSend: function() {
+                console.info('Creating Criteria');
+                self.trigger('request');
+            },
+            success: function() {
+                console.info('Created Criteria', showIf.get('id'));
+                self.showIfs.reset([showIf]);
+            },
+            error: function() {
+                console.warn('Failed to create Criteria', showIf.get('id'));
+                App().RootView.showNotification('Failed to create Criteria!');
+            },
+        });
+    },
+
+    clearCriteria: function() {
+        for (let model of this.showIfs.models) {
+            model.destroy();
+        }
     },
 
 });

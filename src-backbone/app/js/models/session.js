@@ -7,9 +7,11 @@ const STORAGE_KEY = AUTH_TOKEN_KEY;
 
 let SessionModel = Backbone.Model.extend({
 
-    constructor : function (options = {}) {
-        this.storage = options.storage;
-        Backbone.Model.prototype.constructor.call(this, options);
+    constructor : function (attributes, options) {
+        this.storage = attributes.storage;
+        delete attributes.storage;
+
+        Backbone.Model.prototype.constructor.call(this, attributes, options);
     },
 
     url: function() {
@@ -126,7 +128,7 @@ let SessionModel = Backbone.Model.extend({
             },
             error: function(errors) {
                 App().RootView.clearNotifications();
-                let parsedErrors = JSON.parse(errors.responseText)
+                let parsedErrors = JSON.parse(errors.responseText);
                 Object.keys(parsedErrors).forEach(function(key) {
                     App().RootView.showNotification({
                         title: 'There was a problem',

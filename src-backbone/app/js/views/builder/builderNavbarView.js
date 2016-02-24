@@ -54,7 +54,6 @@ module.exports = Marionette.LayoutView.extend({
     initialize: function() {
         this.listenTo(this.model, 'request', this.saving); // Whenenever an AJAX call is made
         this.listenTo(this.model, 'sync', this.saved); // After server responds
-        this.listenTo(this.model, 'destroy', this.saved); // After server responds
         this.listenTo(this.model, 'error', this.error); // After server responds with error
     },
 

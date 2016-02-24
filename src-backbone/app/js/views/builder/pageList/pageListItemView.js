@@ -2,6 +2,7 @@ const Config = require('utils/config');
 let App = require('utils/sanaAppInstance');
 
 
+
 module.exports = Marionette.ItemView.extend({
 
     template: require('templates/builder/pageList/pageListItemView'),
@@ -22,6 +23,12 @@ module.exports = Marionette.ItemView.extend({
     events: {
         'click a.delete': '_onDeletePage',
         'click a.page': '_onSelectPage',
+    },
+
+    templateHelpers: function() {
+        return {
+            elements: this.model.elements.toJSON(),
+        };
     },
 
     _onDeletePage: function(event) {

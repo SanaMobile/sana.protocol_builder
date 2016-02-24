@@ -2,18 +2,121 @@
 @import url(utils/helpers.less);
 
 
-section.details-panel{
-    border-bottom: 1px solid @grey-border;
+#page-details{
     padding: 40px;
     padding-right: @container-side-padding;
 
-    h1{
-        font-size: 24px;
-        line-height: 40px;
-        margin: 40px 0;
+    section.details-panel{
+        h1{
+            font-size: 24px;
+            line-height: 40px;
+            margin: 40px 0 15px;
 
-        &:first-child{
-            margin-top: 0;
+            &.checkbox-heading{
+                margin-top: 0;
+
+                input[type=checkbox]{
+                    cursor: pointer;
+                    margin-left: 10px;
+                    width: 20px; height: 20px;
+                }
+            }
+        }
+    }
+}
+
+#condition-editor{
+    div.node{
+        @button-size: 30px;
+
+        margin-bottom: 15px;
+
+        &:last-child{
+            margin-bottom: 0;
+        }
+
+        &.root,
+        &.logical{
+            border: 1px solid @grey-border;
+            padding: 15px;
+        }
+
+        div.criteria-form,
+        div.logical-form{
+            position: relative;
+        }
+
+        div.criteria-form{
+            display: flex;
+            line-height: @button-size;
+            padding-right: (@button-size * 3) + (@column-margin * 3);
+        }
+
+        div.logical-form{
+            padding-right: (@button-size * 3) + (@column-margin * 3);
+
+            div.logical-statement{
+                margin-bottom: 15px;
+
+                select,
+                span{
+                    display: inline-block;
+                    margin: 0;
+                }
+
+                span{
+                    line-height: 30px;
+                }
+            }
+        }
+
+        input[type="text"]{
+            box-sizing: border-box;
+            flex: 1;
+            height: 30px;
+            line-height: 20px;
+            padding: 5px;
+        }
+
+        select{
+            box-sizing: border-box;
+            height: @button-size;
+            margin: 0 15px;
+            padding: 5px;
+            width: auto;
+
+            &:first-child{
+                margin-left: 0;
+            }
+        }
+
+        span.glyphicon{
+            cursor: pointer;
+            display: block;
+            position: absolute;
+            top: 0;
+
+            font-size: 20px;
+            line-height: @button-size;
+            text-align: center;
+            width: @button-size; height: @button-size;
+
+            &.add{
+                right: @button-size * 2 + @column-margin * 2;
+            }
+
+            &.delete{
+                right: @button-size + @column-margin;
+            }
+
+            &.expand,
+            &.contract{
+                right: 0;
+            }
+
+            &.disabled{
+                color: @grey-bg;
+            }
         }
     }
 }

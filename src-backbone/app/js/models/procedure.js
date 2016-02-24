@@ -39,11 +39,12 @@ let Procedure = Backbone.Model.extend({
 
     initialize: function() {
         // Propagate AJAX events from child to this model so that the status bar can be notified
-        Helpers.propagateEvents(this.pages, this, ['request', 'sync', 'destroy', 'error']);
+        Helpers.propagateEvents(this.pages, this);
 
         if (Config.DEBUG) {
+            let procedureId = this.get('id');
             this.listenTo(this.pages, 'all', function(event, subject) {
-                console.debug('Pages collection event:', event, subject && subject.get('id'));
+                console.log('Procedure', procedureId, 'PagesCollection event:', event, subject && subject.get('id'));
             });
         }
     },

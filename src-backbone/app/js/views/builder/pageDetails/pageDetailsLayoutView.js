@@ -14,30 +14,23 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     initialize: function() {
-        this.conditionEditor = new ConditionEditor();
-        this.elementsEditor = new ElementsEditor();
-
         let self = this;
         this.model.on(Procedure.ACTIVE_PAGE_CHANGE_EVENT, function(page) {
             console.info('ACTIVE_PAGE_CHANGE_EVENT', page);
-            self._setVisibility();
-            self.conditionEditor.setPage(page);
-            self.elementsEditor.setPage(page);
+            self.render();
         });
     },
 
-    onBeforeShow: function() {
-        this._setVisibility();
-        this.showChildView('conditionEditor', this.conditionEditor);
-        this.showChildView('elementsEditor', this.elementsEditor);
-    },
-
-    _setVisibility: function() {
+    onRender: function() {
         if (this.model.activePageId) {
             this.$el.show();
         } else {
             this.$el.hide();
         }
+
+        let activePage = this.model.pages.get(this.model.activePageId);
+        this.showChildView('conditionEditor', new ConditionEditor({ model: activePage }));
+        this.showChildView('elementsEditor', new ElementsEditor({ model: activePage }));
     },
 
 });

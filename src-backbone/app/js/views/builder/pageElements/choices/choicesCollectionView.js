@@ -23,7 +23,7 @@ module.exports = Marionette.CollectionView.extend({
     },
 
     onRender: function() {
-        console.log('choicesCollectionView onRender');
+        console.debug('choicesCollectionView onRender');
     },
 
 });

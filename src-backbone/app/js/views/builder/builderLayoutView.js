@@ -48,7 +48,6 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onBeforeShow: function() {
-        console.log('onBeforeShow');
         App().RootView.switchNavbar(new NavbarView({ model: this.model }));
         this.showChildView('metaData', new MetaDataView({ model: this.model }));
         this.showChildView('pageList', new PageListCollectionView({ collection: this.model.pages }));
