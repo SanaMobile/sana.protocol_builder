@@ -5,7 +5,7 @@ from api.models import Page
 from utils import factories
 
 
-class ProcedureTest(TestCase):
+class PageTest(TestCase):
     def test_create_page(self):
         test_procedure = factories.ProcedureFactory()
 

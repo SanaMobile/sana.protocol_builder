@@ -89,41 +89,4 @@ class ShowIfFactory(factory.django.DjangoModelFactory):
         model = models.ShowIf
 
     page = factory.SubFactory(PageFactory)
-
-
-class CriteriaConditionFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = models.ConditionNode
-
-    parent = None
-    criteria_element = factory.SubFactory(ElementFactory)
-    node_type = 'EQUALS'
-    value = 'foot'
-    show_if = factory.SubFactory(ShowIfFactory)
-
-
-class AndConditionFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = models.ConditionNode
-
-    parent = None
-    node_type = 'AND'
-    show_if = factory.SubFactory(ShowIfFactory)
-
-
-class OrConditionFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = models.ConditionNode
-
-    parent = None
-    node_type = 'OR'
-    show_if = factory.SubFactory(ShowIfFactory)
-
-
-class NotConditionFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = models.ConditionNode
-
-    parent = None
-    node_type = 'NOT'
-    show_if = factory.SubFactory(ShowIfFactory)
+    conditions = ""
