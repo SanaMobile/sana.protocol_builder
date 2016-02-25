@@ -99,6 +99,7 @@ def login(request):
     form = AuthenticationForm(data=request.POST)
     valid_form = form.is_valid()
     token_key = None
+    user_details = {}
 
     if valid_form:
         form.clean()  # Calls authenticate(); will through ValidationException if form is invalid
@@ -114,6 +115,14 @@ def login(request):
 
         token_key = token.key
         logger.info("Login Success: u:{0} e:{0}".format(user.username, user.email))
+
+        user_details = {
+            'is_superuser': user.is_superuser,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'username': user.username,
+            'email': user.email,
+        }
     else:
         logger.info("Login Failed: {0}".format(_flattenFormErrors(form)))
 
@@ -121,6 +130,7 @@ def login(request):
         'success': valid_form,
         'errors': form.errors,
         'token': token_key,
+        'user': user_details,
     })
 
 

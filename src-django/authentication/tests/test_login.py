@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from rest_framework import status
-from nose.tools import assert_equals, assert_true, assert_false
+from nose.tools import assert_equals, assert_true, assert_false, assert_is_not_none
 import json
 
 
@@ -37,6 +37,7 @@ class LoginTest(TestCase):
         # Check json response
         r = json.loads(response.content)
         assert_true(r['success'])
-        assert_true(r['token'] is not None)
+        assert_is_not_none(r['token'])
         assert_equals(r['token'], Token.objects.get(user=user).key)
         assert_equals(len(r['errors']), 0)
+        assert_is_not_none(r['user'])
