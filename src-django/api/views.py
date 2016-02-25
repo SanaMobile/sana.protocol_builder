@@ -3,6 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
 from django.contrib.auth.models import User
+from django.db.utils import DatabaseError
 from generator import ProtocolBuilder
 from postgres_copy import CopyMapping
 import models
@@ -120,6 +121,18 @@ class ElementViewSet(viewsets.ModelViewSet):
 
 
 class ConceptViewSet(viewsets.ModelViewSet):
+    CSV_COLUMN_MAPPING = {
+        "created": "created",
+        "last_modified": "modified",
+        "uuid": "uuid",
+        "name": "name",
+        "display_name": "display_name",
+        "description": "description",
+        "data_type": "datatype",
+        "mime_type": "mimetype",
+        "constraint": "constraint"
+    }
+
     model = models.Concept
     serializer_class = serializer.ConceptSerializer
 
@@ -149,25 +162,16 @@ class ConceptViewSet(viewsets.ModelViewSet):
             copy_mapping = CopyMapping(
                 models.Concept,
                 file_path,
-                dict(
-                    created="created",
-                    last_modified="modified",
-                    uuid="uuid",
-                    name="name",
-                    display_name="display_name",
-                    description="description",
-                    data_type="datatype",
-                    mime_type="mimetype",
-                    constraint="constraint"
-                )
+                ConceptViewSet.CSV_COLUMN_MAPPING
             )
             copy_mapping.save()
-        except Exception as e:
+        except (ValueError, DatabaseError):
+            expected_columns = ', '.join(ConceptViewSet.CSV_COLUMN_MAPPING.keys())
             return JsonResponse(
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status=status.HTTP_400_BAD_REQUEST,
                 data={
                     'success': False,
-                    'errors': [str(e)]
+                    'errors': ['CSV import error. Expected columns are {0}'.format(expected_columns)]
                 }
             )
         finally:

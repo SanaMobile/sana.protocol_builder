@@ -42,7 +42,7 @@ class ImportCSVTest(TestCase):
             HTTP_AUTHORIZATION=add_token_to_header(self.user, self.token)
         )
 
-        assert_equals(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        assert_equals(response.status_code, status.HTTP_400_BAD_REQUEST)
         body = json.loads(response.content)
 
         assert_true('success' in body)
