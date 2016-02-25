@@ -17,6 +17,18 @@ end
 
 secrets = Chef::EncryptedDataBagItem.load("secrets", "sana_protocol_builder")
 
+environment = {
+  'PATH' => '/root/.virtualenvs/sana_protocol_builder/bin',
+  'DJANGO_SECRET_KEY' => secrets['django_secret_key'],
+  'DJANGO_DB_NAME' => secrets['django_db_name'],
+  'DJANGO_DB_USER' => secrets['django_db_user'],
+  'DJANGO_DB_PASSWORD' => secrets['django_db_password'],
+  'EMAIL_FROM' => secrets['email_from'],
+  'EMAIL_HOST' => secrets['email_host'],
+  'EMAIL_HOST_USER' => secrets['email_host_user'],
+  'EMAIL_HOST_PASSWORD' => secrets['email_host_password']
+}
+
 file '/root/.ssh/id_rsa' do
   content secrets['ssh_private_key']
   owner 'root'
@@ -131,17 +143,7 @@ supervisor_service 'gunicorn' do
 
   command '/root/.virtualenvs/sana_protocol_builder/bin/gunicorn sanaprotocolbuilder.wsgi:application --bind 127.0.0.1:8001'
   directory '/opt/sana.protocol_builder/src-django'
-  environment(
-    'PATH' => '/root/.virtualenvs/sana_protocol_builder/bin',
-    'DJANGO_SECRET_KEY' => secrets['django_secret_key'],
-    'DJANGO_DB_NAME' => secrets['django_db_name'],
-    'DJANGO_DB_USER' => secrets['django_db_user'],
-    'DJANGO_DB_PASSWORD' => secrets['django_db_password'],
-    'EMAIL_FROM' => secrets['email_from'],
-    'EMAIL_HOST' => secrets['email_host'],
-    'EMAIL_HOST_USER' => secrets['email_host_user'],
-    'EMAIL_HOST_PASSWORD' => secrets['email_host_password']
-  )
+  environment(environment)
 
   redirect_stderr true
 end
@@ -159,9 +161,7 @@ supervisor_service 'sanaprotocolbuilder-celery' do
   killasgroup true
   command '/root/.virtualenvs/sana_protocol_builder/bin/celery --app=sanaprotocolbuilder.celery:app worker --loglevel=INFO'
   directory '/opt/sana.protocol_builder/src-django'
-  environment(
-    'PATH' => '/root/.virtualenvs/sana_protocol_builder/bin',
-  )
+  environment(environment)
 
   stdout_logfile '/var/log/celery/worker.log'
   stderr_logfile '/var/log/celery/worker.log'
