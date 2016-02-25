@@ -1,12 +1,15 @@
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
 from django.contrib.auth.models import User
 from generator import ProtocolBuilder
+from postgres_copy import CopyMapping
 import models
 import json
+import os
 import serializer
+import uuid
 
 
 class ProcedureViewSet(viewsets.ModelViewSet):
@@ -122,6 +125,57 @@ class ConceptViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return models.Concept.objects
+
+    @list_route(methods=['POST'])
+    def import_csv(self, request):
+        if 'csv' not in request.FILES:
+            return JsonResponse(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    'success': False,
+                    'errors': ["Missing 'csv' parameter"]
+                }
+            )
+
+        csv = request.FILES['csv']
+
+        file_path = "/tmp/{0}.csv".format(str(uuid.uuid4()))
+
+        with open(file_path, 'wb+') as destination:
+            for chunk in csv.chunks():
+                destination.write(chunk)
+
+        try:
+            copy_mapping = CopyMapping(
+                models.Concept,
+                file_path,
+                dict(
+                    created="created",
+                    last_modified="modified",
+                    uuid="uuid",
+                    name="name",
+                    display_name="display_name",
+                    description="description",
+                    data_type="datatype",
+                    mime_type="mimetype",
+                    constraint="constraint"
+                )
+            )
+            copy_mapping.save()
+        except Exception as e:
+            return JsonResponse(
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                data={
+                    'success': False,
+                    'errors': [str(e)]
+                }
+            )
+        finally:
+            os.remove(file_path)
+
+        return JsonResponse({
+            'success': True,
+        })
 
 
 class ShowIfViewSet(viewsets.ModelViewSet):
