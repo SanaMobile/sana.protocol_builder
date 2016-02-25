@@ -26,7 +26,6 @@ module.exports = Marionette.LayoutView.extend({
 
     ui: {
         'eid': 'input.eid',
-        'concept': 'input.concept',
         'question': 'input.question',
         'required': 'input.required',
         'answer': 'input.answer',
@@ -42,7 +41,6 @@ module.exports = Marionette.LayoutView.extend({
         'click a.move-down': '_onMoveElementDown',
 
         'keyup @ui.eid': '_onFormUpdate',
-        'keyup @ui.concept': '_onFormUpdate',
         'keyup @ui.question': '_onFormUpdate',
         'change @ui.required': '_onFormUpdate',
         'keyup @ui.image': '_onFormUpdate',
@@ -129,7 +127,6 @@ module.exports = Marionette.LayoutView.extend({
 
     _saveToServer: function() {
         const eid = this.ui.eid.val();
-        const concept = this.ui.concept.val();
         const question = this.ui.question.val();
         const required = this.ui.required.is(':checked');
         const answer = this.ui.answer.val() || '';
@@ -141,7 +138,6 @@ module.exports = Marionette.LayoutView.extend({
         let self = this;
         this.model.save({
             eid: eid,
-            concept: concept,
             question: question,
             required: required,
             answer: answer,
