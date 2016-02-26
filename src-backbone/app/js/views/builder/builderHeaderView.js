@@ -19,6 +19,11 @@ module.exports = Marionette.ItemView.extend({
         'click @ui.downloadButton': '_download'
     },
 
+    modelEvents: {
+        'change:title': 'render',
+        'change:author': 'render',
+    },
+
     _save: _.debounce(function() { this._saveToServer(); }, Config.INPUT_DELAY_BEFORE_SAVE),
 
     _saveToServer: function() {
