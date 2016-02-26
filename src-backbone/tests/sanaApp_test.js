@@ -28,16 +28,16 @@ describe('SanaApp', function() {
             helpersMock.restore();
         });
 
-        it('should setup storage mechanism', function() {
+        it('should setup storage mechanism', function(doneCallback) {
             app._setupSession();
-
             assert.isObject(app.storage);
+            doneCallback();
         });
 
-        it('should setup session', function() {
+        it('should setup session', function(doneCallback) {
             app._setupSession();
-
             assert.isObject(app.session);
+            doneCallback();
         });
 
         it('should redirect user to logged in page if there is a token', function() {
