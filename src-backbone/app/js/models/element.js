@@ -8,13 +8,12 @@ module.exports = Backbone.Model.extend({
 
     urlRoot: '/api/elements',
 
-    constructor: function(attributes, options = {}) {
+    constructor: function(attributes, options) {
         // See model/procedure.js for explaination
         this.choices = new Choices(null, {
             parentElement: this,
             allowMultipleAnswers: (attributes.element_type === 'MULTI_SELECT'),
         });
-        attributes = this.parse(attributes);
 
         Backbone.Model.prototype.constructor.call(this, attributes, options);
     },
@@ -29,8 +28,9 @@ module.exports = Backbone.Model.extend({
         });
 
         if (Config.DEBUG) {
+            let elementId = this.get('id');
             this.listenTo(this.choices, 'all', function(event, subject) {
-                console.debug('Choices collection event:', event, subject && subject.get('text'));
+                console.log('Element', elementId, 'ChoicesCollection event:', event, subject && subject.get('text'));
             });
         }
     },
@@ -52,13 +52,13 @@ module.exports = Backbone.Model.extend({
             json.answer = this.choices.getDefaultAnswer();
         }
 
-        let element_type = this.get('element_type');
+        // TODO organize this...
 
-        if (Config.CHOICE_ELEMENT_TYPES.includes(element_type)) {
+        let elementType = this.get('element_type');
+        if (Config.CHOICE_ELEMENT_TYPES.includes(elementType)) {
             json.choices = this.choices.getAnswers();
         }
-
-        if (!Config.PLUGIN_ELEMENT_TYPES.includes(element_type)) {
+        if (!Config.PLUGIN_ELEMENT_TYPES.includes(elementType)) {
             delete json.action;
             delete json.mime_type;
         }

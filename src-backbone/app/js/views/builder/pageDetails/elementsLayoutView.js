@@ -1,9 +1,8 @@
 const Config = require('utils/config');
-let ElementsCollectionView = require('views/builder/pageElements/elementsCollectionView');
-let Section = require('./sectionLayoutView');
+const ElementsCollectionView = require('views/builder/pageElements/elementsCollectionView');
 
 
-module.exports = Section.extend({
+module.exports = Marionette.LayoutView.extend({
 
     template: require('templates/builder/pageDetails/elementsLayoutView'),
 
@@ -16,13 +15,15 @@ module.exports = Section.extend({
     },
 
     onRender: function () {
-        if (!this.model) {
-            return;
-        }
+        console.debug('elementsLayoutView render()');
 
-        this.showChildView('elementsList', new ElementsCollectionView({
-            collection: this.model.elements,
-        }));
+        if (this.model) {
+            this.showChildView('elementsList', new ElementsCollectionView({
+                collection: this.model.elements,
+            }));
+        } else {
+            this.getRegion('elementsList').reset();
+        }
     },
 
     _onCreateNewElement: function(event) {

@@ -23,14 +23,17 @@ module.exports = Marionette.CollectionView.extend({
     },
 
     initialize: function() {
-        this.collection.on('sync', this.render);
-        this.collection.on('destroy', this.render);
-        this.collection.on('error', this.render);
-        this.collection.parentProcedure.on(Procedure.ACTIVE_PAGE_CHANGE_EVENT, this.render);
-    },
+        let self = this;
 
-    onRender: function() {
-        console.log('pageListCollectionView onRender');
+        this.collection.on('sync', function(collection, response, options) {
+            console.debug('pageListCollectionView render() due to sync event');
+            self.render();
+        });
+
+        this.collection.parentProcedure.on(Procedure.ACTIVE_PAGE_CHANGE_EVENT, function() {
+            console.debug('pageListCollectionView render() due to ACTIVE_PAGE_CHANGE_EVENT');
+            self.render();
+        });
     },
 
 });

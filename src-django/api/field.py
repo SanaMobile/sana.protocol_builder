@@ -19,6 +19,9 @@ class ElementChoicesField(serializers.Field):
 
 class ConditionTreeField(serializers.Field):
     def to_representation(self, obj):
+        if len(obj) == 0:
+            obj = '{}'
+
         return json.loads(obj)
 
     def to_internal_value(self, data):

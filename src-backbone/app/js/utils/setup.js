@@ -23,6 +23,12 @@ module.exports = {
 
     _loadHandlebarsHelpers: function() {
         Handlebars.registerHelper('sluggify', Helpers.sluggify);
+
+        Handlebars.registerHelper('checkSelected', function(value, activeValue) {
+            if (value === activeValue) {
+                return ' selected';
+            }
+        });
     },
 
     _setupFormatJS: function() {

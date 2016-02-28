@@ -1,8 +1,7 @@
 const Config = require('utils/config');
-let Procedure       = require('models/procedure');
-let DebugInfo       = require('./debugLayoutView');
-let ConditionEditor = require('./conditionLayoutView');
-let ElementsEditor  = require('./elementsLayoutView');
+const Procedure = require('models/procedure');
+const ConditionEditor = require('./conditionLayoutView');
+const ElementsEditor = require('./elementsLayoutView');
 
 
 module.exports = Marionette.LayoutView.extend({
@@ -10,38 +9,28 @@ module.exports = Marionette.LayoutView.extend({
     template: require('templates/builder/pageDetails/pageDetailsLayoutView'),
 
     regions: {
-        debugInfo: 'section#debug-info',
         conditionEditor: 'section#conditions',
         elementsEditor: 'section#elements',
     },
 
     initialize: function() {
-        this.debugInfo = new DebugInfo();
-        this.conditionEditor = new ConditionEditor();
-        this.elementsEditor = new ElementsEditor();
-
         let self = this;
         this.model.on(Procedure.ACTIVE_PAGE_CHANGE_EVENT, function(page) {
-            self._setVisibility();
-            self.debugInfo.setPage(page);
-            self.conditionEditor.setPage(page);
-            self.elementsEditor.setPage(page);
+            console.info('ACTIVE_PAGE_CHANGE_EVENT', page);
+            self.render();
         });
     },
 
-    onBeforeShow: function() {
-        this._setVisibility();
-        this.showChildView('debugInfo', this.debugInfo);
-        this.showChildView('conditionEditor', this.conditionEditor);
-        this.showChildView('elementsEditor', this.elementsEditor);
-    },
-
-    _setVisibility: function() {
+    onRender: function() {
         if (this.model.activePageId) {
             this.$el.show();
         } else {
             this.$el.hide();
         }
+
+        let activePage = this.model.pages.get(this.model.activePageId);
+        this.showChildView('conditionEditor', new ConditionEditor({ model: activePage }));
+        this.showChildView('elementsEditor', new ElementsEditor({ model: activePage }));
     },
 
 });

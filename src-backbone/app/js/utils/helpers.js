@@ -43,10 +43,15 @@ module.exports = {
         console.info('%cView: ' + title, 'background:Green; color:White');
     },
 
-    propagateEvents: function(src, dest, eventsToPropagate) {
+    propagateEvents: function(src, dest, eventsToPropagate = ['request', 'sync', 'error']) {
         let createEventHandler = function(event) {
             return function() {
-                dest.trigger(event);
+                let args = [event];
+                for (let arg of arguments) {
+                    args.push(arg);
+                }
+
+                dest.trigger.apply(dest, args);
             };
         };
 

@@ -50,4 +50,7 @@ module.exports = {
         'PLUGIN',
         'ENTRY_PLUGIN',
     ],
+
+    MAX_CONDITIONAL_DEPTH: 3, // i.e. max number of logical connective nesting
+
 };
