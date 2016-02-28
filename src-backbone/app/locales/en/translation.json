@@ -81,6 +81,8 @@
     "Required": "Required",
     "Image": "Image",
     "Audio": "Audio",
+    "Action": "Action",
+    "MIME Type": "MIME Type",
     "Default Answer": "Default Answer",
     "DATE": "Date",
     "ENTRY": "Entry",

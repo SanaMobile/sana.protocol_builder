@@ -69,6 +69,7 @@ gulp.task('css', function() {
         .pipe(gulpif(Config.DEBUG, sourceMaps.init({ loadMaps: true })))
             .pipe(less({
                 paths: [
+                    path.join(__dirname, 'node_modules'),
                     path.join(__dirname, 'app/css'),
                 ]
             }))

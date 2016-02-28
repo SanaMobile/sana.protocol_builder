@@ -15,6 +15,10 @@ module.exports = Backbone.Model.extend({
             allowMultipleAnswers: (attributes.element_type === 'MULTI_SELECT'),
         });
 
+        this.debounceSave = _.debounce(function() {
+            this._debounceSave.apply(this, arguments);
+        }, Config.INPUT_DELAY_BEFORE_SAVE);
+
         Backbone.Model.prototype.constructor.call(this, attributes, options);
     },
 
@@ -71,6 +75,24 @@ module.exports = Backbone.Model.extend({
             text: text,
             choiceDisplayIndex: _.max(this.choices.models, m => m.get('choiceDisplayIndex')) + 1,
         }));
+    },
+
+    _debounceSave: function(attributes, options = {}) {
+        let self = this;
+        let logSaveOptions = {
+            beforeSend: function() {
+                console.info('Saving Element', self.get('id'));
+            },
+            success: function() {
+                console.info('Saved Element', self.get('id'));
+            },
+            error: function() {
+                console.error('Unable to save Element changes', self.get('id'));
+            },
+        };
+
+        $.extend(options, logSaveOptions);
+        this.save(attributes, options);
     },
 
 });
