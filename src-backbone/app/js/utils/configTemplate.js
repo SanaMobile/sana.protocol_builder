@@ -27,6 +27,7 @@ module.exports = {
         'signup',
         'terms',
         'privacy',
+        'credits',
     ],
 
     ELEMENT_TYPES: [

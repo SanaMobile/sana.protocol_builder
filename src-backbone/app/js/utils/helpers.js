@@ -39,7 +39,7 @@ module.exports = {
     },
 
     arrivedOnView: function(title) {
-        document.title = title + " | " + Config.SITE_TITLE;
+        document.title = i18n.t(title) + " | " + Config.SITE_TITLE;
         console.info('%cView: ' + title, 'background:Green; color:White');
     },
 
