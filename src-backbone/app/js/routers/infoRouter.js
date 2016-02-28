@@ -11,6 +11,7 @@ module.exports = Marionette.AppRouter.extend({
     appRoutes: {
         'terms'   : 'routeTermsOfService',
         'privacy' : 'routePrivacyPolicy',
+        'credits' : 'routeCredits',
     },
 
 });
