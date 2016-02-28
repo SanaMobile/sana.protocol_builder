@@ -1,5 +1,9 @@
-<label for="action-{{ id }}">{{ i18n "Action" }}</label>
-<input type="text" id="action-{{ id }}" name="action" class="form-control action" value="{{ action }}">
+<div class="form-group">
+    <label for="action-{{ id }}">{{ i18n "Action" }}</label>
+    <input type="text" id="action-{{ id }}" name="action" class="form-control action" value="{{ action }}">
+</div>
 
-<label for="mime-type-{{ id }}">{{ i18n "Mime-Type" }}</label>
-<input type="text" id="mime-type-{{ id }}" name="mime-type" class="form-control mime-type" value="{{ mime_type }}">
+<div class="form-group">
+    <label for="mime-type-{{ id }}">{{ i18n "MIME Type" }}</label>
+    <input type="text" id="mime-type-{{ id }}" name="mime-type" class="form-control mime-type" value="{{ mime_type }}">
+</div>

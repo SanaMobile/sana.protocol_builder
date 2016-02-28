@@ -7,8 +7,10 @@ module.exports = {
     loadLibs: function() {
         // Loads libraries into global namespace
         global.$ = global.jQuery = require('jquery');
+        global.moment = require('moment');
         require('jquery-ui/sortable');
         require('bootstrap');
+        require('bootstrap-datepicker');
 
         global._ = require('underscore');
         global.Backbone = require('backbone');

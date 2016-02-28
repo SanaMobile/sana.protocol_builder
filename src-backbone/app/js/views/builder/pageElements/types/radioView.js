@@ -11,5 +11,4 @@ module.exports = Marionette.LayoutView.extend({
         ChoiceBasedElementBehavior: { }
     },
 
-
 });

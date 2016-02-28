@@ -4,11 +4,18 @@ module.exports = Marionette.ItemView.extend({
 
     ui: {
         'action': 'input.action',
-        'mimeType': 'input.mime-type',
     },
 
-    triggers: {
-        'keyup @ui.action': 'update_action',
-        'keyup @ui.mimeType': 'update_mimeType',
+    events: {
+        'keyup @ui.action': '_onPluginEntryFormChanged',
     },
+
+    _onPluginEntryFormChanged: function(event) {
+        let action = this.ui.action.val();
+
+        this.model.debounceSave({
+            action: action,
+        });
+    },
+
 });

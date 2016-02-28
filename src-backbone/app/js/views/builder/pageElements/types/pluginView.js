@@ -7,8 +7,19 @@ module.exports = Marionette.ItemView.extend({
         'mimeType': 'input.mime-type',
     },
 
-    triggers: {
-        'keyup @ui.action': 'update_action',
-        'keyup @ui.mimeType': 'update_mimeType',
+    events: {
+        'keyup @ui.action': '_onPluginFormChanged',
+        'keyup @ui.mimeType': '_onPluginFormChanged',
     },
+
+    _onPluginFormChanged: function(event) {
+        let action = this.ui.action.val();
+        let mimeType = this.ui.mimeType.val();
+
+        this.model.debounceSave({
+            action: action,
+            mime_type: mimeType,
+        });
+    },
+
 });

@@ -6,7 +6,16 @@ module.exports = Marionette.ItemView.extend({
         'answer': 'input.answer'
     },
 
-    triggers: {
-        'keyup @ui.answer': 'update_answer'
+    events: {
+        'keyup @ui.answer': '_onEntryFormChanged',
     },
+
+    _onEntryFormChanged: function(event) {
+        let answer = this.ui.answer.val();
+
+        this.model.debounceSave({
+            answer: answer,
+        });
+    },
+
 });
