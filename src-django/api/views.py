@@ -115,6 +115,25 @@ class ElementViewSet(viewsets.ModelViewSet):
     model = models.Element
     serializer_class = serializer.ElementSerializer
 
+    @detail_route(methods=['GET'])
+    def elements_before(self, request, pk=None):
+        try:
+            element = models.Element.objects.get(pk=pk)
+        except models.Element.DoesNotExist:
+            return HttpResponseBadRequest(json.dumps({'pk': ['Invalid element']}))
+
+        elements = models.Element.objects.filter(
+            page__procedure__exact=element.page.procedure.pk,
+            page__display_index__lt=element.page.display_index
+        )
+
+        serializer = self.get_serializer(
+            instance=elements,
+            many=True
+        )
+
+        return Response(serializer.data)
+
     def get_queryset(self):
         user = self.request.user
         return models.Element.objects.filter(page__procedure__owner_id__exact=user.id)
