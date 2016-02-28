@@ -8,7 +8,8 @@ import json
 
 
 class ElementSerializer(serializers.ModelSerializer):
-    choices = field.ElementChoicesField(required=False)
+    choices = field.ArrayAsStringField(required=False)
+    answer = field.ArrayAsStringField(required=False)
 
     class Meta:
         model = models.Element

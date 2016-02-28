@@ -81,7 +81,7 @@ class ElementGenerator:
             'id': self.element.eid,
             'concept': self.element.concept.name,
             'question': self.element.question,
-            'answer': self.element.answer
+            'answer': self.__parse_answers()
         }
 
         if self.element.required:
@@ -103,8 +103,14 @@ class ElementGenerator:
         return props
 
     def __parse_choices(self):
-        choice_list = json.loads(self.element.choices)
-        return ','.join(choice_list)
+        return self.__parse(self.element.choices)
+
+    def __parse_answers(self):
+        return self.__parse(self.element.answer)
+
+    def __parse(self, field):
+        item_list = json.loads(field)
+        return ','.join(item_list)
 
     def generate(self, parent):
         props = self.__get_properties()

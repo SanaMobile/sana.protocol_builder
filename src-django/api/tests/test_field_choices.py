@@ -1,12 +1,12 @@
 from django.test import TestCase
 from nose.tools import raises, assert_equals, assert_true
 from rest_framework.serializers import ValidationError
-from api.field import ElementChoicesField
+from api.field import ArrayAsStringField
 
 
-class ElementChoicesFieldTest(TestCase):
+class ArrayAsStringFieldTest(TestCase):
     def setUp(self):
-        self.field = ElementChoicesField()
+        self.field = ArrayAsStringField()
         self.json_string = '["test", "tester", "testing"]'
         self.string_array = ['test', 'tester', 'testing']
 
