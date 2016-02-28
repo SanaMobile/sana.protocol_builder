@@ -108,7 +108,7 @@ const ConditionalNode = Backbone.Model.extend({
         } else if (LOGICAL_NODE_TYPES.includes(nodeType)) {
             return false;
         } else {
-            throw ReferenceError('Unknonwn conditional node type', nodeType);
+            throw ReferenceError('Unknown conditional node type', nodeType);
         }
     },
 
