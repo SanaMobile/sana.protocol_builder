@@ -15,6 +15,14 @@ module.exports = Marionette.LayoutView.extend({
         elementCreator: 'section#element-creator',
     },
 
+    templateHelpers: function() {
+        let activePage = this.model.getActivePage();
+
+        return {
+            pageCanHaveConditions: activePage && activePage.canHaveConditions(),
+        };
+    },
+
     initialize: function() {
         let self = this;
         this.model.on(Procedure.ACTIVE_PAGE_CHANGE_EVENT, function(page) {
@@ -33,7 +41,7 @@ module.exports = Marionette.LayoutView.extend({
 
         let activePage = this.model.getActivePage();
 
-        if (activePage) {
+        if (activePage && activePage.canHaveConditions()) {
             this.showChildView('showIfsEditor', new ShowIfsEditor({ model: activePage }));
         } else {
             this.getRegion('showIfsEditor').reset();

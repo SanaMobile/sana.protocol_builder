@@ -123,4 +123,8 @@ module.exports = Backbone.Model.extend({
         }
     },
 
+    canHaveConditions: function() {
+        return this.get('id') !== this.collection.at(0).get('id');
+    },
+
 });
