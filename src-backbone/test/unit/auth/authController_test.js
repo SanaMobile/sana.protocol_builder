@@ -24,7 +24,7 @@ describe('Auth Controller', function() {
     let resetPasswordViewStub;
 
     let resetPasswordCompleteView;
-    let resetPasswordCompleteViewStub;    
+    let resetPasswordCompleteViewStub;
 
     beforeEach(function() {
         // Setup helpers
@@ -45,6 +45,7 @@ describe('Auth Controller', function() {
             'routers/authRouter': {},
             'routers/infoRouter': {},
             'routers/proceduresRouter': {},
+            'routers/conceptsRouter': {},
             'utils/helpers': helpers,
         });
         app = new SanaApp();
