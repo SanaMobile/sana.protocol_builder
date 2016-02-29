@@ -10,7 +10,6 @@ let SortableBehavior = Marionette.Behavior.extend({
     onFinishedSorting: function(event, ui) {
         let $child = ui.item;
         let newIndex = $child.parent().children().index($child);
-
         let collection = this.view.collection;
         let model = collection.get($child.attr('data-model-cid'));
 
@@ -73,7 +72,7 @@ let SortableBehavior = Marionette.Behavior.extend({
             // CollectionView
             return this.$el;
         }
-    }
+    },
 
 });
 

@@ -1,5 +1,6 @@
 const Config = require('utils/config');
 const Procedure = require('models/procedure');
+const SortableBehavior = require('behaviors/sortableBehavior');
 const ShowIfsEditor = require('./pageConditions/showIfsCompositeView');
 const ElementsEditor = require('./pageElements/elementsCompositeView');
 const ElementCreator = require('./pageElements/elementCreatorView');
