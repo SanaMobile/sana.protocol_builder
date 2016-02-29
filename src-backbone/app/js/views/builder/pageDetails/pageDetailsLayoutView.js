@@ -1,7 +1,7 @@
 const Config = require('utils/config');
 const Procedure = require('models/procedure');
-const ConditionEditor = require('./conditionLayoutView');
-const ElementsEditor = require('./elementsLayoutView');
+const ShowIfsEditor = require('./pageConditions/showIfsCompositeView');
+const ElementsEditor = require('./pageElements/elementsCompositeView');
 
 
 module.exports = Marionette.LayoutView.extend({
@@ -9,7 +9,7 @@ module.exports = Marionette.LayoutView.extend({
     template: require('templates/builder/pageDetails/pageDetailsLayoutView'),
 
     regions: {
-        conditionEditor: 'section#conditions',
+        showIfsEditor: 'section#show-ifs',
         elementsEditor: 'section#elements',
     },
 
@@ -29,7 +29,7 @@ module.exports = Marionette.LayoutView.extend({
         }
 
         let activePage = this.model.pages.get(this.model.activePageId);
-        this.showChildView('conditionEditor', new ConditionEditor({ model: activePage }));
+        this.showChildView('showIfsEditor', new ShowIfsEditor({ model: activePage }));
         this.showChildView('elementsEditor', new ElementsEditor({ model: activePage }));
     },
 

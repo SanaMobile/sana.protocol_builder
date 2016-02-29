@@ -4,7 +4,7 @@ const Helpers = require('utils/helpers');
 
 module.exports = Marionette.ItemView.extend({
 
-    template: require('templates/builder/pageElements/choices/choicesItemView'),
+    template: require('templates/builder/pageDetails/pageElements/choices/choicesItemView'),
     tagName: 'li',
     className: 'choice',
 

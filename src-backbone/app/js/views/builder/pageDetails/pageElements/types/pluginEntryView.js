@@ -1,6 +1,6 @@
 module.exports = Marionette.ItemView.extend({
 
-    template: require('templates/builder/pageElements/types/pluginEntryView'),
+    template: require('templates/builder/pageDetails/pageElements/types/pluginEntryView'),
 
     ui: {
         'action': 'input.action',

@@ -4,7 +4,7 @@ const ConditionalNode = require('models/conditionals/conditionalNode');
 
 const ConditionalNodeView = Marionette.CompositeView.extend({
 
-    template: require('templates/builder/pageConditions/conditionalNodeView'),
+    template: require('templates/builder/pageDetails/pageConditions/conditionalNodeView'),
     childViewContainer: 'div.children-nodes',
 
     className: function() {

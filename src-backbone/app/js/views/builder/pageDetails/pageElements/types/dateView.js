@@ -1,6 +1,6 @@
 module.exports = Marionette.ItemView.extend({
 
-    template: require('templates/builder/pageElements/types/dateView'),
+    template: require('templates/builder/pageDetails/pageElements/types/dateView'),
 
     ui: {
         'datepicker': 'div.input-group.date',

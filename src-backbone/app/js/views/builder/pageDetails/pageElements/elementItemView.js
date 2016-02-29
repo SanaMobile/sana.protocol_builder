@@ -14,7 +14,7 @@ const PluginEntryItemView = require('./types/pluginEntryView');
 
 module.exports = Marionette.LayoutView.extend({
 
-    template: require('templates/builder/pageElements/elementItemView'),
+    template: require('templates/builder/pageDetails/pageElements/elementItemView'),
     tagName: 'li',
     className: function () {
         return 'element element-type-' + Helpers.sluggify(this.model.get('element_type'));

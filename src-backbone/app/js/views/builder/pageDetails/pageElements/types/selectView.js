@@ -1,7 +1,7 @@
 module.exports = Marionette.LayoutView.extend({
 
-    template: require('templates/builder/pageElements/types/choicesView'),
-    className: 'has-choices multi-select',
+    template: require('templates/builder/pageDetails/pageElements/types/choicesView'),
+    className: 'has-choices select',
 
     regions: {
         choicesList: 'div.choices-list',
