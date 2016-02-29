@@ -2,6 +2,7 @@ const Config = require('utils/config');
 const Procedure = require('models/procedure');
 const ShowIfsEditor = require('./pageConditions/showIfsCompositeView');
 const ElementsEditor = require('./pageElements/elementsCompositeView');
+const ElementCreator = require('./pageElements/elementCreatorView');
 
 
 module.exports = Marionette.LayoutView.extend({
@@ -11,6 +12,7 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         showIfsEditor: 'section#show-ifs',
         elementsEditor: 'section#elements',
+        elementCreator: 'section#element-creator',
     },
 
     initialize: function() {
@@ -26,11 +28,28 @@ module.exports = Marionette.LayoutView.extend({
             this.$el.show();
         } else {
             this.$el.hide();
+            return;
         }
 
-        let activePage = this.model.pages.get(this.model.activePageId);
-        this.showChildView('showIfsEditor', new ShowIfsEditor({ model: activePage }));
-        this.showChildView('elementsEditor', new ElementsEditor({ model: activePage }));
+        let activePage = this.model.getActivePage();
+
+        if (activePage) {
+            this.showChildView('showIfsEditor', new ShowIfsEditor({ model: activePage }));
+        } else {
+            this.getRegion('showIfsEditor').reset();
+        }
+
+        if (activePage) {
+            this.showChildView('elementsEditor', new ElementsEditor({ model: activePage }));
+        } else {
+            this.getRegion('elementsEditor').reset();
+        }
+
+        if (activePage) {
+            this.showChildView('elementCreator', new ElementCreator({ model: activePage }));
+        } else {
+            this.getRegion('elementCreator').reset();
+        }
     },
 
 });

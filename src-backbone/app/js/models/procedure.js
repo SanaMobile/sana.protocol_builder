@@ -130,6 +130,10 @@ let Procedure = Backbone.Model.extend({
         this.trigger(ACTIVE_PAGE_CHANGE_EVENT, null);
     },
 
+    getActivePage: function() {
+        return this.pages.get(this.activePageId);
+    },
+
     generate: function() {
         const title = this.get('title');
         $.ajax({
