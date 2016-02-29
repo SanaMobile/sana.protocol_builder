@@ -1,5 +1,5 @@
 let Page = require('models/page');
-let SortableViewBehavior = require('behaviors/sortableBehavior');
+let SortableBehavior = require('behaviors/sortableBehavior');
 
 
 module.exports = Backbone.Collection.extend({
@@ -11,8 +11,13 @@ module.exports = Backbone.Collection.extend({
         delete options.parentProcedure;
 
         this.comparator = 'display_index';
-        this.on(SortableViewBehavior.ON_SORT_EVENT, function() {
+        this.on(SortableBehavior.ON_SORT_EVENT, function() {
             this.each(function(model, index) {
+                if (index === 0) {
+                    // Remove any existing conditions
+                    model.clearCriteria();
+                }
+
                 model.save();
             });
         });

@@ -25,8 +25,14 @@ module.exports = Marionette.LayoutView.extend({
 
     initialize: function() {
         let self = this;
+
         this.model.on(Procedure.ACTIVE_PAGE_CHANGE_EVENT, function(page) {
             console.info('ACTIVE_PAGE_CHANGE_EVENT', page);
+            self.render();
+        });
+
+        this.model.pages.on(SortableBehavior.ON_SORT_EVENT, function() {
+            console.info('ON_SORT_EVENT');
             self.render();
         });
     },
@@ -36,7 +42,6 @@ module.exports = Marionette.LayoutView.extend({
             this.$el.show();
         } else {
             this.$el.hide();
-            return;
         }
 
         let activePage = this.model.getActivePage();
