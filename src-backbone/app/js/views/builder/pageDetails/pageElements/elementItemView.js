@@ -25,14 +25,11 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     ui: {
-        'eid': 'input.eid',
         'question': 'input.question',
         'required': 'input.required',
         'answer': 'input.answer',
         'image': 'input.image',
         'audio': 'input.audio',
-        'action': 'input.action',
-        'mimeType': 'input.mime-type',
     },
 
     events: {
@@ -96,8 +93,8 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     _onFormUpdate: function(event) {
-        const eid = this.ui.eid.val();
         const question = this.ui.question.val();
+        const eid = Helpers.sluggify(question) + '-' + this.model.get('id');
         const required = this.ui.required.is(':checked');
         const image = this.ui.image.val();
         const audio = this.ui.audio.val();
