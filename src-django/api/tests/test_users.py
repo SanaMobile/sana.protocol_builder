@@ -8,6 +8,7 @@ from nose.tools import assert_equals, assert_not_equals, assert_true, assert_fal
 from api.startup import grant_permissions
 from utils.helpers import add_token_to_header
 from utils import factories
+from mock import patch
 import json
 
 
@@ -92,10 +93,13 @@ class UserTest(TestCase):
         assert_equals(response.status_code, status.HTTP_400_BAD_REQUEST)
         assert_equals(User.objects.get(pk=self.user.id), self.user)
 
-    def test_reset_password(self):
+    @patch('api.views.PasswordResetTokenGenerator.make_token')
+    def test_reset_password(self, PasswordResetTokenGeneratorMock):
         data = {
             'email': self.user.email,
         }
+
+        PasswordResetTokenGeneratorMock.return_value = 'abc'
 
         response = self.client.post(
             path=self.reset_password_url,
@@ -107,12 +111,10 @@ class UserTest(TestCase):
         assert_equals(len(mail.outbox), 1)
         assert_equals(mail.outbox[0].subject, 'Reset Your Password')
 
-        token = cache.get(self.user.email)
-
         data = {
-            'email': self.user.email,
-            'password_reset_token': token,
-            'new_password1': self.new_password,
+            'reset_token': 'abc',
+            'new_password': self.new_password,
+            'password_confirmation': self.new_password,
         }
 
         response = self.client.post(
