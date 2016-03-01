@@ -119,6 +119,7 @@
     "Contract this list into a criteria": "Contract this list into a criteria",
     "When": "When",
     "Except when": "Except when",
+    "Page displayIndex": "Page {{ displayIndex }}",
 
     "When all": "When all",
     "When any": "When any",

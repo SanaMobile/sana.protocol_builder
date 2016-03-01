@@ -127,4 +127,28 @@ module.exports = Backbone.Model.extend({
         return this.get('id') !== this.collection.at(0).get('id');
     },
 
+    getConditionalOperandElements: function() {
+        let myDisplayIndex = this.get('display_index');
+        let pagesBeforeMe = this.collection.filter(function(page) {
+            return page.get('display_index') < myDisplayIndex;
+        });
+
+        let operandElements = [];
+
+        for (let page of pagesBeforeMe) {
+            let pageElements = [];
+
+            page.elements.each(function(element) {
+                pageElements.push(element.attributes);
+            });
+
+            operandElements.push({
+                pageLabel: i18n.t('Page displayIndex', { displayIndex: (page.get('display_index') + 1) }),
+                pageElements: pageElements,
+            });
+        }
+
+        return operandElements;
+    },
+
 });

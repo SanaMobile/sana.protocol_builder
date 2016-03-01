@@ -116,6 +116,10 @@ const ConditionalNode = Backbone.Model.extend({
         return (!this.parentConditionalNode) ? 0 : this.parentConditionalNode.getDepth() + 1;
     },
 
+    getOperandElements: function() {
+        return this.rootShowIf.collection.parentPage.getConditionalOperandElements();
+    },
+
     _saveRootShowIf: function(callback) {
         let self = this;
         this.rootShowIf.save(null, {

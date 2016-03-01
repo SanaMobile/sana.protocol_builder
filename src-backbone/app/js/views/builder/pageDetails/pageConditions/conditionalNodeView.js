@@ -23,13 +23,14 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
     },
 
     templateHelpers: function() {
-        let isAll = (this.model.get('node_type') === 'AND' && !this.model.get('isNegated')) ||
-                    (this.model.get('node_type') === 'OR' && this.model.get('isNegated'));
+        let isLogicAll = (this.model.get('node_type') === 'AND' && !this.model.get('isNegated')) ||
+                         (this.model.get('node_type') === 'OR' && this.model.get('isNegated'));
 
         return {
             cid: this.model.cid,
-            isAll: isAll,
+            isLogicAll: isLogicAll,
             isCriteria: this.model.isCriteriaNode(),
+            operandElements: this.model.getOperandElements(),
 
             canAdd: this.model.canAdd(),
             canDelete: this.model.canDelete(),
@@ -43,7 +44,7 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
         if (this.model.isCriteriaNode()) {
             return {
                 'criteriaNegation': 'select.negation' + '[data-cid=' + cid + ']',
-                'criteriaElement': 'input.element' + '[data-cid=' + cid + ']',
+                'criteriaElement': 'select.operand-element' + '[data-cid=' + cid + ']',
                 'criteriaComparator': 'select.comparator' + '[data-cid=' + cid + ']',
                 'criteriaValue': 'input.value' + '[data-cid=' + cid + ']',
 
@@ -67,7 +68,7 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
         if (this.model.isCriteriaNode()) {
             return {
                 'change @ui.criteriaNegation': '_onCriteriaNegationChanged',
-                'keyup @ui.criteriaElement': '_onCriteriaElementChanged',
+                'change @ui.criteriaElement': '_onCriteriaElementChanged',
                 'change @ui.criteriaComparator': '_onCriteriaComparatorChanged',
                 'keyup @ui.criteriaValue': '_onCriteriaValueChanged',
 
@@ -85,6 +86,22 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
                 'click @ui.contractButton': '_onContractLogic',
             };
         }
+    },
+
+    onRender: function() {
+        let formContainerSelector;
+
+        if (this.model.isCriteriaNode()) {
+            formContainerSelector = 'div.criteria-form';
+        } else {
+            formContainerSelector = 'div.logical-form';
+        }
+
+        this.$el.children(formContainerSelector).find('select').selectpicker({
+            showIcon: false,
+            showTick: false,
+            width: 'auto',
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -120,7 +137,9 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
     },
 
     _onCriteriaElementChanged: function(event) {
-        // TODO
+        let operandElement = parseInt(this.ui.criteriaElement.val());
+        this.model.set('criteria_element', operandElement);
+        this.model.saveRootShowIf();
     },
 
     _onCriteriaValueChanged: function(event) {

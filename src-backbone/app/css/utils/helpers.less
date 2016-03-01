@@ -14,3 +14,19 @@
         clear: both;
     }
 }
+
+.icon(@name) {
+    &.element-type-@{name} {
+        &:before {
+            background-image: url('/img/elements/@{name}.png');
+        }
+    }
+}
+
+.icon-large(@name) {
+    &.element-type-@{name} {
+        &:before {
+            background-image: url('/img/elements/@{name}-large.png');
+        }
+    }
+}

@@ -4,12 +4,12 @@
 
 <a class="page">
     <ul class="element-preview">
-    {{#each elements}}
+        {{#each elements}}
         <li data-element-id="{{ id }}" class="element-type-{{ sluggify element_type }}">
             {{ question }}
         </li>
-    {{else}}
+        {{else}}
         <li class="empty">{{ i18n "Empty Page" }}</li>
-    {{/each}}
+        {{/each}}
     </ul>
 </a>
