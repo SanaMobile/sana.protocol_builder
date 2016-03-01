@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
 from django.contrib.auth.models import User
@@ -134,10 +134,10 @@ class ConceptViewSet(viewsets.ModelViewSet):
     }
 
     model = models.Concept
+    queryset = models.Concept.objects.all()
     serializer_class = serializer.ConceptSerializer
-
-    def get_queryset(self):
-        return models.Concept.objects
+    filter_backends = (filters.SearchFilter,)
+    search_fields = (('name',))
 
     @list_route(methods=['POST'])
     def import_csv(self, request):
