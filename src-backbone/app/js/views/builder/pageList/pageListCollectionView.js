@@ -40,12 +40,10 @@ module.exports = Marionette.CollectionView.extend({
         let self = this;
 
         this.collection.on('sync', function(collection, response, options) {
-            console.debug('pageListCollectionView render() due to sync event');
             self.render();
         });
 
         this.collection.parentProcedure.on(Procedure.ACTIVE_PAGE_CHANGE_EVENT, function() {
-            console.debug('pageListCollectionView render() due to ACTIVE_PAGE_CHANGE_EVENT');
             self.render();
         });
     },

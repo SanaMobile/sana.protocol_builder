@@ -87,10 +87,6 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
         }
     },
 
-    onBeforeRender: function() {
-        console.debug('conditionalNodeView onBeforeRender()', this.model.attributes, this.model.cid);
-    },
-
     //--------------------------------------------------------------------------
     // Common node event handlers
     //--------------------------------------------------------------------------
