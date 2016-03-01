@@ -47,3 +47,56 @@ class ConceptTest(TestCase):
 
         concept = Concept.objects.get(pk=body['id'])
         assert_equals(concept.name, self.data['name'])
+
+
+class ConceptSearchTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.token = Token.objects.get(user=factories.UserFactory())
+        factories.ConceptFactory()
+        factories.ConceptFactory(
+            name='NOT A NAME'
+        )
+        factories.ConceptFactory(
+            name='SXS SITEZ'
+        )
+
+        self.concept_url = '/api/concepts?search={0}'
+        self.user = factories.UserFactory()
+        grant_permissions()
+
+    def test_concept_search(self):
+        response = self.client.get(
+            path=self.concept_url.format('SX,SITE'),
+            content_type='application/json',
+            HTTP_AUTHORIZATION=add_token_to_header(self.user, self.token)
+        )
+
+        assert_equals(response.status_code, status.HTTP_200_OK)
+        body = json.loads(response.content)
+
+        assert_equals(len(body), 2)
+
+    def test_no_results(self):
+        response = self.client.get(
+            path=self.concept_url.format('BAD,THINGS'),
+            content_type='application/json',
+            HTTP_AUTHORIZATION=add_token_to_header(self.user, self.token)
+        )
+
+        assert_equals(response.status_code, status.HTTP_200_OK)
+        body = json.loads(response.content)
+
+        assert_equals(len(body), 0)
+
+    def test_exact_result(self):
+        response = self.client.get(
+            path=self.concept_url.format('NOT%20A%20NAME'),
+            content_type='application/json',
+            HTTP_AUTHORIZATION=add_token_to_header(self.user, self.token)
+        )
+
+        assert_equals(response.status_code, status.HTTP_200_OK)
+        body = json.loads(response.content)
+
+        assert_equals(len(body), 1)
