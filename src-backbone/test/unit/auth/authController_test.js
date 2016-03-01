@@ -20,6 +20,12 @@ describe('Auth Controller', function() {
     let settingsView;
     let settingsViewStub;
 
+    let resetPasswordView;
+    let resetPasswordViewStub;
+
+    let resetPasswordCompleteView;
+    let resetPasswordCompleteViewStub;    
+
     beforeEach(function() {
         // Setup helpers
         let helpers = require('utils/helpers');
@@ -72,6 +78,18 @@ describe('Auth Controller', function() {
         };
         settingsViewStub = sinon.stub().returns(settingsView);
 
+        // Setup resetPasswordView
+        resetPasswordView = {
+            name: 'resetPasswordView',
+        };
+        resetPasswordViewStub = sinon.stub().returns(resetPasswordView);
+
+        // Setup resetPasswordCompleteView
+        resetPasswordCompleteView = {
+            name: 'resetPasswordCompleteView',
+        };
+        resetPasswordCompleteViewStub = sinon.stub().returns(resetPasswordCompleteView);
+
         // Setup authController
         let AuthController = proxyquire('controllers/authController', {
             'utils/sanaAppInstance': getAppInstance,
@@ -80,6 +98,8 @@ describe('Auth Controller', function() {
             'views/auth/signupView': signupViewStub,
             'views/auth/loginView': loginViewStub,
             'views/auth/settingsView': settingsViewStub,
+            'views/auth/resetPasswordView': resetPasswordViewStub,
+            'views/auth/resetPasswordCompleteView': resetPasswordCompleteViewStub,
         });
         authController = new AuthController();
     });

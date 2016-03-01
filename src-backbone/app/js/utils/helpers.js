@@ -85,4 +85,11 @@ module.exports = {
         element.click();
         document.body.removeChild(element);
     },
+
+    getURLParam: function(url, param) {
+        param = param.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+        var regex = new RegExp("[\\?&]"+param+"=([^&#]*)");
+        var results = regex.exec(url);
+        return results === null ? null : results[1];
+    }
 };
