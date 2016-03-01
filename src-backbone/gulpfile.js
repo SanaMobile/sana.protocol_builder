@@ -247,6 +247,7 @@ gulp.task('js-unit-test', ['js-lint', 'js-config'], function() {
     gulp.src(Config.javascripts)
         .pipe(filter('**/**_test.js'))
         .pipe(mocha({
+            timeout: 5000,
             require: [
                 './tests/setup/globals',
             ],
