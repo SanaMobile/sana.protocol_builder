@@ -17,7 +17,7 @@ let Config = {
     configTemplateFile: 'configTemplate.js',
 
     javascripts: [
-        'tests/**/*.js',
+        'test/**/*.js',
         'app/js/**/*.js',
         'app/js/**/*.hbs',
     ],
@@ -242,20 +242,19 @@ gulp.task('debug', ['set-debug'], function(){
 gulp.task('js-unit-test', ['js-lint', 'js-config'], function() {
     let filter = require('gulp-filter');
     let mocha = require('gulp-mocha');
-    let stripDebug = require('gulp-strip-debug');
 
     gulp.src(Config.javascripts)
         .pipe(filter('**/**_test.js'))
         .pipe(mocha({
             require: [
-                './tests/setup/globals',
+                './test/unit/setup/globals',
             ],
         }))
         .once('error', function() {
             process.exit(1);
         })
         .once('end', function() {
-            process.exit();
+            process.exit(0);
         });
 });
 
