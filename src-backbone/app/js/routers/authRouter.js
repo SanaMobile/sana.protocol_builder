@@ -9,13 +9,13 @@ module.exports = Marionette.AppRouter.extend({
     },
 
     appRoutes: {
-        ''                      : 'routeIndex',
-        'login'                 : 'routeLogin',
-        'logout'                : 'routeLogout',
-        'signup'                : 'routeSignup',
-        'account'               : 'routeSettings',
-        'resetpassword'         : 'routeResetPassword',
-        'resetpasswordcomplete' : 'routeResetPasswordComplete'
+        ''                     : 'routeIndex',
+        'login'                : 'routeLogin',
+        'logout'               : 'routeLogout',
+        'signup'               : 'routeSignup',
+        'account'              : 'routeSettings',
+        'resetpassword'        : 'routeResetPassword',
+        'resetpassword/:token' : 'routeResetPasswordComplete'
     }
 
 });

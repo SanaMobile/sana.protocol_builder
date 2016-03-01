@@ -1,7 +1,12 @@
-let App = require('utils/sanaAppInstance');
+const App = require('utils/sanaAppInstance');
 const Helpers = require('utils/helpers');
 
 module.exports = Marionette.ItemView.extend({
+
+    initialize: function(reset_token) {
+        this.token = reset_token.token;
+    },
+
     template: require('templates/auth/resetPasswordCompleteView'),
 
     ui: {
@@ -22,14 +27,13 @@ module.exports = Marionette.ItemView.extend({
     },
 
     completeReset: function(data) {
-        let token = Helpers.getURLParam(Backbone.history.fragment, 'reset_token');
         let json = {};
         data.forEach(function(item) {
             if (item.value !== "") {
                 json[item.name] = item.value;
             }
         });
-        json.reset_token = token;
+        json.reset_token = this.token;
 
         $.ajax({
             type: 'POST',

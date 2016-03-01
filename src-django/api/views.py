@@ -124,7 +124,7 @@ class UserPasswordViewSet(viewsets.GenericViewSet):
 
         token = PasswordResetTokenGenerator().make_token(user)
         url_base = "https://sanaprotocolbuilder.me/"
-        url = "{base}/resetpasswordcomplete?reset_token={token}".format(base=url_base, token=token)
+        url = "{base}/resetpassword/{token}".format(base=url_base, token=token)
 
         env = templater.get_environment('api', 'templates')
         template = env.get_template('password_reset_template')
@@ -169,8 +169,8 @@ class UserPasswordViewSet(viewsets.GenericViewSet):
             user = User.objects.get(email=email)
         except:
             return self.error_response(
-                status.HTTP_404_NOT_FOUND,
-                'No one by that email exists')
+                status.HTTP_400_BAD_REQUEST,
+                'Invalid or expired token!')
 
         if user is not None:
             user.set_password(body['new_password'])

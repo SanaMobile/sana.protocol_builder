@@ -1,11 +1,11 @@
-let App                       = require('utils/sanaAppInstance');
-let Helpers                   = require('utils/helpers');
-let AuthLayoutView            = require('views/auth/authLayoutView');
-let SignupView                = require('views/auth/signupView');
-let LoginView                 = require('views/auth/loginView');
-let SettingsView              = require('views/auth/settingsView');
-let ResetPasswordView         = require('views/auth/resetPasswordView');
-let ResetPasswordCompleteView = require('views/auth/resetPasswordCompleteView');
+const App                       = require('utils/sanaAppInstance');
+const Helpers                   = require('utils/helpers');
+const AuthLayoutView            = require('views/auth/authLayoutView');
+const SignupView                = require('views/auth/signupView');
+const LoginView                 = require('views/auth/loginView');
+const SettingsView              = require('views/auth/settingsView');
+const ResetPasswordView         = require('views/auth/resetPasswordView');
+const ResetPasswordCompleteView = require('views/auth/resetPasswordCompleteView');
 
 
 module.exports = Marionette.Controller.extend({
@@ -23,6 +23,10 @@ module.exports = Marionette.Controller.extend({
     },
 
     routeResetPassword: function() {
+        if (App().session.isValid()) {
+            Helpers.navigateToDefaultLoggedIn();
+            return;
+        }
         Helpers.arrivedOnView('Reset Password');
 
         let authLayoutView = new AuthLayoutView();
@@ -30,20 +34,12 @@ module.exports = Marionette.Controller.extend({
         authLayoutView.showChildView('authFormArea', new ResetPasswordView());
     },
 
-    routeResetPasswordComplete: function() {
-        if (Helpers.getURLParam(Backbone.history.fragment, 'token') === null) {
-            if (App().session.isValid()) {
-                Helpers.navigateToDefaultLoggedIn();
-            } else {
-                Helpers.navigateToDefaultLoggedOut();
-            }
-            return;
-        }
+    routeResetPasswordComplete: function(token) {
         Helpers.arrivedOnView('Reset Password');
 
         let authLayoutView = new AuthLayoutView();
         App().RootView.switchMainView(authLayoutView);
-        authLayoutView.showChildView('authFormArea', new ResetPasswordCompleteView());
+        authLayoutView.showChildView('authFormArea', new ResetPasswordCompleteView({token: token}));
     },
 
     routeSignup: function () {
