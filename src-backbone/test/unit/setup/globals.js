@@ -1,8 +1,8 @@
 // Set up paths for require/proxyquire so they will search relative to these dir
 let path = require('path');
 process.env.NODE_PATH = 
-    path.join(__dirname, '../../app/js') + ':' +
-    path.join(__dirname, '../../tests')  + ':'
+    path.join(__dirname, '../../../app/js') + ':' +
+    path.join(__dirname, '../../../test/unit')  + ':'
 ;
 require('module').Module._initPaths();
 
