@@ -4,8 +4,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
 from django.contrib.auth.models import User
 from django.db.utils import DatabaseError
-from generator import ProtocolBuilder
 from postgres_copy import CopyMapping
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.core.cache import cache
+from generator import ProtocolBuilder
+from mailer import templater, tasks
 import models
 import json
 import os
@@ -81,6 +84,103 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save()
 
         return Response(serializer.data)
+
+
+class UserPasswordViewSet(viewsets.GenericViewSet):
+    model = User
+    queryset = User.objects.all()
+    serializer_class = serializer.UserSerializer
+    authentication_classes = (())
+    permission_classes = (())
+    PASSWORD_RESET_EXPIRY = 86400*2  # 2 days
+
+    def error_response(self, response_status, msg):
+        return JsonResponse(
+            status=response_status,
+            data={
+                'errors': [msg],
+            })
+
+    @list_route(methods=['POST'])
+    def reset_password(self, request):
+        if not request.body:
+            return self.error_response(
+                status.HTTP_400_BAD_REQUEST,
+                'No body in request')
+
+        body = json.loads(request.body)
+
+        if ('email' not in body):
+            return self.error_response(
+                status.HTTP_400_BAD_REQUEST,
+                'Email is missing!')
+
+        try:
+            user = User.objects.get(email=body['email'])
+        except:
+            return self.error_response(
+                status.HTTP_404_NOT_FOUND,
+                'No one by that email exists')
+
+        token = PasswordResetTokenGenerator().make_token(user)
+        url_base = "https://sanaprotocolbuilder.me/"
+        url = "{base}/resetpassword/{token}".format(base=url_base, token=token)
+
+        env = templater.get_environment('api', 'templates')
+        template = env.get_template('password_reset_template')
+        email = template.render(first_name=user.first_name, link=url)
+
+        tasks.send_email.delay(user.email, 'Reset Your Password', email)
+
+        cache.set(token, user.email, self.PASSWORD_RESET_EXPIRY)
+        if cache.get(token) == user.email:
+            return HttpResponse(status=status.HTTP_201_CREATED)
+        else:
+            return self.error_response(
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+                'Something went wrong, please try again')
+
+    @list_route(methods=['POST'])
+    def reset_password_complete(self, request):
+        if not request.body:
+            return self.error_response(
+                status.HTTP_400_BAD_REQUEST, '')
+
+        body = json.loads(request.body)
+
+        if 'new_password' not in body:
+            return self.error_response(
+                status.HTTP_400_BAD_REQUEST,
+                'New password is missing')
+        elif 'password_confirmation' not in body:
+            return self.error_response(
+                status.HTTP_400_BAD_REQUEST,
+                'Password confirmation is missing')
+        elif body['new_password'] != body['password_confirmation']:
+            return self.error_response(
+                status.HTTP_400_BAD_REQUEST,
+                "The passwords don't match!")
+
+        reset_token = body['reset_token']
+
+        email = cache.get(reset_token)
+
+        try:
+            user = User.objects.get(email=email)
+        except:
+            return self.error_response(
+                status.HTTP_400_BAD_REQUEST,
+                'Invalid or expired token!')
+
+        if user is not None:
+            user.set_password(body['new_password'])
+            user.save()
+            cache.delete(reset_token)
+            return HttpResponse(status=status.HTTP_200_OK)
+        else:
+            return self.error_response(
+                status.HTTP_400_BAD_REQUEST,
+                'The email token has expired. Please reset your password again')
 
 
 class PageViewSet(viewsets.ModelViewSet):

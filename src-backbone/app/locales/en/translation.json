@@ -28,6 +28,12 @@
     // Account Settings
     "Successfuly updated account details!": "Successfuly updated account details!",
     "There was a problem": "There was a problem",
+    "Password successfully reset!": "Password successfully reset!", 
+    "Email to reset password sent!": "Email to reset password sent!",
+    "Confirm Password": "Confirm Password",
+    "New Password": "New Password",
+    "Change Password": "Change Password",
+    "Request Password Reset": "Request Password Reset",
 
     // Procedures
     "Hello username": "Hello {{ username }}",

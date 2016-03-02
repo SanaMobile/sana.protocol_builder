@@ -28,6 +28,8 @@ module.exports = {
         'terms',
         'privacy',
         'credits',
+        'resetpassword',
+        'resetpasswordcomplete',
     ],
 
     ELEMENT_TYPES: [
