@@ -8,13 +8,22 @@ let SortableBehavior = Marionette.Behavior.extend({
     },
 
     onFinishedSorting: function(event, ui) {
-        let displayIndexAttr = this.options.displayIndexAttr; // attribute of model that determines sort order
-
         let $child = ui.item;
         let newIndex = $child.parent().children().index($child);
 
         let collection = this.view.collection;
         let model = collection.get($child.attr('data-model-cid'));
+
+        // Ask user before sorting if it has some side effects
+        if (_.isFunction(this.options.shouldConfirmBeforeSort) && this.options.shouldConfirmBeforeSort(model, newIndex)) {
+            let warningMessage = "Reordering this page will remove all of your conditionals. Are you sure you wish to continue?";
+            if (!confirm(warningMessage)) {
+                event.preventDefault();
+                return;
+            }
+        }
+
+        let displayIndexAttr = this.options.displayIndexAttr; // attribute of model that determines sort order
 
         // Remove the newly sorted item and re-index every thing else
         collection.remove(model, { silent: true });
