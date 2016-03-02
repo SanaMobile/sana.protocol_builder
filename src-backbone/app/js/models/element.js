@@ -8,7 +8,7 @@ module.exports = Backbone.Model.extend({
 
     urlRoot: '/api/elements',
 
-    constructor: function(attributes, options) {
+    constructor: function(attributes, options = {}) {
         // See model/procedure.js for explaination
         this.choices = new Choices(null, {
             parentElement: this,
@@ -19,6 +19,7 @@ module.exports = Backbone.Model.extend({
             this._debounceSave.apply(this, arguments);
         }, Config.INPUT_DELAY_BEFORE_SAVE);
 
+        options.parse = true;
         Backbone.Model.prototype.constructor.call(this, attributes, options);
     },
 
@@ -30,13 +31,6 @@ module.exports = Backbone.Model.extend({
         this.choices.on('destroy', function() {
             self.save();
         });
-
-        if (Config.DEBUG) {
-            let elementId = this.get('id');
-            this.listenTo(this.choices, 'all', function(event, subject) {
-                console.log('Element', elementId, 'ChoicesCollection event:', event, subject && subject.get('text'));
-            });
-        }
     },
 
     parse: function(response, options) {
@@ -50,21 +44,27 @@ module.exports = Backbone.Model.extend({
     },
 
     toJSON: function() {
-        let json = _.clone(this.attributes);
+        let json = _.pick(this.attributes,
+            'id',
+            'display_index',
+            'concept',
+            'page',
+            'element_type',
+            'question',
+            'required',
+            'answer'
+        );
 
-        if (!json.answer) {
+        let elementType = this.get('element_type');
+
+        if (Config.CHOICE_ELEMENT_TYPES.includes(elementType)) {
+            json.choices = this.choices.getAnswers();
             json.answer = this.choices.getDefaultAnswer();
         }
 
-        // TODO organize this...
-
-        let elementType = this.get('element_type');
-        if (Config.CHOICE_ELEMENT_TYPES.includes(elementType)) {
-            json.choices = this.choices.getAnswers();
-        }
-        if (!Config.PLUGIN_ELEMENT_TYPES.includes(elementType)) {
-            delete json.action;
-            delete json.mime_type;
+        if (Config.PLUGIN_ELEMENT_TYPES.includes(elementType)) {
+            json.action = this.get('action');
+            json.mime_type = this.get('mime_type');
         }
 
         return json;
@@ -73,7 +73,7 @@ module.exports = Backbone.Model.extend({
     createNewChoice: function(text) {
         return this.choices.add(new Choice({
             text: text,
-            choiceDisplayIndex: _.max(this.choices.models, m => m.get('choiceDisplayIndex')) + 1,
+            choiceDisplayIndex: _.max(this.choices.pluck('choiceDisplayIndex')) + 1,
         }));
     },
 

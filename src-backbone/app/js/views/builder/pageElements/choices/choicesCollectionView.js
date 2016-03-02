@@ -1,12 +1,8 @@
-const ItemView = require('./choicesItemView');
-
-
 module.exports = Marionette.CollectionView.extend({
 
     tagName: 'ul',
     className: 'choices',
-
-    childView: ItemView,
+    childView: require('./choicesItemView'),
 
     behaviors: {
         SortableBehavior: {
@@ -20,10 +16,6 @@ module.exports = Marionette.CollectionView.extend({
                 distance: 5,
             },
         }
-    },
-
-    onRender: function() {
-        console.debug('choicesCollectionView onRender');
     },
 
 });
