@@ -7,8 +7,7 @@ import uuid
 class Procedure(models.Model):
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
-    version = models.CharField(max_length=255, null=True)
-    uuid = models.CharField(max_length=36, null=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(User)
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
