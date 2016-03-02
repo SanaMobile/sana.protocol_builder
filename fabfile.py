@@ -12,7 +12,7 @@ env.frontend_dir    = 'src-backbone'
 
 def test():
     with lcd(env.backend_dir):
-        local('python manage.py syncdb --noinput')
+        local('python manage.py migrate --noinput')
         local('python manage.py test api --noinput')
         local('python manage.py test authentication --noinput')
 
@@ -43,7 +43,7 @@ def update_host():
             run('pip install --quiet --requirement requirements.txt')
 
             print(green('Creating database tables...'))
-            run('python manage.py syncdb --noinput')
+            run('python manage.py migrate --noinput')
 
             print(green('Restarting gunicorn...'))
             run('supervisorctl restart gunicorn')

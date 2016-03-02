@@ -38,7 +38,7 @@ APPEND_SLASH = False
 # Application definition
 # ------------------------------------------------------------------------------
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     # Django apps
     'django.contrib.admin',         # Admin system
     'django.contrib.sessions',      # Dependency of django.contrib.auth
@@ -57,9 +57,9 @@ INSTALLED_APPS = (
     'authentication.apps.AuthenticationConfig',
     'api.apps.ApiConfig',
     'mailer.apps.MailerConfig',
-)
+]
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,7 +69,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'sanaprotocolbuilder.middleware.ExceptionLoggingMiddleware',
-)
+]
 
 ROOT_URLCONF = 'sanaprotocolbuilder.urls'
 
