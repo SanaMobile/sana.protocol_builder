@@ -14,7 +14,7 @@ module.exports = Marionette.ItemView.extend({
     },
 
     events: {
-        'submit': 'onSubmit',
+        'submit @ui.form': 'onSubmit',
     },
 
     onSubmit: function(event) {
