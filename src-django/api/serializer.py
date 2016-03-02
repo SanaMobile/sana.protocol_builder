@@ -4,6 +4,7 @@ from rest_framework.fields import SkipField
 from django.contrib.auth.models import User
 import models
 import field
+import json
 
 
 class ElementSerializer(serializers.ModelSerializer):
@@ -50,7 +51,7 @@ class ElementSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if (data['element_type'] in models.Element.CHOICE_TYPES and
-           'answer' in data and data['answer'] not in data['choices']):
+           'answer' in data and data['answer'] not in json.loads(data['choices'])):
             raise serializers.ValidationError('Answer must be one of the choices')
 
         return data
