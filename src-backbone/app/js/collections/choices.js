@@ -1,4 +1,5 @@
 const Choice = require('models/choice');
+const SortableBehavior = require('behaviors/sortableBehavior');
 
 
 module.exports = Backbone.Collection.extend({
@@ -13,6 +14,10 @@ module.exports = Backbone.Collection.extend({
         delete options.allowMultipleAnswers;
 
         this.comparator = 'choiceDisplayIndex';
+        this.on(SortableBehavior.ON_SORT_EVENT, function() {
+            this.parentElement.save();
+        });
+
         Backbone.Collection.prototype.constructor.call(this, models, options);
     },
 
