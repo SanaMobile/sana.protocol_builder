@@ -98,7 +98,6 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
         }
 
         this.$el.children(formContainerSelector).find('select').selectpicker({
-            showIcon: false,
             showTick: false,
             width: 'auto',
         });

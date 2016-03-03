@@ -68,6 +68,37 @@
             }
 
             div.bootstrap-select.operand-element{
+                button.dropdown-toggle{
+                    @icon: 14px;
+
+                    i.glyphicon{
+                        display: inline-block;
+                        margin: 0;
+                        width: @icon; height: @icon;
+
+                        &:before{
+                            background-image: url('/img/elements/default.png');
+                            background-repeat: no-repeat;
+                            background-position: center;
+                            background-size: 100% 100%;
+
+                            display: block;
+                            content: '';
+                            overflow: hidden;
+                            width: @icon; height: @icon;
+                        }
+
+                        .icon(date);
+                        .icon(entry);
+                        .icon(select);
+                        .icon(multi-select);
+                        .icon(radio);
+                        .icon(picture);
+                        .icon(plugin);
+                        .icon(plugin-entry);
+                    }
+                }
+
                 a.opt{
                     padding-left: 20px + 16px + 10px;
                     position: relative;
@@ -84,14 +115,18 @@
                         top: (26px - 16px) / 2; left: 20px;
                         width: 16px; height: 16px;
                     }
-                    .icon-large(date);
-                    .icon-large(entry);
-                    .icon-large(select);
-                    .icon-large(multi-select);
-                    .icon-large(radio);
-                    .icon-large(picture);
-                    .icon-large(plugin);
-                    .icon-large(plugin-entry);
+                    .icon(date);
+                    .icon(entry);
+                    .icon(select);
+                    .icon(multi-select);
+                    .icon(radio);
+                    .icon(picture);
+                    .icon(plugin);
+                    .icon(plugin-entry);
+
+                    .glyphicon{
+                        display: none;
+                    }
                 }
             }
         }
