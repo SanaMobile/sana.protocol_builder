@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # ------------------------------------------------------------------------------
 # Flags
@@ -38,7 +38,7 @@ APPEND_SLASH = False
 # Application definition
 # ------------------------------------------------------------------------------
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     # Django apps
     'django.contrib.admin',         # Admin system
     'django.contrib.sessions',      # Dependency of django.contrib.auth
@@ -54,12 +54,12 @@ INSTALLED_APPS = (
     'django_extensions',            # Adds some useful dev commands for convenience
 
     # Our apps
-    'api',
-    'authentication',
-    'mailer',
-)
+    'authentication.apps.AuthenticationConfig',
+    'api.apps.ApiConfig',
+    'mailer.apps.MailerConfig',
+]
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,7 +69,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'sanaprotocolbuilder.middleware.ExceptionLoggingMiddleware',
-)
+]
 
 ROOT_URLCONF = 'sanaprotocolbuilder.urls'
 
@@ -248,8 +248,7 @@ NORMAL_USER_GROUP = 'normal_users'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-        ],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -261,7 +260,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'debug': True
+            'debug': DEBUG
         },
     },
 ]

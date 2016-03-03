@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from rest_framework import routers
-from startup import run_once
 import views
+
 
 router = routers.SimpleRouter(trailing_slash=False)
 router.register(r'procedures', views.ProcedureViewSet, base_name='procedure')
@@ -15,16 +15,3 @@ router.register(r'passwords', views.UserPasswordViewSet, base_name='password')
 urlpatterns = [
     url(r'^', include(router.urls))
 ]
-
-
-# ------------------------------------------------------------------------------
-# Non-url related operations
-#
-# These must be run once on startup but need database access, otherwise they
-# can be put in __init__.py or AppConfig.ready()
-#
-# See http://stackoverflow.com/a/16111968
-#     https://docs.djangoproject.com/en/1.8/ref/applications/#django.apps.AppConfig.ready
-# ------------------------------------------------------------------------------
-
-run_once()

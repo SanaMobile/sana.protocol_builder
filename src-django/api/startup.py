@@ -15,7 +15,3 @@ def grant_permissions():
 
         for p in permissions:
             normal_users_group.permissions.add(p)
-
-
-def run_once():
-    grant_permissions()
