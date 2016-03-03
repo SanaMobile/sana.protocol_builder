@@ -34,11 +34,16 @@ module.exports = Backbone.Model.extend({
     },
 
     parse: function(response, options) {
-        response.created       = new Date(Date.parse(response.created));
+        response.created = new Date(Date.parse(response.created));
         response.last_modified = new Date(Date.parse(response.last_modified));
 
-        this.choices.setAnswers(response.choices, response.answer);
-        delete response.choices;
+        if (Config.CHOICE_ELEMENT_TYPES.includes(response.element_type)) {
+            this.choices.setChoices(response.choices, response.answer);
+            delete response.choices;
+            delete response.answer;
+        } else {
+            response.answer = (response.answer && response.answer.length === 1) ? response.answer[0] : '';
+        }
 
         return response;
     },
@@ -51,15 +56,18 @@ module.exports = Backbone.Model.extend({
             'page',
             'element_type',
             'question',
-            'required',
-            'answer'
+            'required'
         );
 
         let elementType = this.get('element_type');
 
         if (Config.CHOICE_ELEMENT_TYPES.includes(elementType)) {
-            json.choices = this.choices.getAnswers();
-            json.answer = this.choices.getDefaultAnswer();
+            json.choices = this.choices.pluck('text');
+            json.answer = this.choices.getDefaultAnswers();
+        } else {
+            json.answer = [
+                this.get('answer')
+            ];
         }
 
         if (Config.PLUGIN_ELEMENT_TYPES.includes(elementType)) {
