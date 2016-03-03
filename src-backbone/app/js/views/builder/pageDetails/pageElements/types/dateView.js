@@ -9,6 +9,7 @@ module.exports = Marionette.ItemView.extend({
 
     events: {
         'change @ui.dateField': '_onDateFormChanged',
+        'clearDate @ui.datepicker': '_onDateFormChanged',
     },
 
     onRender: function() {
