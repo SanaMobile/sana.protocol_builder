@@ -138,9 +138,11 @@ module.exports = Backbone.Model.extend({
         for (let page of pagesBeforeMe) {
             let pageElements = [];
 
-            page.elements.each(function(element) {
+            for (let element of page.elements.models) {
+                let attributes = _.clone(element.attributes);
+                attributes.question = attributes.question || i18n.t(element.get('element_type'));
                 pageElements.push(element.attributes);
-            });
+            }
 
             operandElements.push({
                 pageLabel: i18n.t('Page displayIndex', { displayIndex: (page.get('display_index') + 1) }),
