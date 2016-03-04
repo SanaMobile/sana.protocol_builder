@@ -1,4 +1,5 @@
 const Choice = require('models/choice');
+const SortableBehavior = require('behaviors/sortableBehavior');
 
 
 module.exports = Backbone.Collection.extend({
@@ -13,6 +14,10 @@ module.exports = Backbone.Collection.extend({
         delete options.allowMultipleAnswers;
 
         this.comparator = 'choiceDisplayIndex';
+        this.on(SortableBehavior.ON_SORT_EVENT, function() {
+            this.parentElement.save();
+        });
+
         Backbone.Collection.prototype.constructor.call(this, models, options);
     },
 
@@ -35,34 +40,30 @@ module.exports = Backbone.Collection.extend({
         });
     },
 
-    setAnswers: function(modelTexts, defaultAnswer) {
-        if (!modelTexts) {
+    setChoices: function(choices, defaultAnswers) {
+        if (!choices) {
             return;
         }
 
-        for (let modelText of modelTexts) {
+        for (let choice of choices) {
+            let isDefault = defaultAnswers.includes(choice);
+
             // Need to manually merge the choice because there's no way to uniquely identify choices (no ids)
-            let existingModel = this.findWhere({ text: modelText }); // WARNING: this only returns the first choice that matches
+            let existingModel = this.findWhere({ text: choice });
             if (existingModel) {
-                let isDefault = (existingModel.get('text') === defaultAnswer); // TODO handle multi-choice's possibility of multiple default answers
                 existingModel.set('isDefault', isDefault);
                 continue;
             }
 
             this.add(new Choice({
-                text: modelText,
-                isDefault: (modelText === defaultAnswer), // TODO handle multi-choice's possiblity of multiple default answers
+                text: choice,
+                isDefault: isDefault,
             }));
         }
     },
 
-    getAnswers: function() {
-        return this.pluck('text');
-    },
-
-    getDefaultAnswer: function() {
-        const defaultChoice = this.findWhere({ isDefault: true }); // TODO handle multiple default answers on backend
-        return defaultChoice ? defaultChoice.get('text') : '';
+    getDefaultAnswers: function() {
+        return this.where({ isDefault: true }).map(choice => choice.get('text'));
     },
 
 });

@@ -3,8 +3,11 @@ from models import ShowIf
 import json
 
 
-class ElementChoicesField(serializers.Field):
+class ArrayAsStringField(serializers.Field):
     def to_representation(self, obj):
+        if not obj:
+            obj = '[]'
+
         return json.loads(obj)
 
     def to_internal_value(self, data):
@@ -19,7 +22,7 @@ class ElementChoicesField(serializers.Field):
 
 class ConditionTreeField(serializers.Field):
     def to_representation(self, obj):
-        if len(obj) == 0:
+        if not obj:
             obj = '{}'
 
         return json.loads(obj)

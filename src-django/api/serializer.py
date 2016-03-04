@@ -8,7 +8,8 @@ import json
 
 
 class ElementSerializer(serializers.ModelSerializer):
-    choices = field.ElementChoicesField(required=False)
+    choices = field.ArrayAsStringField(required=False)
+    answer = field.ArrayAsStringField(required=False)
 
     class Meta:
         model = models.Element
@@ -50,9 +51,18 @@ class ElementSerializer(serializers.ModelSerializer):
         return ret
 
     def validate(self, data):
-        if (data['element_type'] in models.Element.CHOICE_TYPES and
-           'answer' in data and data['answer'] not in json.loads(data['choices'])):
-            raise serializers.ValidationError('Answer must be one of the choices')
+        if data['element_type'] in models.Element.CHOICE_TYPES:
+            # Choice-based element needs to have a valid answer
+            answers = json.loads(data['answer'])
+            choices = json.loads(data['choices'])
+
+            if data['element_type'] != 'MULTI_SELECT':
+                if len(answers) > 1:
+                    raise serializers.ValidationError('Answer must have at most 1 choice')
+
+            for answer in answers:
+                if answer not in choices:
+                    raise serializers.ValidationError('Answer must be one of the choices')
 
         return data
 

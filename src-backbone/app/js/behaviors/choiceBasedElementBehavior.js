@@ -6,7 +6,7 @@ const Helpers = require('utils/helpers');
 module.exports = Marionette.Behavior.extend({
 
     events: {
-        'keypress input.new-choice': '_onKeypressNewChoiceInput',
+        'keypress input.new-choice': '_onKeyPressNewChoiceInput',
         'paste input.new-choice': '_onPasteNewChoiceInput',
     },
 
@@ -18,7 +18,11 @@ module.exports = Marionette.Behavior.extend({
         this.view.showChildView('choicesList', this.choicesCollectionView);
     },
 
-    _onKeypressNewChoiceInput: function(event) {
+    //--------------------------------------------------------------------------
+    // Event handlers
+    //--------------------------------------------------------------------------
+
+    _onKeyPressNewChoiceInput: function(event) {
         if (!event.which) {
             // Do nothing when keypress is not a valid character
             return;
@@ -33,20 +37,22 @@ module.exports = Marionette.Behavior.extend({
     _onPasteNewChoiceInput: function(event) {
         event.preventDefault();
 
-        let text = (event.originalEvent || event).clipboardData.getData('text/html');
-        let strippedText = $('<div></div>').append(text).text();
-
-        let newChoice = this.view.model.createNewChoice(strippedText);
+        let text = (event.originalEvent || event).clipboardData.getData('text');
+        let newChoice = this.view.model.createNewChoice(text);
         this._changeFocusToNewChoice(newChoice);
     },
 
+    //--------------------------------------------------------------------------
+    // Helpers
+    //--------------------------------------------------------------------------
+
     _changeFocusToNewChoice: function(newChoice) {
-        let childView = this.choicesCollectionView.children.findByModel(newChoice);
+        let choiceView = this.choicesCollectionView.children.findByModel(newChoice);
 
-        // Ensure even if there's no input afterwards, Choice model will still trigger an update event
-        childView._onKeyDownInput(Helpers.createDummyEvent());
+        // Ensure even if there's no input afterwards, Choice model will still trigger a change event to save
+        choiceView.saveChoice();
 
-        let $input = childView.$el.find('div.input');
+        let $input = choiceView.$el.find('div.input');
         $input.focus();
 
         let range = document.createRange();

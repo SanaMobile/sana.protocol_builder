@@ -100,7 +100,7 @@ class ElementGeneratorTest(TestCase):
             eid='1',
             element_type='ENTRY',
             question='Which valve',
-            answer=''
+            answer='[]'
         )
 
         self.generator = generators.ElementGenerator(self.element)
@@ -171,7 +171,7 @@ class ElementGeneratorTest(TestCase):
 
     def test_element_has_answer(self):
         assert_true('answer' in self.attribs)
-        assert_equals(self.attribs['answer'], self.element.answer)
+        assert_equals(self.attribs['answer'], '')
 
     @raises(ValueError)
     def test_error_if_no_answer(self):

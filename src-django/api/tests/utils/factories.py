@@ -51,7 +51,7 @@ class ElementFactory(factory.django.DjangoModelFactory):
     concept = factory.SubFactory(ConceptFactory)
     question = 'Where does it hurt?'
     eid = 'checkup_id'
-    answer = ''
+    answer = '[]'
     page = factory.SubFactory(PageFactory)
 
 

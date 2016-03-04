@@ -169,16 +169,24 @@ div#elements-list ul{
                         border: 1px solid @grey-border-light;
                         border-radius: 3px;
                         padding: 10px 0;
+
+                        ul.choices{
+                            padding-left: 0;
+
+                            li{
+                                list-style: none;
+
+                                &.ui-sortable-placeholder{
+                                    background: @grey-bg-light;
+                                }
+                            }
+                        }
                     }
 
-                    li.ui-sortable-placeholder{
-                        background: @grey-bg-light;
-                    }
-
+                    // Each choice item
                     li.choice,
                     div.choice{
                         background: #fff;
-                        display: flex;
                         position: relative;
                         margin: 5px 0;
 
