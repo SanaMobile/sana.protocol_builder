@@ -13,11 +13,6 @@ module.exports = Backbone.Collection.extend({
         this.comparator = 'display_index';
         this.on(SortableBehavior.ON_SORT_EVENT, function() {
             this.each(function(model, index) {
-                if (index === 0) {
-                    // Remove any existing conditions
-                    model.clearCriteria();
-                }
-
                 model.save();
             });
         });

@@ -30,7 +30,7 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
             cid: this.model.cid,
             isLogicAll: isLogicAll,
             isCriteria: this.model.isCriteriaNode(),
-            operandElements: this.model.getOperandElements(),
+            operandElements: this.model.getPossibleOperandElements(),
 
             canAdd: this.model.canAdd(),
             canDelete: this.model.canDelete(),
@@ -136,8 +136,16 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
     },
 
     _onCriteriaElementChanged: function(event) {
-        let operandElement = parseInt(this.ui.criteriaElement.val());
-        this.model.set('criteria_element', operandElement);
+        let data = this.ui.criteriaElement.val().split('-');
+        let operandElement = parseInt(data[0]);
+        let operandElementPage = parseInt(data[1]);
+
+        this.model.set({
+            criteria_element: operandElement,
+            operandElementPage: operandElementPage,
+        }, {
+            operandElementPage: operandElementPage,
+        });
         this.model.saveRootShowIf();
     },
 

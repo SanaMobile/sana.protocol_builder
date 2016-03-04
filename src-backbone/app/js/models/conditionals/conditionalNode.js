@@ -28,12 +28,20 @@ const ConditionalNode = Backbone.Model.extend({
     },
 
     constructor: function(attributes, options = {}) {
+        this.parentPage = options.parentPage;
+        delete options.parentPage;
+
         this.parentConditionalNode = options.parentConditionalNode;
+        delete options.parentConditionalNode;
+
         this.rootShowIf = options.rootShowIf;
+        delete options.rootShowIf;
+
         this.childrenNodes = new ConditionalNodes(null, {
             model: ConditionalNode, // To avoid circular dependencies inside the collection
+            parentPage: this.parentPage,
             parentConditionalNode: this,
-            rootShowIf: options.rootShowIf,
+            rootShowIf: this.rootShowIf,
         });
 
         this.saveRootShowIf = _.debounce(function() {
@@ -44,9 +52,32 @@ const ConditionalNode = Backbone.Model.extend({
         Backbone.Model.prototype.constructor.call(this, attributes, options);
     },
 
-    reset: function(attributes) {
-        this.clear({ silent: true });
-        this.set(this.parse(attributes));
+    initialize: function() {
+        this.on('destroy', function(self, collection, options) {
+            // Unregister elementId from parentPage's dependency cache
+            let elementId = self.get('criteria_element');
+            self.parentPage.dependentPageCache.delete(elementId);
+
+            console.log('onDestroy', self.parentPage.dependentPageCache);
+        });
+
+        this.on('change:criteria_element', function(self, elementId, options) {
+            let previousElementId = self.previous('criteria_element');
+            let dependentPage = self.parentPage.collection.get(options.operandElementPage);
+
+            // Unregister previous elementId from parentPage's dependency cache
+            self.parentPage.dependentPageCache.delete(previousElementId);
+
+            // Register new elementId to parentPage's dependency cache
+            self.parentPage.dependentPageCache.set(elementId, dependentPage);
+
+            console.log('onChange', self.parentPage.dependentPageCache);
+        });
+    },
+
+    reset: function(attributes, options) {
+        this.clear(options);
+        this.set(this.parse(attributes), options);
     },
 
     parse: function(response, options) {
@@ -91,6 +122,7 @@ const ConditionalNode = Backbone.Model.extend({
                 };
             }
         } else {
+            json.operandElementPage = this.get('operandElementPage');
             json.isNegated = this.get('isNegated');
         }
 
@@ -112,15 +144,56 @@ const ConditionalNode = Backbone.Model.extend({
         }
     },
 
+    getPossibleOperandElements: function() {
+        return this.rootShowIf.collection.parentPage.getPossibleOperandElements();
+    },
+
     getDepth: function() {
         return (!this.parentConditionalNode) ? 0 : this.parentConditionalNode.getDepth() + 1;
     },
 
-    getOperandElements: function() {
-        return this.rootShowIf.collection.parentPage.getConditionalOperandElements();
+    getDependentElements: function() {
+        let dependents = [];
+
+        if (this.isCriteriaNode()) {
+            let elementId = this.get('criteria_element');
+            if (elementId > 0) {
+                dependents.push(elementId);
+            }
+        } else {
+            this.childrenNodes.each(function(child) {
+                dependents = dependents.concat(child.getDependentElements());
+            });
+        }
+
+        return dependents;
+    },
+
+    clearDependentElementsAfterPosition: function(position) {
+        if (this.isCriteriaNode()) {
+            let dependentPage = this.parentPage.dependentPageCache.get(this.get('criteria_element'));
+            let dependentPageIndex = dependentPage.get('display_index');
+            if (dependentPageIndex >= position) {
+                // dependentPage appears after this position
+                this.unset('criteria_element');
+            }
+        } else {
+            this.childrenNodes.each(function(child) {
+                child.removeElementOperandsAfterPosition(position);
+            });
+        }
+
+        if (this.isRootNode()) {
+            // Bypass the debounce since we want the ShowIfItemView to rerender
+            // immediately. This is safe because this method is only be triggered
+            // after a sort event, which should not happen that frequently
+            this._saveRootShowIf();
+        }
     },
 
     _saveRootShowIf: function(callback) {
+        // Should not call this method directly from view callbacks
+        // Call saveRootShowIf() instead (without the _) to debounce the save calls
         let self = this;
         this.rootShowIf.save(null, {
             beforeSend: function() {
@@ -136,11 +209,12 @@ const ConditionalNode = Backbone.Model.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Actions
+    // View events
     //--------------------------------------------------------------------------
 
     createNewNeighborNode: function() {
         let neighborNode = new ConditionalNode(null, {
+            parentPage: this.parentPage,
             parentConditionalNode: this.parentConditionalNode,
             rootShowIf: this.rootShowIf,
         });
@@ -168,6 +242,7 @@ const ConditionalNode = Backbone.Model.extend({
 
     expand: function() {
         let childNode = new ConditionalNode(this.attributes, {
+            parentPage: this.parentPage,
             parentConditionalNode: this,
             rootShowIf: this.rootShowIf,
         });
@@ -190,7 +265,7 @@ const ConditionalNode = Backbone.Model.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Criteria Node
+    // Template helpers
     //--------------------------------------------------------------------------
 
     canAdd: function() {

@@ -14,11 +14,19 @@ let SortableBehavior = Marionette.Behavior.extend({
         let model = collection.get($child.attr('data-model-cid'));
 
         // Ask user before sorting if it has some side effects
-        if (_.isFunction(this.options.shouldConfirmBeforeSort) && this.options.shouldConfirmBeforeSort(model, newIndex)) {
-            let warningMessage = "Reordering this page will remove all of your conditionals. Are you sure you wish to continue?";
-            if (!confirm(warningMessage)) {
-                event.preventDefault();
-                return;
+        if (_.isFunction(model.shouldConfirmBeforeSort)) {
+            let onSortOptions = model.shouldConfirmBeforeSort(newIndex);
+
+            if (onSortOptions) {
+                let warningMessage = onSortOptions.warningMessage + ' ' +
+                                     i18n.t("Are you sure you wish to continue?");
+
+                if (confirm(warningMessage)) {
+                    onSortOptions.callback();
+                } else {
+                    event.preventDefault();
+                    return;
+                }
             }
         }
 

@@ -10,7 +10,12 @@
         {{#each operandElements}}
         <optgroup label="{{ pageLabel }}">
             {{#each pageElements }}
-            <option value="{{ id }}" class="element-type-{{ sluggify element_type }}" data-icon="element-type-{{ sluggify element_type }}" {{ checkSelected ../../criteria_element id }}>{{ question }}</option>
+            <option value="{{ id }}-{{ page }}"
+                    data-icon="element-type-{{ sluggify element_type }}"
+                    class="element-type-{{ sluggify element_type }}"
+                    {{ checkSelected ../../criteria_element id }}>
+                    {{ question }}
+            </option>
             {{/each}}
         </optgroup>
         {{/each}}
