@@ -117,6 +117,7 @@ def login(request):
         logger.info("Login Success: u:{0} e:{0}".format(user.username, user.email))
 
         user_details = {
+            'id': user.pk,
             'is_superuser': user.is_superuser,
             'first_name': user.first_name,
             'last_name': user.last_name,

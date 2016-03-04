@@ -54,19 +54,32 @@ class UserViewSet(viewsets.ModelViewSet):
     def json_msg(self, key, message):
         return json.dumps({key: [message]})
 
+    def error_response(self, response_status, msg):
+        return JsonResponse(
+            status=response_status,
+            data={
+                'errors': [msg],
+            })
+
     @list_route(methods=['patch'])
     def update_details(self, request):
         if not request.body:
-            return HttpResponseBadRequest(self.json_msg('all', "There was nothing submitted"))
+            return self.error_response(
+                status.HTTP_400_BAD_REQUEST,
+                'There was nothing submitted')
 
         body = json.loads(request.body)
         user = User.objects.get(auth_token=body['auth'])
 
         if 'current-password' not in body:
-            return HttpResponseBadRequest(self.json_msg('current-password', "No password provided"))
+            return self.error_response(
+                status.HTTP_400_BAD_REQUEST,
+                'No password provided')
 
         if not user.check_password(body['current-password']):
-            return HttpResponseBadRequest(self.json_msg('current-password', "The password provided isn't correct."))
+            return self.error_response(
+                status.HTTP_400_BAD_REQUEST,
+                "The password provided isn't correct.")
 
         # Need to explicitly set password to have Django hash it
         if 'password' in body and body['password']:
@@ -83,7 +96,16 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(serializer.data)
+        user_details = {
+            'id': user.pk,
+            'is_superuser': user.is_superuser,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'username': user.username,
+            'email': user.email,
+        }
+
+        return JsonResponse({'user': user_details})
 
 
 class UserPasswordViewSet(viewsets.GenericViewSet):
