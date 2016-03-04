@@ -22,14 +22,10 @@ class ProcedureGenerator:
     def __get_properties(self):
         props = {
             'title': self.procedure.title,
-            'author': self.procedure.author
+            'author': self.procedure.author,
+            'uuid': str(self.procedure.uuid),
+            'version': str(self.procedure.last_modified)
         }
-
-        if self.procedure.version:
-            props['version'] = self.procedure.version
-
-        if self.procedure.uuid:
-            props['uuid'] = self.procedure.uuid
 
         return props
 

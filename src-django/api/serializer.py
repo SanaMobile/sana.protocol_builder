@@ -123,7 +123,6 @@ class ProcedureSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'author',
-            'version',
             'uuid',
             'owner',
             'pages',

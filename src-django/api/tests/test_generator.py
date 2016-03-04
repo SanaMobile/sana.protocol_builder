@@ -4,7 +4,6 @@ from nose.tools import raises, assert_equals, assert_is_not_none, assert_true, a
 from api.models import Element
 import api.generator as generators
 from utils import factories
-import uuid
 import json
 
 
@@ -60,25 +59,13 @@ class ProcedureGeneratorTest(TestCase):
 
         generators.ProcedureGenerator(procedure).generate()
 
-    def test_element_has_no_version_attrib(self):
-        assert_false('version' in self.attribs, self.attribs)
-
-    def test_element_has_no_uuid(self):
-        assert_false('uuid' in self.attribs)
-
     def test_element_has_version_attrib(self):
-        self.procedure.version = '0.1'
-        self.procedure_etree_element = self.generator.generate()
-
         assert_true('version' in self.procedure_etree_element.attrib)
-        assert_equals(self.procedure_etree_element.attrib['version'], self.procedure.version)
+        assert_equals(self.procedure_etree_element.attrib['version'], str(self.procedure.last_modified))
 
     def test_element_has_uuid_attrib(self):
-        self.procedure.uuid = str(uuid.uuid1())
-        self.procedure_etree_element = self.generator.generate()
-
         assert_true('uuid' in self.procedure_etree_element.attrib)
-        assert_equals(self.procedure_etree_element.attrib['uuid'], self.procedure.uuid)
+        assert_equals(self.procedure_etree_element.attrib['uuid'], str(self.procedure.uuid))
 
 
 class PageGeneratorTest(TestCase):

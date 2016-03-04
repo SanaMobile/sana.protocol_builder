@@ -1,9 +1,8 @@
 from django.test import TestCase
 from django.db import IntegrityError
-from nose.tools import raises, assert_equals, assert_not_equals, assert_true
+from nose.tools import raises, assert_equals, assert_true, assert_is_not_none
 from api.models import Procedure
 from utils import factories
-import uuid
 
 
 class ProcedureTest(TestCase):
@@ -19,30 +18,8 @@ class ProcedureTest(TestCase):
         proc = Procedure.objects.get(author='tester')
         assert_equals(proc.author, 'tester')
         assert_equals(proc.title, 'test procedure')
-        assert_equals(proc.version, None)
-        assert_equals(proc.uuid, None)
+        assert_is_not_none(proc.uuid)
         assert_equals(proc.owner, test_user)
-
-    def test_procedures_all_properties(self):
-        test_user = factories.UserFactory()
-        test_uuid = str(uuid.uuid1())
-
-        factories.ProcedureFactory(
-            author='tester2',
-            title='full test procedure',
-            version='1.0',
-            uuid=test_uuid,
-            owner=test_user
-        )
-
-        proc = Procedure.objects.get(author='tester2')
-        assert_equals(proc.author, 'tester2')
-        assert_equals(proc.title, 'full test procedure')
-        assert_equals(proc.version, '1.0')
-        assert_equals(proc.uuid, test_uuid)
-        assert_equals(proc.owner, test_user)
-        assert_not_equals(proc.last_modified, None)
-        assert_not_equals(proc.created, None)
 
     @raises(IntegrityError)
     def test_author_none(self):
