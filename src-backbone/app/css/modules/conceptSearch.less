@@ -1,0 +1,47 @@
+@import url(utils/constants.less);
+@import url(utils/helpers.less);
+
+
+@modal-max-height: 520px;
+
+@concept-table-margin-top: 15px;
+@concept-table-font-size: 16px;
+
+@cell-padding: 14px;
+@cell-border-radius: 7px;
+@cell-hover-background-color: #337ab7;
+@cell-hover-text-color: white;
+
+
+.modal .modal-body {
+    max-height: @modal-max-height;
+    overflow-y: auto;
+}
+
+
+table#concept-table {
+    margin-top: @concept-table-margin-top;
+    width: 100%;
+
+    tr {
+        td {
+            padding: @cell-padding;
+            border-radius: @cell-border-radius;
+        }
+
+    }
+
+    tr:hover {
+        background-color: @cell-hover-background-color;
+
+        a {
+            color: @cell-hover-text-color;
+        }
+    }
+
+    a {
+        font-size: @concept-table-font-size;
+        cursor: default;
+        text-decoration: none;
+    }
+}
