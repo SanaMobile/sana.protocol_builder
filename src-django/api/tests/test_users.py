@@ -56,6 +56,9 @@ class UserTest(TestCase):
         assert_equals(response.status_code, status.HTTP_200_OK)
         assert_not_equals(self.user.email, self.new_email)
         assert_equals(User.objects.get(pk=self.user.id).email, self.new_email)
+        json_response = json.loads(response.content)['user']
+        for key in ['is_superuser', 'first_name', 'last_name', 'username', 'email']:
+            assert_true(key in json_response)
 
     def test_update_password(self):
         data = {
