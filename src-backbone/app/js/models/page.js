@@ -12,33 +12,31 @@ module.exports = Backbone.Model.extend({
 
     urlRoot: '/api/pages',
 
-    constructor: function(attributes, options) {
+    constructor: function(attributes, options = {}) {
         // See model/procedure.js for explaination
         this.elements = new Elements(null, { parentPage: this });
         this.showIfs = new ShowIfs(null, { parentPage: this });
 
+        options.parse = true;
         Backbone.Model.prototype.constructor.call(this, attributes, options);
     },
 
     initialize: function() {
         // Propagate AJAX events from child to this model so that the status bar can be notified
-
-        let self = this;
         this.listenTo(this.elements, 'add', function(model, collection, options) {
-            Helpers.propagateEvents(model, self);
+            Helpers.propagateEvents(model, this);
         });
         this.listenTo(this.elements, 'reset', function(collection, options) {
             for (let model of collection.models) {
-                Helpers.propagateEvents(model, self);
+                Helpers.propagateEvents(model, this);
             }
         });
-
         this.listenTo(this.showIfs, 'add', function(model, collection, options) {
-            Helpers.propagateEvents(model, self);
+            Helpers.propagateEvents(model, this);
         });
         this.listenTo(this.showIfs, 'reset', function(collection, options) {
             for (let model of collection.models) {
-                Helpers.propagateEvents(model, self);
+                Helpers.propagateEvents(model, this);
             }
         });
     },
@@ -47,12 +45,12 @@ module.exports = Backbone.Model.extend({
         response.created = new Date(Date.parse(response.created));
         response.last_modified = new Date(Date.parse(response.last_modified));
 
-        this.elements.reset(response.elements);
+        this.elements.reset(response.elements, { parse: true });
         delete response.elements;
 
-        this.showIfs.reset(response.show_if);
+        this.showIfs.reset(response.show_if, { parse: true });
         delete response.show_if;
-        
+
         return response;
     },
 
@@ -108,7 +106,7 @@ module.exports = Backbone.Model.extend({
             },
             success: function() {
                 console.info('Created Criteria', showIf.get('id'));
-                self.showIfs.reset([showIf]);
+                self.showIfs.reset([ showIf ], { parse: true });
             },
             error: function() {
                 console.warn('Failed to create Criteria', showIf.get('id'));

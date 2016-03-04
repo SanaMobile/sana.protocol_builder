@@ -135,7 +135,6 @@ class ProcedureSerializer(serializers.ModelSerializer):
             'author',
             'uuid',
             'owner',
-            'pages',
             'last_modified',
             'created'
         )
@@ -143,11 +142,12 @@ class ProcedureSerializer(serializers.ModelSerializer):
 
 class ProcedureDetailSerializer(ProcedureSerializer):
     owner = serializers.ReadOnlyField(source='owner.id')
+    pages = PageSerializer(many=True, read_only=True)
 
     class Meta(ProcedureSerializer.Meta):
         model = models.Procedure
         depth = 1
-        fields = ProcedureSerializer.Meta.fields
+        fields = ProcedureSerializer.Meta.fields + ('pages',)
 
 
 class ConceptSerializer(serializers.ModelSerializer):

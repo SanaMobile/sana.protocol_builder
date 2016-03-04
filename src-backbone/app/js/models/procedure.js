@@ -20,9 +20,6 @@ let Procedure = Backbone.Model.extend({
     },
 
     constructor: function(attributes, options = {}) {
-        this.loadDetails = options.loadDetails || false;
-        delete options.loadDetails;
-
         // We do not want the Collection to be an attribute of this model because:
         // - parse() is called before initialize()/defaults() but we need a common reference to the Pages
         // - creating a new Pages inside parse every time causes a lot of headache with event listeners and garbage collection
@@ -46,7 +43,7 @@ let Procedure = Backbone.Model.extend({
         response.created       = new Date(Date.parse(response.created));
         response.last_modified = new Date(Date.parse(response.last_modified));
 
-        this._setPages(response.pages); // At the minimum, this sets a bunch of Page models with only 'id' attribute
+        this._setPages(response.pages);
         delete response.pages;
 
         return response;
@@ -59,31 +56,38 @@ let Procedure = Backbone.Model.extend({
     },
 
     _setPages: function (pages) {
-        let self = this;
-        let onPageFetch = function(model, response, options) {
-            self._setPage(model);
-        };
+        this.pages.reset(pages, { parse: true });
 
-        for (let i = 0; i < pages.length; i++) {
-            let page = new Page(pages[i]);
-            this.pages.add(page, { silent: true });
+        let activePage = this.pages.findWhere(function(page) {
+            return page.isActive();
+        });
 
-            if (this.loadDetails) {
-                page.fetch({ 
-                    success: onPageFetch,
-                });
-            }
+        if (activePage) {
+            this.selectActivePage(activePage);
         }
     },
 
-    _setPage: function(page) {
-        // Not silent update because now we have all the info for the view
-        page = this.pages.add(page, { merge: true });
+    //--------------------------------------------------------------------------
+    // Managing activePageId
+    //--------------------------------------------------------------------------
 
-        if (page.isActive()) {
-            this.selectActivePage(page);
-        }
+    selectActivePage: function(page) {
+        this.activePageId = page.get('id');
+        this.trigger(ACTIVE_PAGE_CHANGE_EVENT, page);
     },
+
+    unselectActivePage: function() {
+        this.activePageId = undefined;
+        this.trigger(ACTIVE_PAGE_CHANGE_EVENT, null);
+    },
+
+    getActivePage: function() {
+        return this.pages.get(this.activePageId);
+    },
+
+    //--------------------------------------------------------------------------
+    // View events
+    //--------------------------------------------------------------------------
 
     createNewPage: function() {
         let position = 0;
@@ -95,8 +99,6 @@ let Procedure = Backbone.Model.extend({
         let page = new Page({
             display_index: position,
             procedure: this.get('id'),
-        }, {
-            loadDetails: this.loadDetails,
         });
 
         let self = this;
@@ -111,20 +113,6 @@ let Procedure = Backbone.Model.extend({
                 App().RootView.showNotification('Failed to create Page!');
             },
         });
-    },
-
-    selectActivePage: function(page) {
-        this.activePageId = page.get('id');
-        this.trigger(ACTIVE_PAGE_CHANGE_EVENT, page);
-    },
-
-    unselectActivePage: function() {
-        this.activePageId = undefined;
-        this.trigger(ACTIVE_PAGE_CHANGE_EVENT, null);
-    },
-
-    getActivePage: function() {
-        return this.pages.get(this.activePageId);
     },
 
     generate: function() {
