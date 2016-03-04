@@ -23,6 +23,8 @@ class SignupTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.valid_fields = {
+            'first_name': 'Foo',
+            'last_name': 'Bar',
             'username': 'admin',
             'email': 'admin@admin.com',
             'password1': 'admin',
