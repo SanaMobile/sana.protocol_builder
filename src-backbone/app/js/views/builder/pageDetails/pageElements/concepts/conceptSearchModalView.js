@@ -1,25 +1,37 @@
+const ConceptCollectionView = require('./conceptCollectionView');
 const ConceptSearch = require('collections/concepts');
 
 
-module.exports = Marionette.CompositeView.extend({
+module.exports = Marionette.LayoutView.extend({
 
     template: require('templates/builder/pageDetails/pageElements/concepts/conceptSearchModalView'),
 
-    childView: require('./conceptListItemView'),
+    regions: {
+        conceptTable: 'section#concept-table',
+    },
 
-    childViewContainer: 'table#concept-table',
+    ui: {
+        'searchField': 'input#search-field',
+    },
 
     events: {
-        'keyup #search-field': '_onKeyUpInput',
+        'keyup @ui.searchField': '_onKeyUpInput',
     },
 
     initialize: function() {
-        this.collection = new ConceptSearch();
+        this.concepts = new ConceptSearch();
+    },
+
+    onBeforeShow: function() {
+        this._conceptCollectionView = new ConceptCollectionView({
+            collection: this.concepts,
+        });
+        this.showChildView('conceptTable', this._conceptCollectionView);
     },
 
     _onKeyUpInput: function(event) {
-        this.collection.query = event.target.value;
-        this.collection.fetch();
+        this.concepts.query = event.target.value;
+        this.concepts.fetch();
     },
 
 });
