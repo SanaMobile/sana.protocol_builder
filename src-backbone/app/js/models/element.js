@@ -51,6 +51,7 @@ module.exports = Backbone.Model.extend({
     toJSON: function() {
         let json = _.pick(this.attributes,
             'id',
+            'eid',
             'display_index',
             'concept',
             'page',
