@@ -1,3 +1,4 @@
+const ModalRegion = require('views/builder/pageDetails/pageElements/modalRegion');
 const Notifications = require('collections/notifications');
 const NotificationsCollectionView = require('views/notifications/notificationsCollectionView');
 
@@ -8,13 +9,17 @@ const App = require('utils/sanaAppInstance');
 
 
 module.exports = Marionette.LayoutView.extend({
-  
+
     el: 'body',
 
     template: require('templates/rootLayoutView'),
 
     regions: {
         'navbar': 'nav#navbar div#navbar-content',
+        'modal': {
+            selector: 'div#modal',
+            regionClass: ModalRegion
+        },
         'notificationCenter': 'div#notification-center',
         'main': 'div#main',
     },
