@@ -56,6 +56,19 @@ module.exports = Backbone.Model.extend({
         });
     },
 
+    destroy: function(options) {
+        let myDisplayIndex = this.get('display_index');
+        let pagesAfterMe = this.collection.filter(function(page) {
+            return page.get('display_index') > myDisplayIndex;
+        });
+
+        for (let page of pagesAfterMe) {
+            page._clearDependentElementsFromPage(this.get('id'));
+        }
+
+        Backbone.Model.prototype.destroy.call(this, options);
+    },
+
     parse: function(response, options) {
         response.created = new Date(Date.parse(response.created));
         response.last_modified = new Date(Date.parse(response.last_modified));
@@ -140,29 +153,23 @@ module.exports = Backbone.Model.extend({
     },
 
     shouldConfirmBeforeSort: function(newIndex) {
-        let self = this;
-        let clearAllCriteria = function() {
-            self.clearCriteria();
-        };
-        let clearElementsFromCriteria = function() {
-            self._clearDependentElementsAfterPosition(newIndex);
-        };
-
-        if (this.showIfs.length === 0) {
-            // Don't need to warn user if there's no side effects to sorting
-            return false;
-        }
-
-        if (newIndex === 0) {
-            // Moving to first slot always remove all conditions
-            return {
-                warningMessage: i18n.t("Reordering this page will remove all of your conditionals."),
-                callback: clearAllCriteria,
-            };
-        }
-
         let oldIndex = this.get('display_index');
+        let message;
 
+        message = this._checkPagesBelowMeBeforeSort(oldIndex, newIndex);
+        if (message) {
+            return message;
+        }
+
+        message = this._checkPagesAboveMeBeforeSort(oldIndex, newIndex);
+        if (message) {
+            return message;
+        }
+
+        return false;
+    },
+
+    _checkPagesBelowMeBeforeSort: function(oldIndex, newIndex) {
         // Moving to a slot below current slot won't invalidate any conditions on this page
         // BUT it may invalidate some conditions on other pages
         if (oldIndex < newIndex) {
@@ -180,19 +187,57 @@ module.exports = Backbone.Model.extend({
             }
 
             if (pagesAfterMeDependingOnMe.length > 0) {
+                let self = this;
                 return {
                     warningMessage: i18n.t("Reordering this page will cause some of your other pages' conditionals to lose their dependent elements because they appear before this page's new location."),
                     callback: function() {
                         for (let page of pagesAfterMeDependingOnMe) {
-                            page._clearDependentElementsFromPage(this.get('id'));
+                            page._clearDependentElementsFromPage(self.get('id'));
                         }
                     },
                 };
             }
         }
 
-        // When newIndex < oldIndex, then there may be pages inbetween that contain
+        if (oldIndex === 0) {
+            let pageOne = this.collection.at(1);
+            if (pageOne.showIfs.length > 0) {
+                return {
+                    warningMessage: i18n.t("Reordering this page will cause some of your other pages' conditionals to lose their dependent elements because they appear before this page's new location."),
+                    callback: function() {
+                        pageOne.clearCriteria();
+                    },
+                };
+            }
+        }
+
+        return false;
+    },
+
+    _checkPagesAboveMeBeforeSort: function(oldIndex, newIndex) {
+        // When newIndex < oldIndex (moving page up), then there may be pages inbetween that contain
         // elements that this page depends on
+        if (this.showIfs.length === 0) {
+            // Don't need to warn user if there's no side effects to sorting
+            return false;
+        }
+
+        let self = this;
+        let clearAllCriteria = function() {
+            self.clearCriteria();
+        };
+        let clearElementsFromCriteria = function() {
+            self._clearDependentElementsAfterPosition(newIndex);
+        };
+
+        if (newIndex === 0) {
+            // Moving to first slot always remove all conditions
+            return {
+                warningMessage: i18n.t("Reordering this page will remove all of your conditionals."),
+                callback: clearAllCriteria,
+            };
+        }
+
         let dependentPages = this.dependentElementsToPage.values();
         for (let dependentPage of dependentPages) {
             if (!dependentPage) {

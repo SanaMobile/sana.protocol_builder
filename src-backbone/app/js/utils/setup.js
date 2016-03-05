@@ -29,7 +29,7 @@ module.exports = {
 
         Handlebars.registerHelper('checkSelected', function(value, activeValue) {
             if (value === activeValue) {
-                return ' selected';
+                return ' selected ';
             }
         });
 

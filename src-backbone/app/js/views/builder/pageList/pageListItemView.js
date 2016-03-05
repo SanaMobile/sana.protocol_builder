@@ -1,6 +1,5 @@
 const Config = require('utils/config');
-let App = require('utils/sanaAppInstance');
-
+const App = require('utils/sanaAppInstance');
 
 
 module.exports = Marionette.ItemView.extend({
