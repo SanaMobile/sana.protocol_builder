@@ -1,5 +1,6 @@
 const App = require('utils/sanaAppInstance');
 const Helpers = require('utils/helpers');
+const User = require('models/user');
 
 const AUTH_TOKEN_KEY = 'AUTH_TOKEN_KEY';
 const USER_STORAGE_KEY = 'USER_DATA';
@@ -41,6 +42,18 @@ let SessionModel = Backbone.Model.extend({
 
     isPriveleged: function() {
         return this.has(USER_STORAGE_KEY) && this.get(USER_STORAGE_KEY).is_superuser;
+    },
+
+    refreshUser: function(async = true) {
+        let user = new User(this.get(USER_STORAGE_KEY));
+        let self = this;
+        user.fetch({
+            async: async,
+            success: function(model) {
+                self.set(USER_STORAGE_KEY, model);
+                self.save();
+            },
+        });
     },
 
     signup: function(formData, serverErrorHandler, networkErrorHandler) {

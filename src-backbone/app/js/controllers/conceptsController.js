@@ -1,20 +1,20 @@
 const Config = require('utils/config');
 
-let App                  = require('utils/sanaAppInstance');
-let Helpers              = require('utils/helpers');
-let ConceptsLayout       = require('views/concepts/conceptsLayoutView');
-let ConceptsUploaderView = require('views/concepts/conceptsUploaderView');
-
+const App                  = require('utils/sanaAppInstance');
+const Helpers              = require('utils/helpers');
+const ConceptsLayout       = require('views/concepts/conceptsLayoutView');
+const ConceptsUploaderView = require('views/concepts/conceptsUploaderView');
 
 module.exports = Marionette.Controller.extend({
 
     routeUploader: function () {
+        if (!App().session.isValid()) {
+            Helpers.navigateToDefaultLoggedOut();
+            return;
+        }
+        App().session.refreshUser(false);
         if (!App().session.isPriveleged()) {
-            if (App().session.isValid()) {
-                Helpers.navigateToDefaultLoggedIn();
-            } else {
-                Helpers.navigateToDefaultLoggedOut();
-            }
+            Helpers.navigateToDefaultLoggedIn();
             return;
         }
         Helpers.arrivedOnView('Concepts');

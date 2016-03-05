@@ -1,4 +1,4 @@
-let ConceptsController = require('controllers/conceptsController');
+const ConceptsController = require('controllers/conceptsController');
 
 
 module.exports = Marionette.AppRouter.extend({
