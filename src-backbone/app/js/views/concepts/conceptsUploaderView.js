@@ -4,11 +4,12 @@ module.exports = Marionette.LayoutView.extend({
     template: require('templates/concepts/conceptUploaderView'),
 
     ui: {
-        form: 'form'
+        form: 'form',
+        file: '.btn-file :file'
     },
 
     events: {
-        submit: 'onSubmit'
+        'submit @ui.form': 'onSubmit',
     },
 
     onSubmit: function(event) {

@@ -12,7 +12,7 @@ module.exports = Marionette.Controller.extend({
             Helpers.navigateToDefaultLoggedOut();
             return;
         }
-        App().session.refreshUser(false);
+        App().session.fetchUser();
         if (!App().session.isPriveleged()) {
             Helpers.navigateToDefaultLoggedIn();
             return;

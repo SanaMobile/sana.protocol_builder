@@ -44,13 +44,12 @@ let SessionModel = Backbone.Model.extend({
         return this.has(USER_STORAGE_KEY) && this.get(USER_STORAGE_KEY).is_superuser;
     },
 
-    refreshUser: function(async = true) {
+    fetchUser: function() {
         let user = new User(this.get(USER_STORAGE_KEY));
         let self = this;
         user.fetch({
-            async: async,
             success: function(model) {
-                self.set(USER_STORAGE_KEY, model);
+                self.set(USER_STORAGE_KEY, model.attributes);
                 self.save();
             },
         });
