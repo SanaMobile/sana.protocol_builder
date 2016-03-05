@@ -13,6 +13,7 @@ describe("Signup View", function () {
             'routers/authRouter': {},
             'routers/infoRouter': {},
             'routers/proceduresRouter': {},
+            'routers/conceptsRouter': {},
             'utils/helpers': {},
         });
         app = new SanaApp();

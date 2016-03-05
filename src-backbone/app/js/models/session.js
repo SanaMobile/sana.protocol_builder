@@ -1,7 +1,9 @@
 const App = require('utils/sanaAppInstance');
 const Helpers = require('utils/helpers');
+const User = require('models/user');
 
 const AUTH_TOKEN_KEY = 'AUTH_TOKEN_KEY';
+const USER_STORAGE_KEY = 'USER_DATA';
 const STORAGE_KEY = AUTH_TOKEN_KEY;
 
 
@@ -36,6 +38,21 @@ let SessionModel = Backbone.Model.extend({
         if (!this.has(AUTH_TOKEN_KEY)) {
             return 'No auth token in session model.';
         }
+    },
+
+    isPriveleged: function() {
+        return this.has(USER_STORAGE_KEY) && this.get(USER_STORAGE_KEY).is_superuser;
+    },
+
+    fetchUser: function() {
+        let user = new User(this.get(USER_STORAGE_KEY));
+        let self = this;
+        user.fetch({
+            success: function(model) {
+                self.set(USER_STORAGE_KEY, model.attributes);
+                self.save();
+            },
+        });
     },
 
     signup: function(formData, serverErrorHandler, networkErrorHandler) {
@@ -119,6 +136,8 @@ let SessionModel = Backbone.Model.extend({
                 App().RootView.hideSpinner();
             },
             success: function(response) {
+                this.set(USER_STORAGE_KEY, response.user);
+                this.save();
                 App().RootView.clearNotifications();
                 App().RootView.showNotification({
                     title: 'Success!',
@@ -141,6 +160,7 @@ let SessionModel = Backbone.Model.extend({
 
     _authHandler: function(response, serverErrorHandler) {
         if (response.success) {
+            this.set(USER_STORAGE_KEY, response.user);
             this.set(AUTH_TOKEN_KEY, response.token);
             this.save();
         } else {
@@ -153,5 +173,6 @@ let SessionModel = Backbone.Model.extend({
 });
 
 SessionModel.AUTH_TOKEN_KEY = AUTH_TOKEN_KEY;
+SessionModel.USER_STORAGE_KEY = USER_STORAGE_KEY;
 
 module.exports = SessionModel;
