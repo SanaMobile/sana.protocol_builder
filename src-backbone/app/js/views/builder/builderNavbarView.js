@@ -10,7 +10,6 @@ module.exports = Marionette.LayoutView.extend({
     className: 'container-fluid spb-container',
 
     regions: {
-        'languageSelector': 'div.navbar-right.language-selector',
         'rightNavbar': 'div.navbar-right.content',
     },
 
