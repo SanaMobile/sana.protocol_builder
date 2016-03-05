@@ -4,4 +4,14 @@ module.exports = Marionette.CollectionView.extend({
 
     childView: require('./conceptListItemView'),
 
+    initialize: function(options) {
+        this.page = options.page;
+    },
+
+    childViewOptions: function() {
+        return {
+            page: this.page,
+        };
+    },
+
 });

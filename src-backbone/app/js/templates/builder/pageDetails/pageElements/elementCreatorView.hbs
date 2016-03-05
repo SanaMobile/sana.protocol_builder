@@ -1,9 +1,0 @@
-<h1>{{ i18n "Create a new element" }}</h1>
-
-<nav id="new-element-btns">
-    {{#each ELEMENT_TYPES}}
-    <a class="element-type-{{ sluggify this }}" data-element-type="{{ this }}">{{ i18n this }}</a>
-    {{/each}}
-</nav>
-
-<a id="create-new-element-btn" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>{{ i18n "Create New Element" }}</a>

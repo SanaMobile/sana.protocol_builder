@@ -18,12 +18,14 @@ module.exports = Marionette.LayoutView.extend({
         'keyup @ui.searchField': '_onKeyUpInput',
     },
 
-    initialize: function() {
+    initialize: function(options) {
+        this.page = options.page;
         this.concepts = new ConceptSearch();
     },
 
     onBeforeShow: function() {
         this._conceptCollectionView = new ConceptCollectionView({
+            page: this.page,
             collection: this.concepts,
         });
         this.showChildView('conceptTable', this._conceptCollectionView);

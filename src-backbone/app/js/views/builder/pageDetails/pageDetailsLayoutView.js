@@ -3,7 +3,6 @@ const Procedure = require('models/procedure');
 const SortableBehavior = require('behaviors/sortableBehavior');
 const ShowIfsEditor = require('./pageConditions/showIfsCompositeView');
 const ElementsEditor = require('./pageElements/elementsCompositeView');
-const ElementCreator = require('./pageElements/elementCreatorView');
 
 
 module.exports = Marionette.LayoutView.extend({
@@ -55,12 +54,6 @@ module.exports = Marionette.LayoutView.extend({
             this.showChildView('elementsEditor', new ElementsEditor({ model: activePage }));
         } else {
             this.getRegion('elementsEditor').reset();
-        }
-
-        if (activePage) {
-            this.showChildView('elementCreator', new ElementCreator({ model: activePage }));
-        } else {
-            this.getRegion('elementCreator').reset();
         }
     },
 

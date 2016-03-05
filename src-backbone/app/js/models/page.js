@@ -86,16 +86,19 @@ module.exports = Backbone.Model.extend({
     // View events
     //--------------------------------------------------------------------------
 
-    createNewElement: function(type) {
+    createNewElement: function(concept, type) {
         let position = 0;
         if (!_.isEmpty(this.elements.models)) {
             let lastElement = _.max(this.elements.models, element => element.get('display_index'));
             position = lastElement.get('display_index') + 1;
         }
 
+        // TODO(connor): call through to _onFormUpdate so that the eid can be generated
         let element = new Element({
             display_index: position,
             page: this.get('id'),
+            question: concept.get('description'),
+            concept: concept.get('id'),
             element_type: type,
         });
 

@@ -1,0 +1,5 @@
+<nav id="new-element-btns">
+    {{#each ELEMENT_TYPES}}
+    <a class="element-type-{{ sluggify this }}" data-element-type="{{ this }}">{{ i18n this }}</a>
+    {{/each}}
+</nav>
