@@ -37,7 +37,7 @@ module.exports = Backbone.Model.extend({
         response.created = new Date(Date.parse(response.created));
         response.last_modified = new Date(Date.parse(response.last_modified));
 
-        if (Config.CHOICE_ELEMENT_TYPES.includes(response.element_type)) {
+        if (this.isChoiceBased(response.element_type)) {
             this.choices.setChoices(response.choices, response.answer);
             delete response.choices;
             delete response.answer;
@@ -51,6 +51,7 @@ module.exports = Backbone.Model.extend({
     toJSON: function() {
         let json = _.pick(this.attributes,
             'id',
+            'eid',
             'display_index',
             'concept',
             'page',
@@ -59,20 +60,16 @@ module.exports = Backbone.Model.extend({
             'required'
         );
 
-        let elementType = this.get('element_type');
-
-        if (Config.CHOICE_ELEMENT_TYPES.includes(elementType)) {
+        if (this.isChoiceBased()) {
             json.choices = this.choices.pluck('text');
             json.answer = this.choices.getDefaultAnswers();
+        } else if (this.isPluginBased()) {
+            json.action = this.get('action');
+            json.mime_type = this.get('mime_type');
         } else {
             json.answer = [
                 this.get('answer')
             ];
-        }
-
-        if (Config.PLUGIN_ELEMENT_TYPES.includes(elementType)) {
-            json.action = this.get('action');
-            json.mime_type = this.get('mime_type');
         }
 
         return json;
@@ -83,6 +80,16 @@ module.exports = Backbone.Model.extend({
             text: text,
             choiceDisplayIndex: _.max(this.choices.pluck('choiceDisplayIndex')) + 1,
         }));
+    },
+
+    isChoiceBased: function(type) {
+        type = type || this.get('element_type');
+        return Config.CHOICE_ELEMENT_TYPES.includes(type);
+    },
+
+    isPluginBased: function(type) {
+        type = type || this.get('element_type');
+        return Config.PLUGIN_ELEMENT_TYPES.includes(type);
     },
 
     _debounceSave: function(attributes, options = {}) {

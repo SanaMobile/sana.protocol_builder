@@ -7,7 +7,11 @@ module.exports = Backbone.Model.extend({
     urlRoot: '/api/conditionals',
 
     constructor: function(attributes, options = {}) {
+        this.parentPage = options.parentPage;
+        delete options.parentPage;
+
         this.rootConditionalNode = new ConditionalNode(null, {
+            parentPage: this.parentPage,
             parentConditionalNode: null,
             rootShowIf: this,
         });
@@ -17,10 +21,10 @@ module.exports = Backbone.Model.extend({
     },
 
     parse: function(response, options) {
-        this.rootConditionalNode.reset(response.conditions);
+        this.rootConditionalNode.reset(response.conditions, { silent: true });
         delete response.conditions;
 
-        this.trigger('update');
+        this.trigger('update'); // Always rerender on load or post save
         return response;
     },
 

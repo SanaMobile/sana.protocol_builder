@@ -35,12 +35,26 @@ section#pages-list{
             border-bottom: 1px solid @grey-border;
             position: relative;
 
-            &.active{
-                background: @grey-bg;
+            &.ui-sortable-helper{
+                cursor: move;
+                border: 1px solid @grey-border;
+                box-shadow: 0 0 20px @grey-border;
+            }
+
+            div.wrapper{
+                &.active{
+                    background: @grey-bg-dark;
+                }
+
+                &.depended-upon{
+                    background: @dependency-highlight;
+                }
             }
 
             &:hover{
-                background: @grey-bg-light;
+                div.wrapper{
+                    background: @grey-bg;
+                }
             }
 
             a.page{
@@ -78,15 +92,6 @@ section#pages-list{
                         top: (30px - 16px) / 2; left: 2px;
                         width: 16px; height: 16px;
                     }
-
-                    .icon(@name) {
-                        &.element-type-@{name} {
-                            &:before {
-                                background-image: url('/img/elements/@{name}.png');
-                            }
-                        }
-                    }
-
                     .icon(date);
                     .icon(entry);
                     .icon(select);
@@ -104,12 +109,6 @@ section#pages-list{
                         }
                     }
                 }
-            }
-
-            &.ui-sortable-helper{
-                cursor: move;
-                border: 1px solid @grey-border;
-                box-shadow: 0 0 20px @grey-border;
             }
 
             div.handle{

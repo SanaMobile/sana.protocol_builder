@@ -1,4 +1,4 @@
-const ChoicesCollectionView = require('views/builder/pageElements/choices/choicesCollectionView');
+const ChoicesCollectionView = require('views/builder/pageDetails/pageElements/choices/choicesCollectionView');
 const Choice = require('models/choice');
 const Helpers = require('utils/helpers');
 

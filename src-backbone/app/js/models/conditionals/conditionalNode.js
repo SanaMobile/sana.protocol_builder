@@ -28,15 +28,23 @@ const ConditionalNode = Backbone.Model.extend({
     },
 
     constructor: function(attributes, options = {}) {
+        this.parentPage = options.parentPage;
+        delete options.parentPage;
+
         this.parentConditionalNode = options.parentConditionalNode;
+        delete options.parentConditionalNode;
+
         this.rootShowIf = options.rootShowIf;
+        delete options.rootShowIf;
+
         this.childrenNodes = new ConditionalNodes(null, {
             model: ConditionalNode, // To avoid circular dependencies inside the collection
+            parentPage: this.parentPage,
             parentConditionalNode: this,
-            rootShowIf: options.rootShowIf,
+            rootShowIf: this.rootShowIf,
         });
 
-        this.saveRootShowIf = _.debounce(function() {
+        this._debounceSave = _.debounce(function() {
             this._saveRootShowIf();
         }, Config.INPUT_DELAY_BEFORE_SAVE);
 
@@ -44,9 +52,41 @@ const ConditionalNode = Backbone.Model.extend({
         Backbone.Model.prototype.constructor.call(this, attributes, options);
     },
 
-    reset: function(attributes) {
-        this.clear({ silent: true });
-        this.set(this.parse(attributes));
+    initialize: function() {
+        this.on('destroy', function(self, collection, options) {
+            // Unregister elementId from parentPage's dependency cache
+            let elementId = self.get('criteria_element');
+            self.parentPage.dependentElementsToPage.delete(elementId);
+
+            console.log('onDestroy', self.parentPage.dependentElementsToPage);
+        });
+
+        this.on('change:criteria_element', function(self, criteriaElementId, options) {
+            let previousElementId = self.previous('criteria_element');
+
+            // Check if previousElementId exists (initially -1)
+            if (previousElementId > 0) {
+                // Unregister previous criteriaElementId from parentPage's dependency cache
+                let previousDependentPage = self.parentPage.dependentElementsToPage.get(previousElementId);
+                self.parentPage.dependentElementsToPage.delete(previousElementId);
+                previousDependentPage.trigger('change:depended-upon', previousDependentPage);
+            }
+
+            // Check if criteriaElementId is being set (property is undefined when calling unset)
+            if (criteriaElementId) {
+                // Register new criteriaElementId to parentPage's dependency cache
+                let dependentPage = self.parentPage.collection.get(options.operandElementPage);
+                self.parentPage.dependentElementsToPage.set(criteriaElementId, dependentPage);
+                dependentPage.trigger('change:depended-upon', dependentPage);
+            }
+
+            console.log('onChange', self.parentPage.dependentElementsToPage);
+        });
+    },
+
+    reset: function(attributes, options) {
+        this.clear(options);
+        this.set(this.parse(attributes), options);
     },
 
     parse: function(response, options) {
@@ -112,11 +152,78 @@ const ConditionalNode = Backbone.Model.extend({
         }
     },
 
+    getPossibleOperandElements: function() {
+        return this.rootShowIf.collection.parentPage.getPossibleOperandElements();
+    },
+
     getDepth: function() {
         return (!this.parentConditionalNode) ? 0 : this.parentConditionalNode.getDepth() + 1;
     },
 
-    _saveRootShowIf: function(callback) {
+    getDependentElements: function() {
+        let dependents = [];
+
+        if (this.isCriteriaNode()) {
+            let elementId = this.get('criteria_element');
+            if (elementId > 0) {
+                dependents.push(elementId);
+            }
+        } else {
+            this.childrenNodes.each(function(child) {
+                dependents = dependents.concat(child.getDependentElements());
+            });
+        }
+
+        return dependents;
+    },
+
+    clearDependentElementsAfterPosition: function(position) {
+        if (this.isCriteriaNode()) {
+            let dependentPage = this.parentPage.dependentElementsToPage.get(this.get('criteria_element'));
+            let dependentPageIndex = dependentPage.get('display_index');
+            if (dependentPageIndex >= position) {
+                // dependentPage appears after this position
+                this.unset('criteria_element');
+            }
+        } else {
+            this.childrenNodes.each(function(child) {
+                child.clearDependentElementsAfterPosition(position);
+            });
+        }
+
+        if (this.isRootNode()) {
+            // Bypass the debounce since we want the ShowIfItemView to rerender
+            // immediately. This is safe because this method is only be triggered
+            // after a sort event, which should not happen that frequently
+            this._saveRootShowIf();
+        }
+    },
+
+    clearDependentElementsFromPage: function(pageId) {
+        if (this.isCriteriaNode()) {
+            let dependentPage = this.parentPage.dependentElementsToPage.get(this.get('criteria_element'));
+            if (dependentPage.get('id') === pageId) {
+                // pageId contains this element but it got moved after this node's parentPage
+                this.unset('criteria_element');
+            }
+        } else {
+            this.childrenNodes.each(function(child) {
+                child.clearDependentElementsFromPage(pageId);
+            });
+        }
+
+        if (this.isRootNode()) {
+            this._saveRootShowIf();
+        }
+    },
+
+    saveRootShowIf: function() {
+        this._debounceSave();
+    },
+
+    _saveRootShowIf: function() {
+        // Should not call this method directly from view callbacks
+        // Call saveRootShowIf() instead (without the _) to debounce the save calls
         let self = this;
         this.rootShowIf.save(null, {
             beforeSend: function() {
@@ -132,11 +239,12 @@ const ConditionalNode = Backbone.Model.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Actions
+    // View events
     //--------------------------------------------------------------------------
 
     createNewNeighborNode: function() {
         let neighborNode = new ConditionalNode(null, {
+            parentPage: this.parentPage,
             parentConditionalNode: this.parentConditionalNode,
             rootShowIf: this.rootShowIf,
         });
@@ -164,6 +272,7 @@ const ConditionalNode = Backbone.Model.extend({
 
     expand: function() {
         let childNode = new ConditionalNode(this.attributes, {
+            parentPage: this.parentPage,
             parentConditionalNode: this,
             rootShowIf: this.rootShowIf,
         });
@@ -186,8 +295,38 @@ const ConditionalNode = Backbone.Model.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Criteria Node
+    // Template helpers
     //--------------------------------------------------------------------------
+
+    elementIsDate: function() {
+        if (!(this.isCriteriaNode() && this.get('criteria_element') > 0)) {
+            return false;
+        }
+
+        let dependentPage = this.parentPage.dependentElementsToPage.get(this.get('criteria_element'));
+        let dependentElement = dependentPage.elements.get(this.get('criteria_element'));
+        return dependentElement.get('element_type') === 'DATE';
+    },
+
+    elementIsChoiceBased: function() {
+        if (!(this.isCriteriaNode() && this.get('criteria_element') > 0)) {
+            return false;
+        }
+
+        let dependentPage = this.parentPage.dependentElementsToPage.get(this.get('criteria_element'));
+        let dependentElement = dependentPage.elements.get(this.get('criteria_element'));
+        return dependentElement.isChoiceBased();
+    },
+
+    getElementChoices: function() {
+        if (!(this.isCriteriaNode() && this.get('criteria_element') > 0)) {
+            return [];
+        }
+
+        let dependentPage = this.parentPage.dependentElementsToPage.get(this.get('criteria_element'));
+        let dependentElement = dependentPage.elements.get(this.get('criteria_element'));
+        return dependentElement.choices.pluck('text');
+    },
 
     canAdd: function() {
         // Only if this node already belongs to a collection (i.e. not root)

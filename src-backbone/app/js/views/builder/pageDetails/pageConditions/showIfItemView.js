@@ -1,10 +1,10 @@
-const ConditionalNodeView = require('views/builder/pageConditions/conditionalNodeView');
+const ConditionalNodeView = require('./conditionalNodeView');
 const ShowIf = require('models/conditionals/showIf');
 
 
 module.exports = Marionette.LayoutView.extend({
 
-    template: require('templates/builder/pageConditions/showIfItemView'),
+    template: require('templates/builder/pageDetails/pageConditions/showIfItemView'),
 
     regions: {
         'main': 'div.show-if'

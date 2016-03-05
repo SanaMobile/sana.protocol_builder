@@ -4,7 +4,7 @@ const ConditionalNode = require('models/conditionals/conditionalNode');
 
 const ConditionalNodeView = Marionette.CompositeView.extend({
 
-    template: require('templates/builder/pageConditions/conditionalNodeView'),
+    template: require('templates/builder/pageDetails/pageConditions/conditionalNodeView'),
     childViewContainer: 'div.children-nodes',
 
     className: function() {
@@ -23,13 +23,18 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
     },
 
     templateHelpers: function() {
-        let isAll = (this.model.get('node_type') === 'AND' && !this.model.get('isNegated')) ||
-                    (this.model.get('node_type') === 'OR' && this.model.get('isNegated'));
+        let isLogicAll = (this.model.get('node_type') === 'AND' && !this.model.get('isNegated')) ||
+                         (this.model.get('node_type') === 'OR' && this.model.get('isNegated'));
 
         return {
             cid: this.model.cid,
-            isAll: isAll,
+            isLogicAll: isLogicAll,
             isCriteria: this.model.isCriteriaNode(),
+            operandElements: this.model.getPossibleOperandElements(),
+
+            showDateEditorForValue: this.model.elementIsDate(),
+            showChoiceEditorForValue: this.model.elementIsChoiceBased() && this.model.get('node_type') === 'EQUALS',
+            elementChoices: this.model.getElementChoices(),
 
             canAdd: this.model.canAdd(),
             canDelete: this.model.canDelete(),
@@ -40,55 +45,106 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
 
     ui: function() {
         let cid = this.model.cid;
-        if (this.model.isCriteriaNode()) {
-            return {
-                'criteriaNegation': 'select.negation' + '[data-cid=' + cid + ']',
-                'criteriaElement': 'input.element' + '[data-cid=' + cid + ']',
-                'criteriaComparator': 'select.comparator' + '[data-cid=' + cid + ']',
-                'criteriaValue': 'input.value' + '[data-cid=' + cid + ']',
+        let viewUI = {
+            'addButton': 'span.glyphicon.add' + '[data-cid=' + cid + ']',
+            'deleteButton': 'span.glyphicon.delete' + '[data-cid=' + cid + ']',
+        };
 
-                'addButton': 'span.glyphicon.add' + '[data-cid=' + cid + ']',
-                'deleteButton': 'span.glyphicon.delete' + '[data-cid=' + cid + ']',
+        if (this.model.isCriteriaNode()) {
+            _.extend(viewUI, {
+                'criteriaNegation': 'select.negation' + '[data-cid=' + cid + ']',
+                'criteriaElement': 'select.operand-element' + '[data-cid=' + cid + ']',
+                'criteriaComparator': 'select.comparator' + '[data-cid=' + cid + ']',
                 'expandButton': 'span.glyphicon.expand' + '[data-cid=' + cid + ']',
-            };
+            });
+
+            if (this.model.elementIsDate()) {
+                _.extend(viewUI, {
+                    'criteriaValue': 'input.value.date' + '[data-cid=' + cid + ']',
+                });
+            } else if (this.model.elementIsChoiceBased()) {
+                _.extend(viewUI, {
+                    'criteriaValue': 'select.value' + '[data-cid=' + cid + ']',
+                });
+            } else {
+                _.extend(viewUI, {
+                    'criteriaValue': 'input.value' + '[data-cid=' + cid + ']',
+                });
+            }
         } else {
-            return {
+            _.extend(viewUI, {
                 'logicalConnective': 'select.logical-connective' + '[data-cid=' + cid + ']',
                 'logicalNegation': 'select.negation' + '[data-cid=' + cid + ']',
-
-                'addButton': 'span.glyphicon.add' + '[data-cid=' + cid + ']',
-                'deleteButton': 'span.glyphicon.delete' + '[data-cid=' + cid + ']',
                 'contractButton': 'span.glyphicon.contract' + '[data-cid=' + cid + ']',
-            };
+            });
         }
+
+        return viewUI;
     },
 
     events: function() {
-        if (this.model.isCriteriaNode()) {
-            return {
-                'change @ui.criteriaNegation': '_onCriteriaNegationChanged',
-                'keyup @ui.criteriaElement': '_onCriteriaElementChanged',
-                'change @ui.criteriaComparator': '_onCriteriaComparatorChanged',
-                'keyup @ui.criteriaValue': '_onCriteriaValueChanged',
+        let viewEvents = {
+            'click @ui.addButton': '_onAddCriteria',
+            'click @ui.deleteButton': '_onDeleteNode',
+        };
 
-                'click @ui.addButton': '_onAddCriteria',
-                'click @ui.deleteButton': '_onDeleteNode',
+        if (this.model.isCriteriaNode()) {
+            _.extend(viewEvents, {
+                'change @ui.criteriaNegation': '_onCriteriaNegationChanged',
+                'change @ui.criteriaElement': '_onCriteriaElementChanged',
+                'change @ui.criteriaComparator': '_onCriteriaComparatorChanged',
                 'click @ui.expandButton': '_onExpandCriteria',
-            };
+            });
+
+            if (this.model.elementIsDate()) {
+                _.extend(viewEvents, {
+                    'changeDate @ui.criteriaValue': '_onCriteriaValueChanged',
+                    'clearDate @ui.criteriaValue': '_onCriteriaValueChanged',
+                });
+            } else if (this.model.elementIsChoiceBased()) {
+                _.extend(viewEvents, {
+                    'change @ui.criteriaValue': '_onCriteriaValueChanged',
+                });
+            } else {
+                _.extend(viewEvents, {
+                    'keyup @ui.criteriaValue': '_onCriteriaValueChanged',
+                });
+            }
         } else {
-            return {
+            _.extend(viewEvents, {
                 'change @ui.logicalConnective': '_onLogicalFormChanged',
                 'change @ui.logicalNegation': '_onLogicalFormChanged',
-
-                'click @ui.addButton': '_onAddCriteria',
-                'click @ui.deleteButton': '_onDeleteNode',
                 'click @ui.contractButton': '_onContractLogic',
-            };
+            });
         }
+
+        return viewEvents;
     },
 
-    onBeforeRender: function() {
-        console.debug('conditionalNodeView onBeforeRender()', this.model.attributes, this.model.cid);
+    onRender: function() {
+        // Setup bootstrap-select
+        let formContainerSelector = this.model.isCriteriaNode() ? 'div.criteria-form' : 'div.logical-form';
+        this.$el.children(formContainerSelector).find('select:not(.value)').selectpicker({
+            showTick: false,
+            width: '120px',
+        });
+        this.$el.children(formContainerSelector).find('select.value').selectpicker({
+            showTick: false,
+            width: 'fit',
+        });
+
+        // Setup bootstrap-datepicker
+        if (this.model.elementIsDate()) {
+            this._isFinishedRenderingDatePicker = false;
+            this.$el.find('input.date').datepicker({
+                todayBtn: 'linked',
+                clearBtn: true,
+                autoclose: true,
+                language: i18n.language,
+                format: 'mm/dd/yyyy',
+            });
+            this._isFinishedRenderingDatePicker = true;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -124,10 +180,23 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
     },
 
     _onCriteriaElementChanged: function(event) {
-        // TODO
+        let data = this.ui.criteriaElement.val().split('-');
+        let operandElement = parseInt(data[0]);
+        let operandElementPage = parseInt(data[1]);
+
+        this.model.set({
+            criteria_element: operandElement,
+        }, {
+            operandElementPage: operandElementPage,
+        });
+        this.model.saveRootShowIf();
     },
 
     _onCriteriaValueChanged: function(event) {
+        if (this.model.elementIsDate() && !this._isFinishedRenderingDatePicker) {
+            return;
+        }
+
         let value = this.ui.criteriaValue.val();
         this.model.set('value', value);
         this.model.saveRootShowIf();

@@ -7,10 +7,17 @@
     padding-right: @container-side-padding;
 
     section.details-panel{
+        margin-bottom: 40px;
+
+        &:last-child{
+            margin-bottom: 0;
+        }
+
         h1{
             font-size: 24px;
             line-height: 40px;
-            margin: 40px 0 15px;
+            margin-top: 0;
+            margin-bottom: 15px;
 
             &.checkbox-heading{
                 margin-top: 0;
@@ -41,87 +48,148 @@
             padding: 15px;
         }
 
-        div.criteria-form,
-        div.logical-form{
-            position: relative;
-        }
-
         div.criteria-form{
             display: flex;
             line-height: @button-size;
             padding-right: (@button-size * 3) + (@column-margin * 3);
+            position: relative;
+
+            .form-control{
+                margin: 0;
+                margin-left: 15px;
+
+                &:first-child{
+                    margin-left: 0;
+                }
+            }
+
+            input[type="text"],
+            div.bootstrap-select.fit-width{
+                flex: 1;
+            }
+
+            div.bootstrap-select.operand-element{
+                button.dropdown-toggle{
+                    @icon: 14px;
+
+                    i.glyphicon{
+                        display: inline-block;
+                        margin: 0;
+                        width: @icon; height: @icon;
+
+                        &:before{
+                            background-image: url('/img/elements/default.png');
+                            background-repeat: no-repeat;
+                            background-position: center;
+                            background-size: 100% 100%;
+
+                            display: block;
+                            content: '';
+                            overflow: hidden;
+                            width: @icon; height: @icon;
+                        }
+
+                        .icon(date);
+                        .icon(entry);
+                        .icon(select);
+                        .icon(multi-select);
+                        .icon(radio);
+                        .icon(picture);
+                        .icon(plugin);
+                        .icon(plugin-entry);
+                    }
+                }
+
+                a.opt{
+                    padding-left: 20px + 16px + 10px;
+                    position: relative;
+
+                    &:before{
+                        background-image: url('/img/elements/default.png');
+                        background-repeat: no-repeat;
+                        background-size: 100% 100%;
+
+                        display: block;
+                        content: '';
+                        overflow: hidden;
+                        position: absolute;
+                        top: (26px - 16px) / 2; left: 20px;
+                        width: 16px; height: 16px;
+                    }
+                    .icon(date);
+                    .icon(entry);
+                    .icon(select);
+                    .icon(multi-select);
+                    .icon(radio);
+                    .icon(picture);
+                    .icon(plugin);
+                    .icon(plugin-entry);
+
+                    .glyphicon{
+                        display: none;
+                    }
+                }
+            }
         }
 
         div.logical-form{
             padding-right: (@button-size * 3) + (@column-margin * 3);
+            position: relative;
 
             div.logical-statement{
                 margin-bottom: 15px;
 
-                select,
-                span{
-                    display: inline-block;
+                .form-control{
                     margin: 0;
                 }
 
-                span{
-                    line-height: 30px;
+                &> span{
+                    display: inline-block;
+                    line-height: 34px;
+                    margin: 0 4px;
                 }
             }
         }
 
-        input[type="text"]{
-            box-sizing: border-box;
-            flex: 1;
-            height: 30px;
-            line-height: 20px;
-            padding: 5px;
-        }
-
-        select{
-            box-sizing: border-box;
-            height: @button-size;
-            margin: 0 15px;
-            padding: 5px;
-            width: auto;
-
-            &:first-child{
-                margin-left: 0;
-            }
-        }
-
-        span.glyphicon{
-            cursor: pointer;
-            display: block;
+        div.actions{
             position: absolute;
-            top: 0;
+            top: 0; right: 0;
+            width: @button-size * 3 + @column-margin * 2;
+            height: @button-size;
 
-            font-size: 20px;
-            line-height: @button-size;
-            text-align: center;
-            width: @button-size; height: @button-size;
+            span.glyphicon{
+                cursor: pointer;
+                display: block;
+                position: absolute;
+                top: 0;
 
-            &.add{
-                right: @button-size * 2 + @column-margin * 2;
-            }
+                font-size: 20px;
+                line-height: @button-size;
+                text-align: center;
+                width: @button-size; height: @button-size;
 
-            &.delete{
-                right: @button-size + @column-margin;
-            }
+                &.add{
+                    left: 0;
+                }
 
-            &.expand,
-            &.contract{
-                right: 0;
-            }
+                &.delete{
+                    left: @button-size + @column-margin;
+                }
 
-            &.disabled{
-                color: @grey-bg;
+                &.expand,
+                &.contract{
+                    left: @button-size * 2 + @column-margin * 2;
+                }
+
+                &.disabled{
+                    color: @grey-bg;
+                }
             }
         }
     }
 }
 
-div#elements-list ul{
+ul#elements-list{
     list-style: none;
     margin: 0;
     padding: 0;
@@ -137,6 +205,25 @@ div#elements-list ul{
             &:last-child{
                 margin-bottom: 0;
             }
+
+            &:before{
+                background-image: url('/img/elements/default-large.png');
+                background-repeat: no-repeat;
+                background-position: center;
+                display: block;
+                content: '';
+                position: absolute;
+                top: 40px; left: 40px;
+                width: 50px; height: 50px;
+            }
+            .icon-large(date);
+            .icon-large(entry);
+            .icon-large(select);
+            .icon-large(multi-select);
+            .icon-large(radio);
+            .icon-large(picture);
+            .icon-large(plugin);
+            .icon-large(entry-plugin);
 
             h2{
                 line-height: 50px;
@@ -333,34 +420,6 @@ div#elements-list ul{
                     color: @grey-text-darkbg;
                 }
             }
-
-            &:before{
-                background-image: url('/img/elements/default-large.png');
-                background-repeat: no-repeat;
-                background-position: center;
-                display: block;
-                content: '';
-                position: absolute;
-                top: 40px; left: 40px;
-                width: 50px; height: 50px;
-            }
-
-            .icon(@name) {
-                &.element-type-@{name} {
-                    &:before {
-                        background-image: url('/img/elements/@{name}-large.png');
-                    }
-                }
-            }
-
-            .icon(date);
-            .icon(entry);
-            .icon(select);
-            .icon(multi-select);
-            .icon(radio);
-            .icon(picture);
-            .icon(plugin);
-            .icon(entry-plugin);
         }
 
         &.empty-elements{
@@ -400,6 +459,10 @@ nav#new-element-btns{
             margin-right: 0;
         }
 
+        &:hover{
+            background-color: @grey-bg;
+        }
+
         &:before{
             background-image: url('/img/elements/default-large.png');
             background-repeat: no-repeat;
@@ -411,26 +474,13 @@ nav#new-element-btns{
             top: 0; left: 0; right: 0;
             height: @icon-box-height;
         }
-
-        &:hover{
-            background-color: @grey-bg;
-        }
-
-        .icon(@name) {
-            &.element-type-@{name} {
-                &:before {
-                    background-image: url('/img/elements/@{name}-large.png');
-                }
-            }
-        }
-
-        .icon(date);
-        .icon(entry);
-        .icon(select);
-        .icon(multi-select);
-        .icon(radio);
-        .icon(picture);
-        .icon(plugin);
-        .icon(plugin-entry);
+        .icon-large(date);
+        .icon-large(entry);
+        .icon-large(select);
+        .icon-large(multi-select);
+        .icon-large(radio);
+        .icon-large(picture);
+        .icon-large(plugin);
+        .icon-large(plugin-entry);
     }
 }

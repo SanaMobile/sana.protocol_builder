@@ -11,6 +11,7 @@ module.exports = {
         require('jquery-ui/sortable');
         require('bootstrap');
         require('bootstrap-datepicker');
+        require('bootstrap-select');
 
         global._ = require('underscore');
         global.Backbone = require('backbone');
@@ -28,7 +29,7 @@ module.exports = {
 
         Handlebars.registerHelper('checkSelected', function(value, activeValue) {
             if (value === activeValue) {
-                return ' selected';
+                return ' selected ';
             }
         });
 

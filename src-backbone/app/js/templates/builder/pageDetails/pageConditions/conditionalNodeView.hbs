@@ -1,0 +1,81 @@
+{{#if isCriteria }}
+
+<div class="criteria-form">
+    <select class="negation form-control" data-cid="{{ cid }}">
+        <option value="default" {{#unless isNegated }}selected{{/unless}}>{{ i18n "When" }}</option>
+        <option value="negated" {{#if isNegated }}selected{{/if}}>{{ i18n "Except when" }}</option>
+    </select>
+
+    <select class="operand-element form-control" data-cid="{{ cid }}" title="{{ i18n "Element to check" }}">
+        {{#each operandElements}}
+        <optgroup label="{{ pageLabel }}">
+            {{#each pageElements }}
+            <option value="{{ id }}-{{ page }}"
+                    data-icon="element-type-{{ sluggify element_type }}"
+                    class="element-type-{{ sluggify element_type }}"
+                    {{ checkSelected ../../criteria_element id }}>
+                    {{ question }}
+            </option>
+            {{/each}}
+        </optgroup>
+        {{/each}}
+    </select>
+
+    <select class="comparator form-control" data-cid="{{ cid }}">
+        <option value="EQUALS" {{ checkSelected node_type 'EQUALS' }}>{{ i18n "Equals" }}</option>
+        <option value="LESS" {{ checkSelected node_type 'LESS' }}>{{ i18n "Greater Than" }}</option>
+        <option value="GREATER" {{ checkSelected node_type 'GREATER' }}>{{ i18n "Less Than" }}</option>
+    </select>
+
+    {{#if showChoiceEditorForValue }}
+        <select class="form-control value" data-cid="{{ cid }}" title="{{ i18n "Value" }}">
+            {{#each elementChoices }}
+            {{!-- 'this' in this block refers to the current element of elementChoices array --}}
+            {{!-- '../value' in this block refers to the ConditionalNode's value attribute --}}
+            <option value="{{ this }}" {{ checkSelected ../value this }}>{{ this }}</option>
+            {{/each}}
+        </select>
+    {{else if showDateEditorForValue }}
+        <input type="text" class="form-control value date" value="{{ value }}" data-cid="{{ cid }}" placeholder="{{ i18n "Value" }}">
+    {{else}}
+        <input type="text" class="form-control value" value="{{ value }}" data-cid="{{ cid }}" placeholder="{{ i18n "Value" }}">
+    {{/if}}
+
+    <div class="actions">
+        <span class="glyphicon glyphicon-plus add{{#unless canAdd }} disabled{{/unless}}"
+              title="{{ i18n "Add a new criteria after this one" }}" data-cid="{{ cid }}"></span>
+        <span class="glyphicon glyphicon-remove delete{{#unless canDelete }} disabled{{/unless}}"
+              title="{{ i18n "Delete this criteria" }}" data-cid="{{ cid }}"></span>
+        <span class="glyphicon glyphicon glyphicon-resize-full expand{{#unless canExpand }} disabled{{/unless}}"
+              title="{{ i18n "Expand this criteria into a list" }}" data-cid="{{ cid }}"></span>
+    </div>
+</div>
+
+{{else}}
+
+<div class="logical-form">
+    <div class="logical-statement">
+        <select class="logical-connective form-control" data-cid="{{ cid }}">
+            <option value="ALL" {{#if isLogicAll }}selected{{/if}}>{{ i18n "When all"}}</option>
+            <option value="ANY" {{#unless isLogicAll }}selected{{/unless}}>{{ i18n "When any"}}</option>
+        </select>
+        <span>{{ i18n "of the following conditions are" }}</span>
+        <select class="negation form-control" data-cid="{{ cid }}">
+            <option value="default" {{#unless isNegated }}selected{{/unless}}>{{ i18n "true" }}</option>
+            <option value="negated" {{#if isNegated }}selected{{/if}}>{{ i18n "false" }}</option>
+        </select>
+    </div>
+
+    <div class="actions">
+        <span class="glyphicon glyphicon-plus add{{#unless canAdd }} disabled{{/unless}}"
+              title="{{ i18n "Add a new criteria after this one" }}" data-cid="{{ cid }}"></span>
+        <span class="glyphicon glyphicon-remove delete{{#unless canDelete }} disabled{{/unless}}"
+              title="{{ i18n "Delete this list" }}" data-cid="{{ cid }}"></span>
+        <span class="glyphicon glyphicon glyphicon-eject contract{{#unless canContract }} disabled{{/unless}}"
+              title="{{ i18n "Contract this list into a criteria" }}" data-cid="{{ cid }}"></span>
+    </div>
+</div>
+
+{{/if}}
+
+<div class="children-nodes"></div>

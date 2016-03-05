@@ -29,11 +29,10 @@ module.exports = Marionette.LayoutView.extend({
         const procedureId = this.options.procedureId;
 
         this.model = new Procedure({
-            // model attributes
+            // Model attributes
             id: procedureId,
         }, {
-            // options passed to model constructor
-            loadDetails: true,
+            // Options passed to model constructor
             activePageId: this.options.pageId,
         });
 

@@ -1,15 +1,17 @@
-<div class="handle" title="{{ i18n "Drag to re-order this page" }}"></div>
+<div class="wrapper {{#if isActive }}active{{/if}} {{#if isBeingDependedUpon }}depended-upon{{/if}}">
+    <div class="handle" title="{{ i18n "Drag to re-order this page" }}"></div>
 
-<a class="delete" title="{{ i18n "Delete this page" }}"><span class="glyphicon glyphicon-remove"></span></a>
+    <a class="delete" title="{{ i18n "Delete this page" }}"><span class="glyphicon glyphicon-remove"></span></a>
 
-<a class="page">
-    <ul class="element-preview">
-    {{#each elements}}
-        <li data-element-id="{{ id }}" class="element-type-{{ sluggify element_type }}">
-            {{ question }}
-        </li>
-    {{else}}
-        <li class="empty">{{ i18n "Empty Page" }}</li>
-    {{/each}}
-    </ul>
-</a>
+    <a class="page">
+        <ul class="element-preview">
+            {{#each elements}}
+            <li data-element-id="{{ id }}" class="element-type-{{ sluggify element_type }}">
+                {{ question }}
+            </li>
+            {{else}}
+            <li class="empty">{{ i18n "Empty Page" }}</li>
+            {{/each}}
+        </ul>
+    </a>
+</div>

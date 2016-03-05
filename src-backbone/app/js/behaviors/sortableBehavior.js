@@ -8,13 +8,29 @@ let SortableBehavior = Marionette.Behavior.extend({
     },
 
     onFinishedSorting: function(event, ui) {
-        let displayIndexAttr = this.options.displayIndexAttr; // attribute of model that determines sort order
-
         let $child = ui.item;
         let newIndex = $child.parent().children().index($child);
-
         let collection = this.view.collection;
         let model = collection.get($child.attr('data-model-cid'));
+
+        // Ask user before sorting if it has some side effects
+        if (_.isFunction(model.shouldConfirmBeforeSort)) {
+            let onSortOptions = model.shouldConfirmBeforeSort.call(model, newIndex);
+
+            if (onSortOptions) {
+                let warningMessage = onSortOptions.warningMessage + ' ' +
+                                     i18n.t("Are you sure you wish to continue?");
+
+                if (confirm(warningMessage)) {
+                    onSortOptions.callback();
+                } else {
+                    event.preventDefault();
+                    return;
+                }
+            }
+        }
+
+        let displayIndexAttr = this.options.displayIndexAttr; // attribute of model that determines sort order
 
         // Remove the newly sorted item and re-index every thing else
         collection.remove(model, { silent: true });
@@ -64,7 +80,7 @@ let SortableBehavior = Marionette.Behavior.extend({
             // CollectionView
             return this.$el;
         }
-    }
+    },
 
 });
 

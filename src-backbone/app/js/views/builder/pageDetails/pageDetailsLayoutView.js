@@ -1,7 +1,9 @@
 const Config = require('utils/config');
 const Procedure = require('models/procedure');
-const ConditionEditor = require('./conditionLayoutView');
-const ElementsEditor = require('./elementsLayoutView');
+const SortableBehavior = require('behaviors/sortableBehavior');
+const ShowIfsEditor = require('./pageConditions/showIfsCompositeView');
+const ElementsEditor = require('./pageElements/elementsCompositeView');
+const ElementCreator = require('./pageElements/elementCreatorView');
 
 
 module.exports = Marionette.LayoutView.extend({
@@ -9,14 +11,27 @@ module.exports = Marionette.LayoutView.extend({
     template: require('templates/builder/pageDetails/pageDetailsLayoutView'),
 
     regions: {
-        conditionEditor: 'section#conditions',
+        showIfsEditor: 'section#show-ifs',
         elementsEditor: 'section#elements',
+        elementCreator: 'section#element-creator',
+    },
+
+    templateHelpers: function() {
+        let activePage = this.model.getActivePage();
+
+        return {
+            pageCanHaveConditions: activePage && activePage.canHaveConditions(),
+        };
     },
 
     initialize: function() {
         let self = this;
+
         this.model.on(Procedure.ACTIVE_PAGE_CHANGE_EVENT, function(page) {
-            console.info('ACTIVE_PAGE_CHANGE_EVENT', page);
+            self.render();
+        });
+
+        this.model.pages.on(SortableBehavior.ON_SORT_EVENT, function() {
             self.render();
         });
     },
@@ -28,9 +43,25 @@ module.exports = Marionette.LayoutView.extend({
             this.$el.hide();
         }
 
-        let activePage = this.model.pages.get(this.model.activePageId);
-        this.showChildView('conditionEditor', new ConditionEditor({ model: activePage }));
-        this.showChildView('elementsEditor', new ElementsEditor({ model: activePage }));
+        let activePage = this.model.getActivePage();
+
+        if (activePage && activePage.canHaveConditions()) {
+            this.showChildView('showIfsEditor', new ShowIfsEditor({ model: activePage }));
+        } else {
+            this.getRegion('showIfsEditor').reset();
+        }
+
+        if (activePage) {
+            this.showChildView('elementsEditor', new ElementsEditor({ model: activePage }));
+        } else {
+            this.getRegion('elementsEditor').reset();
+        }
+
+        if (activePage) {
+            this.showChildView('elementCreator', new ElementCreator({ model: activePage }));
+        } else {
+            this.getRegion('elementCreator').reset();
+        }
     },
 
 });

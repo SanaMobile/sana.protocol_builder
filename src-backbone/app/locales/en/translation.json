@@ -78,6 +78,10 @@
     "Saving...": "Saving...",
     "All changes saved to server.": "All changes saved to server.",
     "Drag to re-order this page": "Drag to re-order this page",
+    "Reordering this page will remove all of your conditionals.": "Reordering this page will remove all of your conditionals.",
+    "Reordering this page will cause some of your conditionals to lose their dependent elements because they appear after this page's new location.": "Reordering this page will cause some of your conditionals to lose their dependent elements because they appear after this page's new location.",
+    "Reordering this page will cause some of your other pages' conditionals to lose their dependent elements because they appear before this page's new location.": "Reordering this page will cause some of your other pages' conditionals to lose their dependent elements because they appear before this page's new location.",
+    "Are you sure you wish to continue?": "Are you sure you wish to continue?",
     "Delete this page": "Delete this page",
     "Delete this element": "Delete this element",
     "Move this element up": "Move this element up",
@@ -118,6 +122,7 @@
     "Contract this list into a criteria": "Contract this list into a criteria",
     "When": "When",
     "Except when": "Except when",
+    "Page displayIndex": "Page {{ displayIndex }}",
 
     "When all": "When all",
     "When any": "When any",

@@ -1,32 +1,26 @@
 const Config = require('utils/config');
-let App = require('utils/sanaAppInstance');
-
+const App = require('utils/sanaAppInstance');
 
 
 module.exports = Marionette.ItemView.extend({
 
     template: require('templates/builder/pageList/pageListItemView'),
     tagName: 'li',
-    attributes: function() {
-        let cssClasses = 'page';
-
-        if (this.model.isActive()) {
-            cssClasses += ' active';
-        }
-
-        return {
-            'class': cssClasses,
-            'data-model-id': this.model.get('id'),
-        };
-    },
+    className: 'page',
 
     events: {
         'click a.delete': '_onDeletePage',
         'click a.page': '_onSelectPage',
     },
 
+    modelEvents: {
+        'change:depended-upon': 'render',
+    },
+
     templateHelpers: function() {
         return {
+            isActive: this.model.isActive(),
+            isBeingDependedUpon: this.model.isBeingDependedUpon(),
             elements: this.model.elements.toJSON(),
         };
     },
