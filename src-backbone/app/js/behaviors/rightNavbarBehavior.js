@@ -7,7 +7,7 @@ const LoggedOutRightNavbarView = require('views/common/loggedOutRightNavbarView'
 module.exports = Marionette.Behavior.extend({
 
     onBeforeShow: function() {
-        this.view.showChildView('languageSelector', new LanguageSelectorView());
+ //       this.view.showChildView('languageSelector', new LanguageSelectorView());
 
         if (App().session.isValid()) {
             this.view.showChildView('rightNavbar', new LoggedInRightNavbarView());

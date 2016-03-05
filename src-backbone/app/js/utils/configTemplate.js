@@ -14,10 +14,11 @@ module.exports = {
         {
             code: 'en',
             name: 'English',
-        }, {
-            code: 'fr',
-            name: 'Français',
-        }
+        },
+        // {
+        //     code: 'fr',
+        //     name: 'Français',
+        // }
     ],
 
     DEFAULT_LOCALE: 'en',
