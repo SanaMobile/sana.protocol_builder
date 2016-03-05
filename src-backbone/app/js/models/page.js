@@ -162,9 +162,33 @@ module.exports = Backbone.Model.extend({
         }
 
         let oldIndex = this.get('display_index');
+
+        // Moving to a slot below current slot won't invalidate any conditions on this page
+        // BUT it may invalidate some conditions on other pages
         if (oldIndex < newIndex) {
-            // Moving to a slot below current slot won't invalidate any conditions
-            return false;
+            let pagesAfterMe = this.collection.filter(function(page) {
+                return page.get('display_index') > oldIndex && page.get('display_index') <= newIndex;
+            });
+            let pagesAfterMeDependingOnMe = [];
+
+            for (let page of pagesAfterMe) {
+                for (let myElement of this.elements.models) {
+                    if (page.dependentElementsToPage.has(myElement.get('id'))) {
+                        pagesAfterMeDependingOnMe.push(page);
+                    }
+                }
+            }
+
+            if (pagesAfterMeDependingOnMe.length > 0) {
+                return {
+                    warningMessage: i18n.t("Reordering this page will cause some of your other pages' conditionals to lose their dependent elements because they appear before this page's new location."),
+                    callback: function() {
+                        for (let page of pagesAfterMeDependingOnMe) {
+                            page._clearDependentElementsFromPage(this.get('id'));
+                        }
+                    },
+                };
+            }
         }
 
         // When newIndex < oldIndex, then there may be pages inbetween that contain
@@ -277,6 +301,14 @@ module.exports = Backbone.Model.extend({
         }
 
         this.showIfs.at(0).rootConditionalNode.clearDependentElementsAfterPosition(position);
+    },
+
+    _clearDependentElementsFromPage: function(pageId) {
+        if (this.showIfs.length === 0) { // Page with no conditions
+            return;
+        }
+
+        this.showIfs.at(0).rootConditionalNode.clearDependentElementsFromPage(pageId);
     },
 
 });

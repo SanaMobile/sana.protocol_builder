@@ -15,7 +15,7 @@ let SortableBehavior = Marionette.Behavior.extend({
 
         // Ask user before sorting if it has some side effects
         if (_.isFunction(model.shouldConfirmBeforeSort)) {
-            let onSortOptions = model.shouldConfirmBeforeSort(newIndex);
+            let onSortOptions = model.shouldConfirmBeforeSort.call(model, newIndex);
 
             if (onSortOptions) {
                 let warningMessage = onSortOptions.warningMessage + ' ' +

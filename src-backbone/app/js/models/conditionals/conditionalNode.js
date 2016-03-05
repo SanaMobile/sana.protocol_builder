@@ -199,6 +199,24 @@ const ConditionalNode = Backbone.Model.extend({
         }
     },
 
+    clearDependentElementsFromPage: function(pageId) {
+        if (this.isCriteriaNode()) {
+            let dependentPage = this.parentPage.dependentElementsToPage.get(this.get('criteria_element'));
+            if (dependentPage.get('id') === pageId) {
+                // pageId contains this element but it got moved after this node's parentPage
+                this.unset('criteria_element');
+            }
+        } else {
+            this.childrenNodes.each(function(child) {
+                child.clearDependentElementsFromPage(pageId);
+            });
+        }
+
+        if (this.isRootNode()) {
+            this._saveRootShowIf();
+        }
+    },
+
     _saveRootShowIf: function(callback) {
         // Should not call this method directly from view callbacks
         // Call saveRootShowIf() instead (without the _) to debounce the save calls
