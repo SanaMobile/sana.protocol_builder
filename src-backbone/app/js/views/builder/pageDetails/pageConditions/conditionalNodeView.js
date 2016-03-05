@@ -142,7 +142,6 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
 
         this.model.set({
             criteria_element: operandElement,
-            operandElementPage: operandElementPage,
         }, {
             operandElementPage: operandElementPage,
         });

@@ -1,6 +1,7 @@
 const Config = require('utils/config');
 const App = require('utils/sanaAppInstance');
 const Helpers = require('utils/helpers');
+const CountedMap = require('utils/countedMap');
 
 const Elements = require('collections/elements');
 const Element = require('models/element');
@@ -18,7 +19,7 @@ module.exports = Backbone.Model.extend({
         this.showIfs = new ShowIfs(null, { parentPage: this });
 
         // A cache that maps this page's Criteria Elements to their original pages
-        this.dependentPageCache = new Map();
+        this.dependentElementsToPage = new CountedMap();
 
         options.parse = true;
         Backbone.Model.prototype.constructor.call(this, attributes, options);
@@ -46,6 +47,11 @@ module.exports = Backbone.Model.extend({
         // When the Procedure has finished loading all the Pages, need to regenerate
         // all of this Page's dependents
         this.listenTo(this.collection, 'reset', function() {
+            if (!this.collection) {
+                this.stopListening(); // Model is about to be destroyed
+                return;
+            }
+
             this._computeDependentPages();
         });
     },
@@ -129,6 +135,8 @@ module.exports = Backbone.Model.extend({
         for (let model of this.showIfs.models) {
             model.destroy();
         }
+
+        this.dependentElementsToPage.clear();
     },
 
     shouldConfirmBeforeSort: function(newIndex) {
@@ -161,13 +169,13 @@ module.exports = Backbone.Model.extend({
 
         // When newIndex < oldIndex, then there may be pages inbetween that contain
         // elements that this page depends on
-        let dependentPages = this.dependentPageCache.values();
+        let dependentPages = this.dependentElementsToPage.values();
         for (let dependentPage of dependentPages) {
             if (!dependentPage) {
                 break;
             }
 
-            let dependentPageIndex = dependentPage.get('display_index');
+            let dependentPageIndex = dependentPage.item.get('display_index');
             if (dependentPageIndex >= newIndex) {
                 // Dependant appears after this page so warn the user
                 return {
@@ -224,10 +232,9 @@ module.exports = Backbone.Model.extend({
     //--------------------------------------------------------------------------
 
     _computeDependentPages: function() {
-        this.dependentPageCache.clear();
+        this.dependentElementsToPage.clear();
 
-        if (this.showIfs.length === 0 || // Page with no conditions
-            !this.collection) {          // Page model is about to be destroyed (on a collection reset)
+        if (this.showIfs.length === 0) { // Page with no conditions
             return;
         }
 
@@ -242,10 +249,10 @@ module.exports = Backbone.Model.extend({
                 return !!page.elements.get(elementId);
             });
 
-            this.dependentPageCache.set(elementId, dependentPage);
+            this.dependentElementsToPage.set(elementId, dependentPage);
         }
 
-        console.log('onReset', this.dependentPageCache);
+        console.log('onReset', this.dependentElementsToPage);
     },
 
     _clearDependentElementsAfterPosition: function(position) {

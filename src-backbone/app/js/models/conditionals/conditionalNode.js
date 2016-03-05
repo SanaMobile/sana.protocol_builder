@@ -56,22 +56,31 @@ const ConditionalNode = Backbone.Model.extend({
         this.on('destroy', function(self, collection, options) {
             // Unregister elementId from parentPage's dependency cache
             let elementId = self.get('criteria_element');
-            self.parentPage.dependentPageCache.delete(elementId);
+            self.parentPage.dependentElementsToPage.delete(elementId);
 
-            console.log('onDestroy', self.parentPage.dependentPageCache);
+            console.log('onDestroy', self.parentPage.dependentElementsToPage);
         });
 
-        this.on('change:criteria_element', function(self, elementId, options) {
+        this.on('change:criteria_element', function(self, criteriaElementId, options) {
             let previousElementId = self.previous('criteria_element');
-            let dependentPage = self.parentPage.collection.get(options.operandElementPage);
 
-            // Unregister previous elementId from parentPage's dependency cache
-            self.parentPage.dependentPageCache.delete(previousElementId);
+            // Check if previousElementId exists (initially -1)
+            if (previousElementId > 0) {
+                // Unregister previous criteriaElementId from parentPage's dependency cache
+                let previousDependentPage = self.parentPage.dependentElementsToPage.get(previousElementId);
+                self.parentPage.dependentElementsToPage.delete(previousElementId);
+                previousDependentPage.trigger('change:depended-upon', previousDependentPage);
+            }
 
-            // Register new elementId to parentPage's dependency cache
-            self.parentPage.dependentPageCache.set(elementId, dependentPage);
+            // Check if criteriaElementId is being set (property is undefined when calling unset)
+            if (criteriaElementId) {
+                // Register new criteriaElementId to parentPage's dependency cache
+                let dependentPage = self.parentPage.collection.get(options.operandElementPage);
+                self.parentPage.dependentElementsToPage.set(criteriaElementId, dependentPage);
+                dependentPage.trigger('change:depended-upon', dependentPage);
+            }
 
-            console.log('onChange', self.parentPage.dependentPageCache);
+            console.log('onChange', self.parentPage.dependentElementsToPage);
         });
     },
 
@@ -122,7 +131,6 @@ const ConditionalNode = Backbone.Model.extend({
                 };
             }
         } else {
-            json.operandElementPage = this.get('operandElementPage');
             json.isNegated = this.get('isNegated');
         }
 
@@ -171,7 +179,7 @@ const ConditionalNode = Backbone.Model.extend({
 
     clearDependentElementsAfterPosition: function(position) {
         if (this.isCriteriaNode()) {
-            let dependentPage = this.parentPage.dependentPageCache.get(this.get('criteria_element'));
+            let dependentPage = this.parentPage.dependentElementsToPage.get(this.get('criteria_element'));
             let dependentPageIndex = dependentPage.get('display_index');
             if (dependentPageIndex >= position) {
                 // dependentPage appears after this position
@@ -179,7 +187,7 @@ const ConditionalNode = Backbone.Model.extend({
             }
         } else {
             this.childrenNodes.each(function(child) {
-                child.removeElementOperandsAfterPosition(position);
+                child.clearDependentElementsAfterPosition(position);
             });
         }
 
