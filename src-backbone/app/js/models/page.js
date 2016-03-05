@@ -197,6 +197,22 @@ module.exports = Backbone.Model.extend({
         return _.isNumber(activePageId) && this.get('id') === activePageId;
     },
 
+    isBeingDependedUpon: function() {
+        if (!this.collection.parentProcedure.activePageId) {
+            // No active page so nobody is depending on me
+            return false;
+        }
+
+        let activePage = this.collection.parentProcedure.getActivePage();
+        for (let element of this.elements.models) {
+            if (activePage.dependentElementsToPage.has(element.get('id'))) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
     canHaveConditions: function() {
         return this.get('id') !== this.collection.at(0).get('id');
     },
