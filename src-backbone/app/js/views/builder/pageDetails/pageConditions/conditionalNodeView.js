@@ -32,6 +32,10 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
             isCriteria: this.model.isCriteriaNode(),
             operandElements: this.model.getPossibleOperandElements(),
 
+            showDateEditorForValue: this.model.elementIsDate(),
+            showChoiceEditorForValue: this.model.elementIsChoiceBased() && this.model.get('node_type') === 'EQUALS',
+            elementChoices: this.model.getElementChoices(),
+
             canAdd: this.model.canAdd(),
             canDelete: this.model.canDelete(),
             canExpand: this.model.canExpand(),
@@ -41,66 +45,106 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
 
     ui: function() {
         let cid = this.model.cid;
+        let viewUI = {
+            'addButton': 'span.glyphicon.add' + '[data-cid=' + cid + ']',
+            'deleteButton': 'span.glyphicon.delete' + '[data-cid=' + cid + ']',
+        };
+
         if (this.model.isCriteriaNode()) {
-            return {
+            _.extend(viewUI, {
                 'criteriaNegation': 'select.negation' + '[data-cid=' + cid + ']',
                 'criteriaElement': 'select.operand-element' + '[data-cid=' + cid + ']',
                 'criteriaComparator': 'select.comparator' + '[data-cid=' + cid + ']',
-                'criteriaValue': 'input.value' + '[data-cid=' + cid + ']',
-
-                'addButton': 'span.glyphicon.add' + '[data-cid=' + cid + ']',
-                'deleteButton': 'span.glyphicon.delete' + '[data-cid=' + cid + ']',
                 'expandButton': 'span.glyphicon.expand' + '[data-cid=' + cid + ']',
-            };
+            });
+
+            if (this.model.elementIsDate()) {
+                _.extend(viewUI, {
+                    'criteriaValue': 'input.value.date' + '[data-cid=' + cid + ']',
+                });
+            } else if (this.model.elementIsChoiceBased()) {
+                _.extend(viewUI, {
+                    'criteriaValue': 'select.value' + '[data-cid=' + cid + ']',
+                });
+            } else {
+                _.extend(viewUI, {
+                    'criteriaValue': 'input.value' + '[data-cid=' + cid + ']',
+                });
+            }
         } else {
-            return {
+            _.extend(viewUI, {
                 'logicalConnective': 'select.logical-connective' + '[data-cid=' + cid + ']',
                 'logicalNegation': 'select.negation' + '[data-cid=' + cid + ']',
-
-                'addButton': 'span.glyphicon.add' + '[data-cid=' + cid + ']',
-                'deleteButton': 'span.glyphicon.delete' + '[data-cid=' + cid + ']',
                 'contractButton': 'span.glyphicon.contract' + '[data-cid=' + cid + ']',
-            };
+            });
         }
+
+        return viewUI;
     },
 
     events: function() {
+        let viewEvents = {
+            'click @ui.addButton': '_onAddCriteria',
+            'click @ui.deleteButton': '_onDeleteNode',
+        };
+
         if (this.model.isCriteriaNode()) {
-            return {
+            _.extend(viewEvents, {
                 'change @ui.criteriaNegation': '_onCriteriaNegationChanged',
                 'change @ui.criteriaElement': '_onCriteriaElementChanged',
                 'change @ui.criteriaComparator': '_onCriteriaComparatorChanged',
-                'keyup @ui.criteriaValue': '_onCriteriaValueChanged',
-
-                'click @ui.addButton': '_onAddCriteria',
-                'click @ui.deleteButton': '_onDeleteNode',
                 'click @ui.expandButton': '_onExpandCriteria',
-            };
+            });
+
+            if (this.model.elementIsDate()) {
+                _.extend(viewEvents, {
+                    'changeDate @ui.criteriaValue': '_onCriteriaValueChanged',
+                    'clearDate @ui.criteriaValue': '_onCriteriaValueChanged',
+                });
+            } else if (this.model.elementIsChoiceBased()) {
+                _.extend(viewEvents, {
+                    'change @ui.criteriaValue': '_onCriteriaValueChanged',
+                });
+            } else {
+                _.extend(viewEvents, {
+                    'keyup @ui.criteriaValue': '_onCriteriaValueChanged',
+                });
+            }
         } else {
-            return {
+            _.extend(viewEvents, {
                 'change @ui.logicalConnective': '_onLogicalFormChanged',
                 'change @ui.logicalNegation': '_onLogicalFormChanged',
-
-                'click @ui.addButton': '_onAddCriteria',
-                'click @ui.deleteButton': '_onDeleteNode',
                 'click @ui.contractButton': '_onContractLogic',
-            };
+            });
         }
+
+        return viewEvents;
     },
 
     onRender: function() {
-        let formContainerSelector;
-
-        if (this.model.isCriteriaNode()) {
-            formContainerSelector = 'div.criteria-form';
-        } else {
-            formContainerSelector = 'div.logical-form';
-        }
-
-        this.$el.children(formContainerSelector).find('select').selectpicker({
+        // Setup bootstrap-select
+        let formContainerSelector = this.model.isCriteriaNode() ? 'div.criteria-form' : 'div.logical-form';
+        this.$el.children(formContainerSelector).find('select:not(.value)').selectpicker({
             showTick: false,
-            width: 'auto',
+            width: '120px',
         });
+        this.$el.children(formContainerSelector).find('select.value').selectpicker({
+            showTick: false,
+            width: 'fit',
+        });
+
+        // Setup bootstrap-datepicker
+        if (this.model.elementIsDate()) {
+            this._isFinishedRenderingDatePicker = false;
+            this.$el.find('input.date').datepicker({
+                todayBtn: 'linked',
+                clearBtn: true,
+                autoclose: true,
+                language: i18n.language,
+                format: 'mm/dd/yyyy',
+            });
+            this._isFinishedRenderingDatePicker = true;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -149,6 +193,10 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
     },
 
     _onCriteriaValueChanged: function(event) {
+        if (this.model.elementIsDate() && !this._isFinishedRenderingDatePicker) {
+            return;
+        }
+
         let value = this.ui.criteriaValue.val();
         this.model.set('value', value);
         this.model.saveRootShowIf();

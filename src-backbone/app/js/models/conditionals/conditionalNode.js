@@ -44,7 +44,7 @@ const ConditionalNode = Backbone.Model.extend({
             rootShowIf: this.rootShowIf,
         });
 
-        this.saveRootShowIf = _.debounce(function() {
+        this._debounceSave = _.debounce(function() {
             this._saveRootShowIf();
         }, Config.INPUT_DELAY_BEFORE_SAVE);
 
@@ -217,7 +217,11 @@ const ConditionalNode = Backbone.Model.extend({
         }
     },
 
-    _saveRootShowIf: function(callback) {
+    saveRootShowIf: function() {
+        this._debounceSave();
+    },
+
+    _saveRootShowIf: function() {
         // Should not call this method directly from view callbacks
         // Call saveRootShowIf() instead (without the _) to debounce the save calls
         let self = this;
@@ -293,6 +297,36 @@ const ConditionalNode = Backbone.Model.extend({
     //--------------------------------------------------------------------------
     // Template helpers
     //--------------------------------------------------------------------------
+
+    elementIsDate: function() {
+        if (!(this.isCriteriaNode() && this.get('criteria_element') > 0)) {
+            return false;
+        }
+
+        let dependentPage = this.parentPage.dependentElementsToPage.get(this.get('criteria_element'));
+        let dependentElement = dependentPage.elements.get(this.get('criteria_element'));
+        return dependentElement.get('element_type') === 'DATE';
+    },
+
+    elementIsChoiceBased: function() {
+        if (!(this.isCriteriaNode() && this.get('criteria_element') > 0)) {
+            return false;
+        }
+
+        let dependentPage = this.parentPage.dependentElementsToPage.get(this.get('criteria_element'));
+        let dependentElement = dependentPage.elements.get(this.get('criteria_element'));
+        return dependentElement.isChoiceBased();
+    },
+
+    getElementChoices: function() {
+        if (!(this.isCriteriaNode() && this.get('criteria_element') > 0)) {
+            return [];
+        }
+
+        let dependentPage = this.parentPage.dependentElementsToPage.get(this.get('criteria_element'));
+        let dependentElement = dependentPage.elements.get(this.get('criteria_element'));
+        return dependentElement.choices.pluck('text');
+    },
 
     canAdd: function() {
         // Only if this node already belongs to a collection (i.e. not root)

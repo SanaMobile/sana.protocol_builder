@@ -298,6 +298,11 @@ module.exports = Backbone.Model.extend({
             let pageElements = [];
 
             for (let element of page.elements.models) {
+                if (element.isPluginBased()) {
+                    // Plugin-based elements do not have any answers so they cannot be compared
+                    continue;
+                }
+
                 let attributes = _.clone(element.attributes);
                 attributes.question = attributes.question || i18n.t(element.get('element_type'));
                 pageElements.push(element.attributes);
