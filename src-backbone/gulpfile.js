@@ -7,6 +7,7 @@ require('babel-core/register');
 //------------------------------------------------------------------------------
 
 let gulp = require('gulp');
+let del = require('del');
 
 let Config = {
     DEBUG: false,
@@ -153,7 +154,7 @@ gulp.task('js-browserify', ['js-config', 'js-lint'], function() {
 
         // Strip console.logs
         .pipe(gulpif(!Config.DEBUG, stripDebug()))
-        
+
         // Compress files
         .pipe(gulpif(Config.DEBUG, sourceMaps.init({ loadMaps: true })))
             .pipe(gulpif(!Config.DEBUG, uglify()))
@@ -212,7 +213,7 @@ gulp.task('locales', function() {
 
 gulp.task('build', ['css', 'js', 'img', 'fonts', 'html', 'locales']);
 
-gulp.task('default', ['build'], function(){
+gulp.task('default', ['build'], function() {
     gulp.watch(Config.stylesheets, ['css']);
     gulp.watch(Config.javascripts, ['js']);
     gulp.watch(Config.images, ['img']);
@@ -225,13 +226,13 @@ gulp.task('default', ['build'], function(){
 
 // Debug
 
-gulp.task('set-debug', function(){
+gulp.task('set-debug', function() {
     let colors = require('colors');
     console.log('Gulp Debug Mode'.yellow.bgBlack);
     Config.DEBUG = true;
 })
 
-gulp.task('debug', ['set-debug'], function(){
+gulp.task('debug', ['set-debug'], function() {
     gulp.start('default');
 })
 
@@ -260,3 +261,7 @@ gulp.task('js-unit-test', ['js-lint', 'js-config'], function() {
 });
 
 gulp.task('test', ['js-unit-test']);
+
+gulp.task('clean', function() {
+    del([Config.output]);
+});
