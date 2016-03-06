@@ -1,6 +1,6 @@
 from xml.etree import ElementTree
 from django.test import TestCase
-from nose.tools import raises, assert_equals, assert_is_not_none, assert_true, assert_false, assert_is_none
+from nose.tools import raises, assert_equals, assert_is_not_none, assert_true, assert_false, assert_is_none, assert_in
 from api.models import Element
 import api.generator as generators
 from utils import factories
@@ -205,19 +205,16 @@ class ElementGeneratorTest(TestCase):
 
         generators.ElementGenerator(element).generate(ElementTree.Element('test'))
 
-    def test_element_has_no_numeric(self):
-        assert_false('numeric' in self.attribs)
-
     def test_element_has_no_choices(self):
         assert_false('choices' in self.attribs)
 
     def test_element_has_choices(self):
-        self.element.choices = '["left","right","center"]'
+        self.element.choices = '["left","right","center,"]'
         self.element.element_type = 'SELECT'
         self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
 
         assert_true('choices' in self.element_etree_element.attrib)
-        assert_equals(self.element_etree_element.attrib['choices'], 'left,right,center')
+        assert_equals(self.element_etree_element.attrib['choices'], 'left,right,center&comma;')
 
     def test_element_has_no_required(self):
         assert_false('required' in self.attribs)
@@ -487,7 +484,7 @@ class ProtocolBuilderTestCase(TestCase):
     def setUp(self):
         self.procedure = factories.ProcedureFactory(
             author='TestUser',
-            title='Burns'
+            title='Burns"\''
         )
 
         for i in range(4):
@@ -561,3 +558,11 @@ class ProtocolBuilderTestCase(TestCase):
     @raises(ValueError)
     def test_procedure_does_not_exist(self):
         generators.ProtocolBuilder.generate(factories.UserFactory(), -1)
+
+    def test_escapes(self):
+        procedure = factories.ProcedureFactory(
+            title='"\''
+        )
+        protocol = generators.ProtocolBuilder.generate(factories.UserFactory(), procedure.id)
+
+        assert_in('title="&quot;\'"', protocol)
