@@ -3,7 +3,7 @@ const Helpers = require('utils/helpers');
 const User = require('models/user');
 
 const AUTH_TOKEN_KEY = 'AUTH_TOKEN_KEY';
-const USER_STORAGE_KEY = 'USER_DATA';
+const USER_STORAGE_KEY = 'USER_KEY';
 const STORAGE_KEY = AUTH_TOKEN_KEY;
 
 
@@ -14,6 +14,16 @@ let SessionModel = Backbone.Model.extend({
         delete attributes.storage;
 
         Backbone.Model.prototype.constructor.call(this, attributes, options);
+    },
+
+    initialize: function() {
+        this.user = new User({});
+    },
+
+    updateSessionUser: function(userData) {
+        let defaults = _.pick(userData, _.keys(this.user.defaults));
+        this.user.set(defaults);
+        this.set(USER_STORAGE_KEY, defaults);
     },
 
     url: function() {
@@ -31,6 +41,7 @@ let SessionModel = Backbone.Model.extend({
     destroy: function(options) {
         this.clear();
         this.storage.delete(STORAGE_KEY);
+        this.storage.delete(USER_STORAGE_KEY);
     },
 
     validate: function() {
@@ -40,19 +51,8 @@ let SessionModel = Backbone.Model.extend({
         }
     },
 
-    isPriveleged: function() {
-        return this.has(USER_STORAGE_KEY) && this.get(USER_STORAGE_KEY).is_superuser;
-    },
-
-    fetchUser: function() {
-        let user = new User(this.get(USER_STORAGE_KEY));
-        let self = this;
-        user.fetch({
-            success: function(model) {
-                self.set(USER_STORAGE_KEY, model.attributes);
-                self.save();
-            },
-        });
+    setAuthToken: function(data) {
+        data.auth = this.get(AUTH_TOKEN_KEY);
     },
 
     signup: function(formData, serverErrorHandler, networkErrorHandler) {
@@ -116,51 +116,9 @@ let SessionModel = Backbone.Model.extend({
         });
     },
 
-    updateInformation: function(formData) {
-        let self = this;
-        let json = {};
-        formData.forEach(function(item) {
-            if (item.value !== "") {
-                json[item.name] = item.value;
-            }
-        });
-        json.auth = self.get(AUTH_TOKEN_KEY);
-        $.ajax({
-            type: 'PATCH',
-            data: JSON.stringify(json),
-            url: '/api/users/update_details',
-            beforeSend: function() {
-                App().RootView.showSpinner();
-            },
-            complete: function() {
-                App().RootView.hideSpinner();
-            },
-            success: function(response) {
-                this.set(USER_STORAGE_KEY, response.user);
-                this.save();
-                App().RootView.clearNotifications();
-                App().RootView.showNotification({
-                    title: 'Success!',
-                    desc: 'Successfuly updated account details!',
-                    alertType: 'success',
-                });
-            },
-            error: function(errors) {
-                App().RootView.clearNotifications();
-                let parsedErrors = JSON.parse(errors.responseText);
-                Object.keys(parsedErrors).forEach(function(key) {
-                    App().RootView.showNotification({
-                        title: 'There was a problem',
-                        desc: parsedErrors[key]
-                    });
-                });
-            },
-        });
-    },
-
     _authHandler: function(response, serverErrorHandler) {
         if (response.success) {
-            this.set(USER_STORAGE_KEY, response.user);
+            this.updateSessionUser(response.user);
             this.set(AUTH_TOKEN_KEY, response.token);
             this.save();
         } else {
