@@ -12,10 +12,12 @@ let Procedure = Backbone.Model.extend({
     urlRoot: '/api/procedures',
 
     defaults: function() {
+        let user = App().session.user;
+
         // These values are only used when we POST /procedures a new procedure
         return {
             'title': i18n.t('Untitled Procedure'),
-            'author': i18n.t('No author specified'), // TODO either fetch user's username or let API allow nullable authors
+            'author': user.get('first_name') + ' ' + user.get('last_name'),
         };
     },
 

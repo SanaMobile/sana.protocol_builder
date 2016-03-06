@@ -1,4 +1,5 @@
 const EventKeys = require('utils/eventKeys');
+const App = require('utils/sanaAppInstance');
 
 
 module.exports = Marionette.LayoutView.extend({
@@ -17,7 +18,9 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onAttach: function() {
-        const welcomeMessage = i18n.t('Hello username', {username: 'Trinovantes'}); // TODO fetch username from server
+        const welcomeMessage = i18n.t('Hello username', {
+            username: App().session.user.get('first_name')
+        });
 
         // Do this after View is shown so that rootLayoutView can find
         // p.navbar-text inside this View

@@ -14,6 +14,8 @@
     "Sign up": "Sign up",
     "Already have an account? Log in": "Already have an account? <a href=\"/login\">Log in<\/a>",
     "Language": "Language",
+    "First Name": "First Name",
+    "Last Name": "Last Name",
 
     // Log in
     "Remember Me": "Remember Me",
@@ -28,7 +30,7 @@
     // Account Settings
     "Successfuly updated account details!": "Successfuly updated account details!",
     "There was a problem": "There was a problem",
-    "Password successfully reset!": "Password successfully reset!", 
+    "Password successfully reset!": "Password successfully reset!",
     "Email to reset password sent!": "Email to reset password sent!",
     "Confirm Password": "Confirm Password",
     "New Password": "New Password",
@@ -148,6 +150,7 @@
 
     // Concepts
     "CSV Imported Successfuly": "CSV Imported Successfuly",
-    "Upload Concept Dictionary": "Upload Concept Dictionary",
+    "Upload Concept Dictionary": "Upload Concept Dictionary"
 
+    //DO NOT PUT A TRALING COMMA AT THE END
 }
