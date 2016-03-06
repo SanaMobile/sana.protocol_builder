@@ -1,12 +1,17 @@
 const Config = require('utils/config');
 const App = require('utils/sanaAppInstance');
+const PageListConditionalNodeView = require('./pageListConditionalNodeView');
 
 
-module.exports = Marionette.ItemView.extend({
+module.exports = Marionette.LayoutView.extend({
 
     template: require('templates/builder/pageList/pageListItemView'),
     tagName: 'li',
     className: 'page',
+
+    ui: {
+        'popoverHandle': 'span.shown-conditionally'
+    },
 
     events: {
         'click a.delete': '_onDeletePage',
@@ -17,12 +22,43 @@ module.exports = Marionette.ItemView.extend({
         'change:depended-upon': 'render',
     },
 
+    regions: {
+        'conditions': 'ul.conditions',
+    },
+
+    initialize: function() {
+        this.listenTo(this.model.showIfs, 'sync', this.render);
+    },
+
     templateHelpers: function() {
         return {
             isActive: this.model.isActive(),
             isBeingDependedUpon: this.model.isBeingDependedUpon(),
+            hasConditions: this.model.showIfs.length > 0,
             elements: this.model.elements.toJSON(),
         };
+    },
+
+    onRender: function() {
+        if (this.model.showIfs.length > 0) {
+            this.showChildView('conditions', new PageListConditionalNodeView({ model: this.model.showIfs.at(0).rootConditionalNode }));
+        }
+
+        let self = this;
+        this.ui.popoverHandle.popover({
+            title: i18n.t("Page Conditions"),
+            trigger: 'hover',
+            placement: 'right',
+            html: true,
+            template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><ul class="popover-content"></ul></div>',
+            content: function() {
+                return self.getRegion('conditions').$el.html();
+            },
+        });
+    },
+
+    onDestroy: function() {
+        this.ui.popoverHandle.popover('destroy');
     },
 
     _onDeletePage: function(event) {

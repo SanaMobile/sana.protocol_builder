@@ -1,0 +1,45 @@
+{{#if isCriteria }}
+
+    <span class="negation">
+        {{#if isNegated }}
+            {{ i18n "Except when" }}
+        {{else}}
+            {{ i18n "When" }}
+        {{/if}}
+    </span>
+
+    <span class="element">
+        &ldquo;{{ elementQuestion }}&rdquo;
+    </span>
+
+    <span class="comparator">
+        {{ node_type }}
+    </span>
+
+    <span class="value">
+        &ldquo;{{ value }}&rdquo;
+    </span>
+
+{{else}}
+
+    <span class="logical-connective">
+        {{#if isLogicAll }}
+            {{ i18n "When all" }}
+        {{else}}
+            {{ i18n "When any"}}
+        {{/if}}
+    </span>
+
+    <span>{{ i18n "of the following conditions are" }}</span>
+
+    <span class="negation">
+        {{#if isNegated }}
+            {{ i18n "false" }}
+        {{else}}
+            {{ i18n "true" }}
+        {{/if}}
+    </span>
+
+{{/if}}
+
+<ul class="children-nodes"></ul>

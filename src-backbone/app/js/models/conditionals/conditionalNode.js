@@ -298,6 +298,16 @@ const ConditionalNode = Backbone.Model.extend({
     // Template helpers
     //--------------------------------------------------------------------------
 
+    getElementQuestion: function() {
+        if (!(this.isCriteriaNode() && this.get('criteria_element') > 0)) {
+            return i18n.t("No question specified");
+        }
+
+        let dependentPage = this.parentPage.dependentElementsToPage.get(this.get('criteria_element'));
+        let dependentElement = dependentPage.elements.get(this.get('criteria_element'));
+        return dependentElement.get('question');
+    },
+
     elementIsDate: function() {
         if (!(this.isCriteriaNode() && this.get('criteria_element') > 0)) {
             return false;
