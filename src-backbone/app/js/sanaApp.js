@@ -116,6 +116,12 @@ module.exports = Marionette.Application.extend({
         this.session = new Session({ storage: this.storage });
         this.session.on('change:' + Session.AUTH_TOKEN_KEY, function() {
             let hasToken = self.session.has(Session.AUTH_TOKEN_KEY);
+
+            if (self.session.has(Session.USER_STORAGE_KEY)) {
+                self.session.updateSessionUser(self.session.get(Session.USER_STORAGE_KEY));
+                self.session.user.fetch();
+            }
+
             console.info('Auth Token Changed: ' + hasToken);
 
             if (hasToken) {
@@ -123,6 +129,7 @@ module.exports = Marionette.Application.extend({
             } else {
                 Helpers.navigateToDefaultLoggedOut();
             }
+
         });
     },
 

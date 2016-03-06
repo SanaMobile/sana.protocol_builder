@@ -18,7 +18,7 @@ module.exports = Marionette.ItemView.extend({
         let self = this;
         let $form = this.ui.form;
 
-        App().session.updateInformation($form.serializeArray());
+        App().session.user.updateInformation($form.serializeArray());
     },
 
 });

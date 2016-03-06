@@ -89,7 +89,7 @@ describe("Session Model", function() {
 
         describe("#destroy()", function() {
             it("should delete from storage", function() {
-                storageMock.expects('delete').once();
+                storageMock.expects('delete').twice();
                 session.destroy();
             });
 
