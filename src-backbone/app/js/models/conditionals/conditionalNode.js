@@ -266,7 +266,7 @@ const ConditionalNode = Backbone.Model.extend({
             this.saveRootShowIf();
         } else {
             // Root node
-            this.rootShowIf.destroy();
+            this.rootShowIf.parentPage.clearCriteria();
         }
     },
 
