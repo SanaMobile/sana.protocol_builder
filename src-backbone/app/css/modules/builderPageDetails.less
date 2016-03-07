@@ -2,6 +2,53 @@
 @import url(utils/helpers.less);
 
 
+@modal-max-height: 520px;
+
+@concept-table-margin-top: 15px;
+@concept-table-font-size: 16px;
+
+@cell-blue-color: #337ab7;
+@cell-padding: 14px;
+@cell-border-radius: 7px;
+@cell-text-color: @cell-blue-color;
+@cell-hover-background-color: @cell-blue-color;
+@cell-hover-text-color: white;
+
+
+.modal .modal-body {
+    max-height: @modal-max-height;
+    overflow-y: auto;
+}
+
+.modal-dialog {
+    width: 640px;
+}
+
+section#concept-table {
+    margin-top: @concept-table-margin-top;
+
+    table {
+        width: 100%;
+
+        tr {
+            td {
+                padding: @cell-padding;
+                border-radius: @cell-border-radius;
+                font-size: @concept-table-font-size;
+                color: @cell-text-color;
+                cursor: default;
+
+                &:hover {
+                    background-color: @cell-hover-background-color;
+                    color: @cell-hover-text-color;
+                }
+            }
+
+        }
+    }
+
+}
+
 #page-details{
     padding: 40px;
     padding-right: @container-side-padding;
@@ -191,7 +238,7 @@
 
 ul#elements-list{
     list-style: none;
-    margin: 0;
+    margin: 0px 0px 20px;
     padding: 0;
 
     li{
@@ -432,17 +479,19 @@ ul#elements-list{
 }
 
 nav#new-element-btns{
-    display: flex;
-
     a{
         @icon-box-height: 100px;
+        @icon-box-width: 140px;
 
+        width: @icon-box-width;
         border: 1px solid @grey-border;
         border-radius: 3px;
         cursor: pointer;
         display: block;
+        float: left;
         flex: 1;
-        margin-right: 10px;
+        margin-right: 16px;
+        margin-bottom: 10px;
         padding: 10px;
         padding-top: @icon-box-height + 10px;
         position: relative;
@@ -455,7 +504,7 @@ nav#new-element-btns{
         font-weight: bold;
         line-height: 20px;
 
-        &:last-child{
+        &:nth-child(4n){
             margin-right: 0;
         }
 
