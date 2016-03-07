@@ -86,6 +86,10 @@ module.exports = Marionette.LayoutView.extend({
         this._notifications.reset();
     },
 
+    showModal: function(view, str) {
+        this.modal.show(view);
+    },
+
     showNotification: function(attributes, isTranslated = false) {
         if (typeof attributes === 'string') {
             attributes = { title: attributes };

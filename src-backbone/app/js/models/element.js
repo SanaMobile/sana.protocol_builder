@@ -51,7 +51,6 @@ module.exports = Backbone.Model.extend({
     toJSON: function() {
         let json = _.pick(this.attributes,
             'id',
-            'eid',
             'display_index',
             'concept',
             'page',
@@ -59,6 +58,8 @@ module.exports = Backbone.Model.extend({
             'question',
             'required'
         );
+
+        json.eid = Helpers.sluggify(json.question) + '-' + json.id;
 
         if (this.isChoiceBased()) {
             json.choices = this.choices.pluck('text');

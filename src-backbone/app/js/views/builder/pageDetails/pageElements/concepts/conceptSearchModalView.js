@@ -24,11 +24,11 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onBeforeShow: function() {
-        this._conceptCollectionView = new ConceptCollectionView({
+        let conceptCollectionView = new ConceptCollectionView({
             page: this.page,
             collection: this.concepts,
         });
-        this.showChildView('conceptTable', this._conceptCollectionView);
+        this.showChildView('conceptTable', conceptCollectionView);
     },
 
     _onKeyUpInput: function(event) {

@@ -31,7 +31,7 @@ module.exports = Marionette.ItemView.extend({
                 concept: this.model,
             }),
         });
-        App().RootView.modal.show(modalView);
+        App().RootView.showModal(modalView);
     },
 
 });

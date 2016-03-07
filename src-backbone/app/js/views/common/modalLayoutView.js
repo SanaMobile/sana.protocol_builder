@@ -3,12 +3,12 @@ module.exports = Marionette.LayoutView.extend({
     template: require('templates/common/modalLayoutView'),
 
     regions: {
-    	'body': 'section#modal-body',
+        'body': 'section#modal-body',
     },
 
     initialize: function(options) {
         this.title = options.title;
-    	this.bodyView = options.bodyView;
+        this.bodyView = options.bodyView;
     },
 
     templateHelpers: function() {
@@ -18,7 +18,7 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onBeforeShow: function() {
-    	this.showChildView('body', this.bodyView);
+        this.showChildView('body', this.bodyView);
     },
 
 });

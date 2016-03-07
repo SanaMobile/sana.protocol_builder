@@ -2,6 +2,53 @@
 @import url(utils/helpers.less);
 
 
+@modal-max-height: 520px;
+
+@concept-table-margin-top: 15px;
+@concept-table-font-size: 16px;
+
+@cell-blue-color: #337ab7;
+@cell-padding: 14px;
+@cell-border-radius: 7px;
+@cell-text-color: @cell-blue-color;
+@cell-hover-background-color: @cell-blue-color;
+@cell-hover-text-color: white;
+
+
+.modal .modal-body {
+    max-height: @modal-max-height;
+    overflow-y: auto;
+}
+
+.modal-dialog {
+    width: 640px;
+}
+
+section#concept-table {
+    margin-top: @concept-table-margin-top;
+
+    table {
+        width: 100%;
+
+        tr {
+            td {
+                padding: @cell-padding;
+                border-radius: @cell-border-radius;
+                font-size: @concept-table-font-size;
+                color: @cell-text-color;
+                cursor: default;
+
+                &:hover {
+                    background-color: @cell-hover-background-color;
+                    color: @cell-hover-text-color;
+                }
+            }
+
+        }
+    }
+
+}
+
 #page-details{
     padding: 40px;
     padding-right: @container-side-padding;

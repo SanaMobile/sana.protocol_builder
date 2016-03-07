@@ -30,7 +30,7 @@ module.exports = Marionette.CompositeView.extend({
             title: i18n.t('New Element'),
             bodyView: new ConceptSearchModalView({ page: this.model }),
         });
-        App().RootView.modal.show(modalView);
+        App().RootView.showModal(modalView);
     },
 
 });
