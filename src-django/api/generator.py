@@ -109,7 +109,8 @@ class ElementGenerator:
         return self.__parse(self.element.answer)
 
     def __parse(self, field):
-        item_list = json.loads(field)
+        item_list = [item.replace(',', '&comma;') for item in json.loads(field)]
+
         return ','.join(item_list)
 
     def generate(self, parent):
