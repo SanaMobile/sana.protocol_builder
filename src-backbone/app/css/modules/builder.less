@@ -71,24 +71,25 @@ header#builder-meta-data{
         }
     }
 
-    a.builder-header-btn{
+    div#button-container{
         margin-top: -20px;
         position: absolute;
         top:50%;
-
-        font-weight: bold;
-        height: 40px;
-        line-height: 40px;
-        padding: 0 20px;
-    }
-
-    a#download-btn{
-        &:extend(.builder-header-btn);
         right: @container-side-padding;
+
+        a.btn{
+            float: left;
+            font-weight: bold;
+            height: 40px;
+            line-height: 40px;
+            padding: 0 20px;
+
+            margin-right: @column-margin;
+            &:last-child{
+                margin-right: 0;
+            }
+        }
+
     }
 
-    a#save-btn{
-        &:extend(.builder-header-btn);
-        right: @container-side-padding * 3;
-    }
 }
