@@ -6,7 +6,7 @@
         <option value="negated" {{#if isNegated }}selected{{/if}}>{{ i18n "Except when" }}</option>
     </select>
 
-    <select class="operand-element form-control" data-cid="{{ cid }}" title="{{ i18n "Element to check" }}">
+    <select class="operand-element form-control" data-cid="{{ cid }}" title="{{ i18n "Element" }}">
         {{#each operandElements}}
         <optgroup label="{{ pageLabel }}">
             {{#each pageElements }}
