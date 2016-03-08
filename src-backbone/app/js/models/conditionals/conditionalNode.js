@@ -201,10 +201,13 @@ const ConditionalNode = Backbone.Model.extend({
 
     clearDependentElementsFromPage: function(pageId) {
         if (this.isCriteriaNode()) {
-            let dependentPage = this.parentPage.dependentElementsToPage.get(this.get('criteria_element'));
-            if (dependentPage.get('id') === pageId) {
-                // pageId contains this element but it got moved after this node's parentPage
-                this.unset('criteria_element');
+            let dependentElement = this.get('criteria_element');
+            if (dependentElement > 0) {
+                let dependentPage = this.parentPage.dependentElementsToPage.get(this.get('criteria_element'));
+                if (dependentPage.get('id') === pageId) {
+                    // pageId contains this element but it got moved after this node's parentPage
+                    this.unset('criteria_element');
+                }
             }
         } else {
             this.childrenNodes.each(function(child) {

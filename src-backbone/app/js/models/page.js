@@ -62,6 +62,17 @@ module.exports = Backbone.Model.extend({
             return page.get('display_index') > myDisplayIndex;
         });
 
+        if (this.collection.at(0) === this && pagesAfterMe.length > 0) {
+            let pageOne = this.collection.at(1);
+            if (pageOne.showIfs.length > 0) {
+                if (!confirm("Deleting this page will cause the second page to lose their conditionals. Are you sure you wish to continue?")) {
+                    return;
+                }
+
+                pageOne.clearCriteria();
+            }
+        }
+
         for (let page of pagesAfterMe) {
             page._clearDependentElementsFromPage(this.get('id'));
         }
@@ -203,7 +214,7 @@ module.exports = Backbone.Model.extend({
             }
         }
 
-        if (oldIndex === 0) {
+        if (this.collection.at(0) === this) {
             let pageOne = this.collection.at(1);
             if (pageOne.showIfs.length > 0) {
                 return {
