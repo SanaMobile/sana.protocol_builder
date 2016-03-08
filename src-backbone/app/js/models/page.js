@@ -339,14 +339,18 @@ module.exports = Backbone.Model.extend({
         let dependentElements = this.showIfs.at(0).rootConditionalNode.getDependentElements();
 
         for (let elementId of dependentElements) {
-            let dependentPage = this.collection.find(function(page) {
-                return !!page.elements.get(elementId);
-            });
-
-            this.dependentElementsToPage.set(elementId, dependentPage);
+            this._computeDependentPage(elementId);
         }
 
         console.log('onReset', this.dependentElementsToPage);
+    },
+
+    _computeDependentPage: function(elementId) {
+        let dependentPage = this.collection.find(function(page) {
+            return !!page.elements.get(elementId);
+        });
+
+        this.dependentElementsToPage.set(elementId, dependentPage);
     },
 
     _clearDependentElementsAfterPosition: function(position) {
