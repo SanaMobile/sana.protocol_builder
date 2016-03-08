@@ -23,8 +23,8 @@
 
     <select class="comparator form-control" data-cid="{{ cid }}">
         <option value="EQUALS" {{ checkSelected node_type 'EQUALS' }}>{{ i18n "Equals" }}</option>
-        <option value="LESS" {{ checkSelected node_type 'LESS' }}>{{ i18n "Greater Than" }}</option>
-        <option value="GREATER" {{ checkSelected node_type 'GREATER' }}>{{ i18n "Less Than" }}</option>
+        <option value="LESS" {{ checkSelected node_type 'LESS' }}>{{ i18n "Less Than" }}</option>
+        <option value="GREATER" {{ checkSelected node_type 'GREATER' }}>{{ i18n "Greater Than" }}</option>
     </select>
 
     {{#if showChoiceEditorForValue }}
