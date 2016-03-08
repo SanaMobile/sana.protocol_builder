@@ -4,6 +4,11 @@
     <a class="delete" title="{{ i18n "Delete this page" }}"><span class="glyphicon glyphicon-remove"></span></a>
 
     <a class="page">
+        {{#if hasConditions }}
+            <ul class="conditions"></ul>
+            <span class="label label-primary shown-conditionally">{{ i18n "Shown Conditionally" }}</span>
+        {{/if}}
+
         <ul class="element-preview">
             {{#each elements}}
             <li data-element-id="{{ id }}" class="element-type-{{ sluggify element_type }}">

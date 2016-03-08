@@ -153,6 +153,7 @@ module.exports = Backbone.Model.extend({
         }
 
         this.dependentElementsToPage.clear();
+        this.save();
     },
 
     shouldConfirmBeforeSort: function(newIndex) {
