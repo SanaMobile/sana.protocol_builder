@@ -8,7 +8,7 @@ class Procedure(models.Model):
     title = models.CharField(max_length=255, blank=True)
     author = models.CharField(max_length=255, blank=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -18,7 +18,7 @@ class Procedure(models.Model):
 
 class Page(models.Model):
     display_index = models.PositiveIntegerField()
-    procedure = models.ForeignKey(Procedure, related_name='pages')
+    procedure = models.ForeignKey(Procedure, related_name='pages', on_delete=models.CASCADE)
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -98,7 +98,7 @@ class Element(models.Model):
     action = models.TextField(null=True, blank=True)
     mime_type = models.CharField(max_length=128, null=True, blank=True)
 
-    page = models.ForeignKey(Page, related_name='elements')
+    page = models.ForeignKey(Page, related_name='elements', on_delete=models.CASCADE)
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -130,7 +130,7 @@ class ShowIf(models.Model):
         'LESS'
     )
 
-    page = models.ForeignKey(Page, related_name='show_if')
+    page = models.ForeignKey(Page, related_name='show_if', on_delete=models.CASCADE)
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
     conditions = models.TextField()
