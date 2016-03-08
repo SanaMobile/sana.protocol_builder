@@ -33,6 +33,12 @@ module.exports = {
             }
         });
 
+        Handlebars.registerHelper('checkChecked', function(value, activeValue) {
+            if (value == activeValue) {
+                return ' checked ';
+            }
+        });
+
         Handlebars.registerHelper('breaklines', function(text) {
             text = Handlebars.Utils.escapeExpression(text);
             text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
