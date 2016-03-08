@@ -50,6 +50,17 @@ def _emailConfirmationKeyTimeout():
     return datetime.timedelta(EMAIL_CONFIRMATION_KEY_TTL_DAYS).total_seconds()
 
 
+def _getUserDetails(user):
+    return {
+        'id': user.pk,
+        'is_superuser': user.is_superuser,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'username': user.username,
+        'email': user.email
+    }
+
+
 # ------------------------------------------------------------------------------
 #  Sign up
 #
@@ -64,6 +75,7 @@ def signup(request):
     form = SignupForm(request.POST)
     valid_form = form.is_valid()
     token_key = None
+    user_details = {}
 
     if valid_form:
         user = form.save()
@@ -77,8 +89,9 @@ def signup(request):
         # TODO(connor): remove hard-coded url: https://github.com/SanaMobile/sana.protocol_builder/issues/325
         env = templater.get_environment("authentication", "templates")
         template = env.get_template("confirmation_email.html")
-        body = template.render(url="https://sanaprotocolbuilder.me/auth/confirm_email/{0}".format(key))
+        body = template.render(url="https://sanaprotocolbuilder.me/confirm_email/{0}".format(key))
         send_email.delay(user.email, "Account Confirmation for Sana Protocol Builder", body)
+        user_details = _getUserDetails(user)
     else:
         logger.info("Signup Failed: {0}".format(_flattenFormErrors(form)))
 
@@ -86,6 +99,7 @@ def signup(request):
         'success': valid_form,
         'errors': form.errors,
         'token': token_key,
+        'user': user_details,
     })
 
 
@@ -116,14 +130,7 @@ def login(request):
         token_key = token.key
         logger.info("Login Success: u:{0} e:{0}".format(user.username, user.email))
 
-        user_details = {
-            'id': user.pk,
-            'is_superuser': user.is_superuser,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'username': user.username,
-            'email': user.email,
-        }
+        user_details = _getUserDetails(user)
     else:
         logger.info("Login Failed: {0}".format(_flattenFormErrors(form)))
 
