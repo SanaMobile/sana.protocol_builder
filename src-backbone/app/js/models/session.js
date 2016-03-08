@@ -71,6 +71,12 @@ let SessionModel = Backbone.Model.extend({
             },
             success: function(response) {
                 self._authHandler(response, serverErrorHandler);
+                App().RootView.clearNotifications();
+                App().RootView.showNotification({
+                    title: 'Success!',
+                    desc: 'An email has been sent to your provided email address. Please follow the link to verify your email.',
+                    alertType: 'success',
+                });
             },
             error: function(error) {
                 networkErrorHandler(error);

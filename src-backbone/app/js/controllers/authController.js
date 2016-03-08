@@ -6,6 +6,7 @@ const LoginView                 = require('views/auth/loginView');
 const SettingsView              = require('views/auth/settingsView');
 const ResetPasswordView         = require('views/auth/resetPasswordView');
 const ResetPasswordCompleteView = require('views/auth/resetPasswordCompleteView');
+const ConfirmEmailView          = require('views/auth/confirmEmailView');
 
 
 module.exports = Marionette.Controller.extend({
@@ -72,6 +73,14 @@ module.exports = Marionette.Controller.extend({
         Helpers.arrivedOnView('Logout');
 
         App().session.logout();
+    },
+
+    routeConfirmEmail: function(token) {
+        Helpers.arrivedOnView('Confirm Email');
+
+        let authLayoutView = new AuthLayoutView();
+        App().RootView.switchMainView(authLayoutView);
+        authLayoutView.showChildView('authFormArea', new ConfirmEmailView({token: token}));
     },
 
 });
