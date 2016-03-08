@@ -18,10 +18,19 @@ module.exports = Marionette.ItemView.extend({
         'keyup @ui.titleField': '_save',
         'keyup @ui.authorField': '_save',
         'click @ui.downloadButton': '_download',
-        'click @ui.saveButton':  '_saveToServer'
+        'click @ui.saveButton':  '_saveProcedure'
     },
 
     _save: _.debounce(function() { this._saveToServer(); }, Config.INPUT_DELAY_BEFORE_SAVE),
+
+    _saveProcedure: function() {
+        this._saveToServer();
+        this.model.pages.forEach(function(page) {
+            page.elements.forEach(function(element) {
+                element.debounceSave();
+            });
+        });
+    },
 
     _saveToServer: function() {
         this.model.save({
