@@ -21,7 +21,7 @@ module.exports = Marionette.ItemView.extend({
                 App().RootView.hideSpinner();
             },
             success: function(response) {
-                self.navigateToAppropriateScreen();
+                self.navigateToDefaultScreen();
                 App().RootView.clearNotifications();
                 App().RootView.showNotification({
                     title: 'Success!',
@@ -30,7 +30,7 @@ module.exports = Marionette.ItemView.extend({
                 });
             },
             error: function(errors) {
-                self.navigateToAppropriateScreen();
+                self.navigateToDefaultScreen();
                 App().RootView.clearNotifications();
                 App().RootView.showNotification({
                     title: 'There was a problem',
@@ -40,7 +40,7 @@ module.exports = Marionette.ItemView.extend({
         });
     },
 
-    navigateToAppropriateScreen: function() {
+    navigateToDefaultScreen: function() {
         if (App().session.isValid()) {
             Helpers.navigateToDefaultLoggedIn();
         } else {

@@ -9,9 +9,15 @@ describe("Session Model", function() {
     let showSpinnerStub;
     let hideSpinnerStub;
 
+    let clearNotificationsStub;
+    let showNotificationStub;
+
     beforeEach(function() {
         showSpinnerStub = sinon.stub();
         hideSpinnerStub = sinon.stub();
+
+        clearNotificationsStub = sinon.stub();
+        showNotificationStub = sinon.stub();
 
         const Storage = require('utils/storage');
         const Session = proxyquire('models/session', {
@@ -20,6 +26,8 @@ describe("Session Model", function() {
                     RootView: {
                         showSpinner: showSpinnerStub,
                         hideSpinner: hideSpinnerStub,
+                        clearNotifications: clearNotificationsStub,
+                        showNotification: showNotificationStub,
                     },
                 };
             },
