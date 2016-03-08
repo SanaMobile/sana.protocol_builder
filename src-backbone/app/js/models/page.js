@@ -21,11 +21,6 @@ module.exports = Backbone.Model.extend({
         // A cache that maps this page's Criteria Elements to their original pages
         this.dependentElementsToPage = new CountedMap();
 
-        options.parse = true;
-        Backbone.Model.prototype.constructor.call(this, attributes, options);
-    },
-
-    initialize: function() {
         // Propagate AJAX events from child to this model so that the status bar can be notified
         this.listenTo(this.elements, 'add', function(model, collection, options) {
             Helpers.propagateEvents(model, this);
@@ -44,6 +39,11 @@ module.exports = Backbone.Model.extend({
             }
         });
 
+        options.parse = true;
+        Backbone.Model.prototype.constructor.call(this, attributes, options);
+    },
+
+    initialize: function() {
         // When the Procedure has finished loading all the Pages, need to regenerate
         // all of this Page's dependents
         this.listenTo(this.collection, 'reset', function() {

@@ -33,12 +33,18 @@ let Procedure = Backbone.Model.extend({
             delete options.activePageId;
         }
 
-        Backbone.Model.prototype.constructor.call(this, attributes, options);
-    },
-
-    initialize: function() {
         // Propagate AJAX events from child to this model so that the status bar can be notified
-        Helpers.propagateEvents(this.pages, this);
+        this.listenTo(this.pages, 'add', function(model, collection, options) {
+            Helpers.propagateEvents(model, this);
+        });
+        this.listenTo(this.pages, 'reset', function(collection, options) {
+            for (let model of collection.models) {
+                Helpers.propagateEvents(model, this);
+            }
+        });
+
+        options.parse = true;
+        Backbone.Model.prototype.constructor.call(this, attributes, options);
     },
 
     parse: function(response, options) {
