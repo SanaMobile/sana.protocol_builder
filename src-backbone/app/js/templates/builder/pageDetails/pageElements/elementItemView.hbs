@@ -10,7 +10,7 @@
         <input type="text" id="question-{{ id }}" name="question" class="form-control question" value="{{ question }}">
         <div class="checkbox">
             <label>
-                <input type="checkbox" name="required" class="required"> {{ i18n "Required" }}
+                <input type="checkbox" name="required" class="required" {{ checkChecked required true }}> {{ i18n "Required" }}
             </label>
         </div>
     </div>
