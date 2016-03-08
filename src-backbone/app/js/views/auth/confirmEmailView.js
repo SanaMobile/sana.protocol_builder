@@ -24,8 +24,8 @@ module.exports = Marionette.ItemView.extend({
                 self.navigateToDefaultScreen();
                 App().RootView.clearNotifications();
                 App().RootView.showNotification({
-                    title: 'Success!',
-                    desc: 'Email confirmed!',
+                    title: i18n.t('Success!'),
+                    desc: i18n.t('Email confirmed!'),
                     alertType: 'success',
                 });
             },
@@ -33,8 +33,8 @@ module.exports = Marionette.ItemView.extend({
                 self.navigateToDefaultScreen();
                 App().RootView.clearNotifications();
                 App().RootView.showNotification({
-                    title: 'There was a problem',
-                    desc: "Your email couldn't be verified"
+                    title: i18n.t('There was a problem'),
+                    desc: i18n.t("Your email couldn't be verified"),
                 });
             }
         });
