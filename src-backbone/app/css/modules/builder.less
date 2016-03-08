@@ -71,14 +71,24 @@ header#builder-meta-data{
         }
     }
 
-    a#download-btn{
+    a.builder-header-btn{
         margin-top: -20px;
         position: absolute;
-        top:50%; right: @container-side-padding;
+        top:50%;
 
         font-weight: bold;
         height: 40px;
         line-height: 40px;
         padding: 0 20px;
+    }
+
+    a#download-btn{
+        &:extend(.builder-header-btn);
+        right: @container-side-padding;
+    }
+
+    a#save-btn{
+        &:extend(.builder-header-btn);
+        right: @container-side-padding * 3;
     }
 }

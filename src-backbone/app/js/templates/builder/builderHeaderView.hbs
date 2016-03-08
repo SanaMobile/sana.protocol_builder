@@ -8,7 +8,11 @@
         <input type="text" title="{{ i18n "Change the author(s) of this procedure" }}" name="change-author" id="change-author" class="form-control" value="{{ author }}">
     </div>
 </div>
-<a id="download-btn" class="btn btn-default">
+<a id="save-btn" class="btn btn-success builder-header-btn">
+    <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+    {{ i18n "Save Procedure" }}
+</a>
+<a id="download-btn" class="btn btn-default builder-header-btn">
     <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
     {{ i18n "Download" }}
 </a>

@@ -11,12 +11,14 @@ module.exports = Marionette.ItemView.extend({
         titleField: 'input#change-title',
         authorField: 'input#change-author',
         downloadButton: 'a#download-btn',
+        saveButton: 'a#save-btn'
     },
 
     events: {
         'keyup @ui.titleField': '_save',
         'keyup @ui.authorField': '_save',
-        'click @ui.downloadButton': '_download'
+        'click @ui.downloadButton': '_download',
+        'click @ui.saveButton':  '_saveToServer'
     },
 
     _save: _.debounce(function() { this._saveToServer(); }, Config.INPUT_DELAY_BEFORE_SAVE),
