@@ -71,14 +71,25 @@ header#builder-meta-data{
         }
     }
 
-    a#download-btn{
+    div#button-container{
         margin-top: -20px;
         position: absolute;
-        top:50%; right: @container-side-padding;
+        top:50%;
+        right: @container-side-padding;
 
-        font-weight: bold;
-        height: 40px;
-        line-height: 40px;
-        padding: 0 20px;
+        a.btn{
+            float: left;
+            font-weight: bold;
+            height: 40px;
+            line-height: 40px;
+            padding: 0 20px;
+
+            margin-right: @column-margin;
+            &:last-child{
+                margin-right: 0;
+            }
+        }
+
     }
+
 }
