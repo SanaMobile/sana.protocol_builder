@@ -59,8 +59,6 @@ module.exports = Backbone.Model.extend({
             'required'
         );
 
-        json.eid = Helpers.sluggify(json.question) + '-' + json.id;
-
         if (this.isChoiceBased()) {
             json.choices = this.choices.pluck('text');
             json.answer = this.choices.getDefaultAnswers();

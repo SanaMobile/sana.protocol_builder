@@ -97,7 +97,6 @@ class ElementGeneratorTest(TestCase):
     def setUp(self):
         self.element = factories.ElementFactory(
             display_index=0,
-            eid='1',
             element_type='ENTRY',
             question='Which valve',
             answer='[]'
@@ -115,23 +114,7 @@ class ElementGeneratorTest(TestCase):
 
     def test_element_has_id(self):
         assert_true('id' in self.attribs)
-        assert_equals(self.attribs['id'], self.element.eid)
-
-    @raises(ValueError)
-    def test_error_if_no_id(self):
-        element = factories.ElementFactory(
-            eid=None
-        )
-
-        generators.ElementGenerator(element).generate(ElementTree.Element('test'))
-
-    @raises(ValueError)
-    def test_error_if_blank_id(self):
-        element = factories.ElementFactory(
-            eid=''
-        )
-
-        generators.ElementGenerator(element).generate(ElementTree.Element('test'))
+        assert_equals(self.attribs['id'], str(self.element.pk))
 
     def test_element_has_type(self):
         assert_true('type' in self.attribs)
@@ -466,7 +449,7 @@ class CriteriaNodeGeneratorTest(TestCase):
         generator = generators.CriteriaNodeGenerator(self.data, factories.PageFactory())
         expected = {
             'value': self.data['value'],
-            'id': self.element.eid,
+            'id': str(self.element.pk),
             'type': self.data['node_type']
         }
         assert_equals(generator.get_properties(), expected)

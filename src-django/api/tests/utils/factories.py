@@ -50,7 +50,6 @@ class ElementFactory(factory.django.DjangoModelFactory):
     element_type = 'ENTRY'
     concept = factory.SubFactory(ConceptFactory)
     question = 'Where does it hurt?'
-    eid = 'checkup_id'
     answer = '[]'
     page = factory.SubFactory(PageFactory)
 
@@ -63,7 +62,6 @@ class ChoiceElementFactory(factory.django.DjangoModelFactory):
     element_type = 'SELECT'
     concept = factory.SubFactory(ConceptFactory)
     question = 'Where does it hurt?'
-    eid = 'checkup_id'
     answer = ''
     choices = '[one, two, three]'
     page = factory.SubFactory(PageFactory)
@@ -77,7 +75,6 @@ class PluginElementFactory(factory.django.DjangoModelFactory):
     element_type = 'PLUGIN'
     concept = factory.SubFactory(ConceptFactory)
     question = 'Where does it hurt?'
-    eid = 'checkup_id'
     answer = ''
     action = 'fire the laser',
     mime_type = 'text/javascript'

@@ -85,7 +85,6 @@ class Element(models.Model):
     )
 
     display_index = models.PositiveIntegerField()
-    eid = models.CharField(max_length=255, null=True, blank=True)
     element_type = models.CharField(max_length=12, choices=TYPES)
     choices = models.TextField(null=True, blank=True)
     concept = models.ForeignKey(Concept, null=True, related_name='elements')
