@@ -26,6 +26,9 @@ describe('Auth Controller', function() {
     let resetPasswordCompleteView;
     let resetPasswordCompleteViewStub;
 
+    let confirmEmailView;
+    let confirmEmailViewStub;
+
     beforeEach(function() {
         // Setup helpers
         let helpers = require('utils/helpers');
@@ -91,6 +94,12 @@ describe('Auth Controller', function() {
         };
         resetPasswordCompleteViewStub = sinon.stub().returns(resetPasswordCompleteView);
 
+        // Setup confirmEmailView
+        confirmEmailView = {
+            name: 'confirmEmailView'
+        };
+        confirmEmailViewStub = sinon.stub().returns(confirmEmailView);
+
         // Setup authController
         let AuthController = proxyquire('controllers/authController', {
             'utils/sanaAppInstance': getAppInstance,
@@ -101,6 +110,7 @@ describe('Auth Controller', function() {
             'views/auth/settingsView': settingsViewStub,
             'views/auth/resetPasswordView': resetPasswordViewStub,
             'views/auth/resetPasswordCompleteView': resetPasswordCompleteViewStub,
+            'views/auth/confirmEmailView': confirmEmailViewStub,
         });
         authController = new AuthController();
     });

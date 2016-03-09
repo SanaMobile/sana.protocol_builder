@@ -16,6 +16,9 @@
     "Language": "Language",
     "First Name": "First Name",
     "Last Name": "Last Name",
+    "An email has been sent to your provided email address. Please follow the link to verify your email.": "An email has been sent to your provided email address. Please follow the link to verify your email.",
+    "Email Confirmed": "Email Confirmed",
+    "Your email couldn't be verified": "Your email couldn't be verified",
 
     // Log in
     "Remember Me": "Remember Me",

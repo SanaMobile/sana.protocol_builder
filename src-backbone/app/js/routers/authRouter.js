@@ -15,7 +15,8 @@ module.exports = Marionette.AppRouter.extend({
         'signup'               : 'routeSignup',
         'account'              : 'routeSettings',
         'resetpassword'        : 'routeResetPassword',
-        'resetpassword/:token' : 'routeResetPasswordComplete'
+        'resetpassword/:token' : 'routeResetPasswordComplete',
+        'confirm_email/:token' : 'routeConfirmEmail',
     }
 
 });
