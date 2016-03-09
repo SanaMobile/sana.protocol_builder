@@ -135,8 +135,8 @@
     "Except when": "Except when",
     "Page displayIndex": "Page {{ displayIndex }}",
 
-    "When all": "When all",
-    "When any": "When any",
+    "all": "all",
+    "any": "any",
     "of the following conditions are": "of the following conditions are",
     "true": "true",
     "false": "false",
