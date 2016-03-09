@@ -57,7 +57,7 @@
     "colors": "^1.1.2",
     "handlebars": "^4.0.4",
     "handlebars-intl": "^1.1.1",
-    "i18next": "^2.0.23",
+    "i18next": "~2.0.23",
     "i18next-node-fs-backend": "0.0.6",
     "i18next-text": "^0.5.6",
     "i18next-xhr-backend": "^0.3.0",
