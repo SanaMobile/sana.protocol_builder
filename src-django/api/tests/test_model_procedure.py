@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.db import IntegrityError
-from nose.tools import raises, assert_equals, assert_true, assert_is_not_none
-from api.models import Procedure
+from nose.tools import raises, assert_equals, assert_true, assert_is_not_none, assert_raises
+from api.models import Procedure, Page, Element, ShowIf
 from utils import factories
 
 
@@ -66,3 +66,29 @@ class ProcedureTest(TestCase):
         )
 
         assert_true(original_last_modified < procedure.last_modified)
+
+    def test_cascade_delete(self):
+        procedure = factories.ProcedureFactory()
+        page = factories.PageFactory(
+            procedure=procedure
+        )
+        element = factories.ElementFactory(
+            page=page
+        )
+        show_if = factories.ShowIfFactory(
+            page=page
+        )
+
+        procedure.delete()
+
+        with assert_raises(Procedure.DoesNotExist):
+            Procedure.objects.get(pk=procedure.pk)
+
+        with assert_raises(Page.DoesNotExist):
+            Page.objects.get(pk=page.pk)
+
+        with assert_raises(Element.DoesNotExist):
+            Element.objects.get(pk=element.pk)
+
+        with assert_raises(ShowIf.DoesNotExist):
+            ShowIf.objects.get(pk=show_if.pk)
