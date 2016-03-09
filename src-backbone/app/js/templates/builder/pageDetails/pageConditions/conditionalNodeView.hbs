@@ -55,9 +55,10 @@
 
 <div class="logical-form">
     <div class="logical-statement">
+        <span>{{ i18n "When" }}</span>
         <select class="logical-connective form-control" data-cid="{{ cid }}">
-            <option value="ALL" {{#if isLogicAll }}selected{{/if}}>{{ i18n "When all"}}</option>
-            <option value="ANY" {{#unless isLogicAll }}selected{{/unless}}>{{ i18n "When any"}}</option>
+            <option value="ALL" {{#if isLogicAll }}selected{{/if}}>{{ i18n "all"}}</option>
+            <option value="ANY" {{#unless isLogicAll }}selected{{/unless}}>{{ i18n "any"}}</option>
         </select>
         <span>{{ i18n "of the following conditions are" }}</span>
         <select class="negation form-control" data-cid="{{ cid }}">
