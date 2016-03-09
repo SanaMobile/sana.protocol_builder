@@ -26,10 +26,6 @@ module.exports = Marionette.LayoutView.extend({
         'conditions': 'ul.conditions',
     },
 
-    initialize: function() {
-        this.listenTo(this.model.showIfs, 'sync', this.render);
-    },
-
     templateHelpers: function() {
         return {
             isActive: this.model.isActive(),
@@ -66,7 +62,7 @@ module.exports = Marionette.LayoutView.extend({
 
         // TODO prompt user for confirmation
         let self = this;
- 
+
         this.$el.fadeOut('fast', function() {
             if (self.model.isActive()) {
                 self.model.collection.parentProcedure.unselectActivePage();
