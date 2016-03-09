@@ -16,7 +16,6 @@ class ElementSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'display_index',
-            'eid',
             'concept',
             'question',
             'answer',

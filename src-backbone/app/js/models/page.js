@@ -104,7 +104,6 @@ module.exports = Backbone.Model.extend({
             position = lastElement.get('display_index') + 1;
         }
 
-        // TODO(connor): call through to _onFormUpdate so that the eid can be generated
         let element = new Element({
             display_index: position,
             page: this.get('id'),

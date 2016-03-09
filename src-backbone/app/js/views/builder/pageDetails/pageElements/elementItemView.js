@@ -37,7 +37,6 @@ module.exports = Marionette.LayoutView.extend({
         'click a.move-up': '_onMoveElementUp',
         'click a.move-down': '_onMoveElementDown',
 
-        'keyup @ui.eid': '_onFormUpdate',
         'keyup @ui.question': '_onFormUpdate',
         'change @ui.required': '_onFormUpdate',
         'keyup @ui.image': '_onFormUpdate',

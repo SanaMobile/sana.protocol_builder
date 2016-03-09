@@ -31,7 +31,6 @@ class ElementTest(TestCase):
         concept = factories.ConceptFactory()
         Element.objects.create(
             display_index=0,
-            eid='eid',
             element_type='SELECT',
             choices='[one, two, three]',
             concept=concept,
@@ -46,7 +45,6 @@ class ElementTest(TestCase):
         element = Element.objects.get(concept=concept)
 
         assert_equals(element.display_index, 0)
-        assert_equals(element.eid, 'eid')
         assert_equals(element.element_type, 'SELECT')
         assert_equals(element.choices, '[one, two, three]')
         assert_equals(element.concept, concept)
@@ -64,7 +62,6 @@ class ElementTest(TestCase):
         concept = factories.ConceptFactory()
         Element.objects.create(
             display_index=0,
-            eid='eid',
             element_type='PLUGIN',
             concept=concept,
             question='test question',
@@ -80,7 +77,6 @@ class ElementTest(TestCase):
         element = Element.objects.get(concept=concept)
 
         assert_equals(element.display_index, 0)
-        assert_equals(element.eid, 'eid')
         assert_equals(element.element_type, 'PLUGIN')
         assert_equals(element.concept, concept)
         assert_equals(element.question, 'test question')

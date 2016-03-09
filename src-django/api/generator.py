@@ -53,9 +53,6 @@ class ElementGenerator:
         self.name = 'Element'
         self.element = element
 
-        if not self.element.eid:
-            raise_error_on_page('Element has no id', self.element.page)
-
         if not self.element.concept:
             raise_error_on_page('Element has no concept', self.element.page)
 
@@ -78,7 +75,7 @@ class ElementGenerator:
     def __get_properties(self):
         props = {
             'type': self.element.element_type,
-            'id': self.element.eid,
+            'id': str(self.element.pk),
             'concept': self.element.concept.name,
             'question': self.element.question,
             'answer': self.__parse_answers()
@@ -177,7 +174,7 @@ class CriteriaNodeGenerator:
     def get_properties(self):
         return {
             'value': self.condition_node['value'],
-            'id': self.criteria_element.eid,
+            'id': str(self.criteria_element.pk),
             'type': self.condition_node['node_type']
         }
 
@@ -237,11 +234,11 @@ class ProtocolBuilder:
         for page in procedure.pages.all():
             page_element = PageGenerator(page).generate(procedure_etree_element)
 
-            for element in page.elements.all():
-                ElementGenerator(element).generate(page_element)
-
             for show_if in page.show_if.all():
                 ShowIfGenerator(show_if).generate(page_element)
+
+            for element in page.elements.all():
+                ElementGenerator(element).generate(page_element)
 
         return procedure_etree_element
 
