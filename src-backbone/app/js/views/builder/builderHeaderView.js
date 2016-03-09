@@ -21,7 +21,14 @@ module.exports = Marionette.ItemView.extend({
         'click @ui.saveButton':  '_saveProcedure',
     },
 
-    _save: _.debounce(function() { this._saveToServer(); }, Config.INPUT_DELAY_BEFORE_SAVE),
+    modelEvents: {
+        'change:title': '_renderOnce',
+        'change:author': '_renderOnce',
+    },
+
+    _save: _.debounce(function() {
+        this._saveToServer();
+    }, Config.INPUT_DELAY_BEFORE_SAVE),
 
     _saveProcedure: function() {
         this.model.save();
@@ -31,6 +38,10 @@ module.exports = Marionette.ItemView.extend({
             });
         });
     },
+
+    _renderOnce: _.once(function() {
+        this.render();
+    }),
 
     _saveToServer: function() {
         this.model.save({
