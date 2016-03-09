@@ -12,6 +12,10 @@ module.exports = Marionette.ItemView.extend({
         'submit': 'onSubmit'
     },
 
+    initialize: function() {
+        this.model = App().session.user;
+    },
+
     onSubmit: function(event) {
         event.preventDefault();
 
