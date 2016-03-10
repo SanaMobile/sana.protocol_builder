@@ -1,6 +1,10 @@
 {{#if isCriteria }}
 
 <div class="criteria-form">
+    <div class="left-actions">
+        <span class="glyphicon glyphicon glyphicon-triangle-right expand{{#unless canExpand }} disabled{{/unless}}"
+              title="{{ i18n "Expand this criteria into a list" }}" data-cid="{{ cid }}"></span>
+    </div>
     <select class="negation form-control" data-cid="{{ cid }}">
         <option value="default" {{#unless isNegated }}selected{{/unless}}>{{ i18n "When" }}</option>
         <option value="negated" {{#if isNegated }}selected{{/if}}>{{ i18n "Except when" }}</option>
@@ -44,14 +48,16 @@
     <div class="actions">
         <span class="glyphicon glyphicon-remove delete{{#unless canDelete }} disabled{{/unless}}"
               title="{{ i18n "Delete this criteria" }}" data-cid="{{ cid }}"></span>
-        <span class="glyphicon glyphicon glyphicon-triangle-left expand{{#unless canExpand }} disabled{{/unless}}"
-              title="{{ i18n "Expand this criteria into a list" }}" data-cid="{{ cid }}"></span>
     </div>
 </div>
 
 {{else}}
 
 <div class="logical-form">
+    <div class="left-actions">
+        <span class="glyphicon glyphicon glyphicon-triangle-bottom contract{{#unless canContract }} disabled{{/unless}}"
+              title="{{ i18n "Contract this list into a criteria" }}" data-cid="{{ cid }}"></span>
+    </div>
     <div class="logical-statement">
         <span>{{ i18n "When" }}</span>
         <select class="logical-connective form-control" data-cid="{{ cid }}">
@@ -70,8 +76,6 @@
               title="{{ i18n "Add a new criteria after this one" }}" data-cid="{{ cid }}"></span>
         <span class="glyphicon glyphicon-remove delete{{#unless canDelete }} disabled{{/unless}}"
               title="{{ i18n "Delete this list" }}" data-cid="{{ cid }}"></span>
-        <span class="glyphicon glyphicon glyphicon-triangle-bottom contract{{#unless canContract }} disabled{{/unless}}"
-              title="{{ i18n "Contract this list into a criteria" }}" data-cid="{{ cid }}"></span>
     </div>
 </div>
 
