@@ -259,7 +259,7 @@ class ConceptViewSet(viewsets.ModelViewSet):
     queryset = models.Concept.objects.all()
     serializer_class = serializer.ConceptSerializer
     filter_backends = (filters.SearchFilter,)
-    search_fields = (('name',))
+    search_fields = ('display_name', 'name')
 
     @list_route(methods=['POST'])
     def import_csv(self, request):

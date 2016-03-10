@@ -5,7 +5,7 @@ module.exports = Backbone.Collection.extend({
 
     model: Concept,
 
-    comparator: 'name',
+    comparator: 'display_name',
 
     initialize : function(models, options){
         this.query = '';
