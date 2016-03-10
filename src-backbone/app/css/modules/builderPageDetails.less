@@ -98,7 +98,7 @@ section#concept-table {
         div.criteria-form{
             display: flex;
             line-height: @button-size;
-            padding-right: (@button-size * 3) + (@column-margin * 3);
+            padding-right: (@button-size * 2) + (@column-margin * 2);
             position: relative;
 
             .form-control{
@@ -107,6 +107,20 @@ section#concept-table {
 
                 &:first-child{
                     margin-left: 0;
+                }
+            }
+
+            div.actions{
+                width: @button-size * 2 + @column-margin;
+                span.glyphicon{
+                    &.delete{
+                        left: 0;
+                    }
+
+                    &.expand,
+                    &.contract{
+                        left: @button-size + @column-margin;
+                    }
                 }
             }
 
@@ -397,7 +411,7 @@ ul#elements-list{
                             }
                         }
                     }
-                    
+
                     // Input field at the bottom
                     div.choice{
                         margin: 0;
