@@ -98,7 +98,8 @@ section#concept-table {
         div.criteria-form{
             display: flex;
             line-height: @button-size;
-            padding-right: (@button-size * 3) + (@column-margin * 3);
+            padding-right: @button-size + @column-margin;
+            padding-left: @button-size;
             position: relative;
 
             .form-control{
@@ -107,6 +108,15 @@ section#concept-table {
 
                 &:first-child{
                     margin-left: 0;
+                }
+            }
+
+            div.actions{
+                width: @button-size;
+                span.glyphicon{
+                    &.delete{
+                        left: 0;
+                    }
                 }
             }
 
@@ -180,7 +190,8 @@ section#concept-table {
         }
 
         div.logical-form{
-            padding-right: (@button-size * 3) + (@column-margin * 3);
+            padding-right: (@button-size * 2) + (@column-margin * 2);
+            padding-left: @button-size + @column-margin - 5;
             position: relative;
 
             div.logical-statement{
@@ -201,7 +212,7 @@ section#concept-table {
         div.actions{
             position: absolute;
             top: 0; right: 0;
-            width: @button-size * 3 + @column-margin * 2;
+            width: @button-size * 2 + @column-margin;
             height: @button-size;
 
             span.glyphicon{
@@ -223,9 +234,32 @@ section#concept-table {
                     left: @button-size + @column-margin;
                 }
 
+                &.disabled{
+                    color: @grey-bg;
+                }
+            }
+        }
+
+        div.left-actions{
+            position: absolute;
+            top: 0; left: 0;
+            width: @button-size + @column-margin;
+            height: @button-size;
+
+            span.glyphicon{
+                cursor: pointer;
+                display: block;
+                position: absolute;
+                top: 0;
+
+                font-size: 20px;
+                line-height: @button-size;
+                text-align: center;
+                width: @button-size; height: @button-size;
+
                 &.expand,
                 &.contract{
-                    left: @button-size * 2 + @column-margin * 2;
+                    left: 0;
                 }
 
                 &.disabled{
@@ -397,7 +431,7 @@ ul#elements-list{
                             }
                         }
                     }
-                    
+
                     // Input field at the bottom
                     div.choice{
                         margin: 0;
