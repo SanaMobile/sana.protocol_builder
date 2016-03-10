@@ -60,7 +60,6 @@ module.exports = {
         } else {
             // No `Intl`, so use and load the polyfill.
             global.Intl = require('intl');
-            require('intl/locale-data/jsonp/en.js');
         }
 
         global.HandlebarsIntl = require('handlebars-intl');
