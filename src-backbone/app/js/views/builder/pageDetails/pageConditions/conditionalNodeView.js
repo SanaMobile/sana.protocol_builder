@@ -207,8 +207,8 @@ const ConditionalNodeView = Marionette.CompositeView.extend({
             return;
         }
 
-        this.model.createNewNeighborNode();
-        this.parentNodeView.render(); // Don't need to check for root since only non-root nodes can add neighbors
+        this.model.createNewChildNode();
+        this.render();
     },
 
     _onExpandCriteria: function(event) {

@@ -245,16 +245,15 @@ const ConditionalNode = Backbone.Model.extend({
     // View events
     //--------------------------------------------------------------------------
 
-    createNewNeighborNode: function() {
-        let neighborNode = new ConditionalNode(null, {
+    createNewChildNode: function() {
+        let childNode = new ConditionalNode(null, {
             parentPage: this.parentPage,
-            parentConditionalNode: this.parentConditionalNode,
+            parentConditionalNode: this,
             rootShowIf: this.rootShowIf,
         });
 
-        this.collection.push(neighborNode, {
+        this.childrenNodes.push(childNode, {
             silent: true,
-            at: this.collection.indexOf(this) + 1,
         });
 
         this.saveRootShowIf();
@@ -343,7 +342,7 @@ const ConditionalNode = Backbone.Model.extend({
 
     canAdd: function() {
         // Only if this node already belongs to a collection (i.e. not root)
-        return _.isObject(this.collection);
+        return !this.isCriteriaNode();
     },
 
     canDelete: function() {

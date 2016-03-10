@@ -42,8 +42,6 @@
     {{/if}}
 
     <div class="actions">
-        <span class="glyphicon glyphicon-plus add{{#unless canAdd }} disabled{{/unless}}"
-              title="{{ i18n "Add a new criteria after this one" }}" data-cid="{{ cid }}"></span>
         <span class="glyphicon glyphicon-remove delete{{#unless canDelete }} disabled{{/unless}}"
               title="{{ i18n "Delete this criteria" }}" data-cid="{{ cid }}"></span>
         <span class="glyphicon glyphicon glyphicon-triangle-left expand{{#unless canExpand }} disabled{{/unless}}"
@@ -68,7 +66,7 @@
     </div>
 
     <div class="actions">
-        <span class="glyphicon glyphicon-plus add{{#unless canAdd }} disabled{{/unless}}"
+        <span class="glyphicon glyphicon-plus add"
               title="{{ i18n "Add a new criteria after this one" }}" data-cid="{{ cid }}"></span>
         <span class="glyphicon glyphicon-remove delete{{#unless canDelete }} disabled{{/unless}}"
               title="{{ i18n "Delete this list" }}" data-cid="{{ cid }}"></span>
