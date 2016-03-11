@@ -2,6 +2,9 @@
 @import url(utils/helpers.less);
 
 
+@popover-width: 700px;
+
+
 section#pages-list{
     a#create-new-page-btn{
         display: block;
@@ -67,7 +70,9 @@ section#pages-list{
                 display: none;
             }
             div.popover{
-                width: 100%;
+
+                width: auto;
+                max-width: @popover-width;
 
                 ul.children-nodes{
                     padding-left: 15px;
@@ -98,9 +103,11 @@ section#pages-list{
                 }
 
                 &> ul{
-                   &> li{
+                    width: @popover-width;
+
+                    &> li{
                         list-style: none;
-                   }
+                    }
                 }
             }
 
