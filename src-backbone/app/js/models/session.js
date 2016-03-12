@@ -70,12 +70,14 @@ let SessionModel = Backbone.Model.extend({
                 App().RootView.hideSpinner();
             },
             success: function(response) {
-                App().RootView.clearNotifications();
-                App().RootView.showNotification({
-                    title: i18n.t('Success!'),
-                    desc: i18n.t('An email has been sent to your provided email address. Please follow the link to verify your email.'),
-                    alertType: 'success',
-                });
+                if (response.success) {
+                    App().RootView.clearNotifications();
+                    App().RootView.showNotification({
+                        title: i18n.t('Success!'),
+                        desc: i18n.t('An email has been sent to your provided email address. Please follow the link to verify your email.'),
+                        alertType: 'success',
+                    });
+                }
                 self._authHandler(response, serverErrorHandler);
             },
             error: function(error) {
