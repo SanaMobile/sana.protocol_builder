@@ -7,7 +7,6 @@ class SignupForm(UserCreationForm):
     first_name = forms.CharField(required=True, label='First Name', help_text='Your first name', max_length=20)
     last_name = forms.CharField(required=True, label='Last Name', help_text='Your last name', max_length=20)
     email = forms.EmailField(required=True, label='Email', help_text='This will be your username when you login')
-    accept_tos = forms.BooleanField(required=True, label='I accept the Terms of Service')
 
     def save(self, commit=True):
         user = super(SignupForm, self).save(commit=False)

@@ -5,26 +5,6 @@ let InfoLayout = require('views/info/infoLayoutView');
 
 module.exports = Marionette.Controller.extend({
 
-    routeTermsOfService: function () {
-        Helpers.arrivedOnView('Terms of Service');
-
-        let infoLayout = new InfoLayout();
-        App().RootView.switchMainView(infoLayout, 'info');
-        infoLayout.showChildView('infoArea', new Marionette.ItemView({
-            template: require('templates/info/termsOfServiceView'),
-        }));
-    },
-  
-    routePrivacyPolicy: function() {
-        Helpers.arrivedOnView('Privacy Policy');
-
-        let infoLayout = new InfoLayout();
-        App().RootView.switchMainView(infoLayout, 'info');
-        infoLayout.showChildView('infoArea', new Marionette.ItemView({
-            template: require('templates/info/privacyPolicyView'),
-        }));
-    },
-  
     routeCredits: function() {
         Helpers.arrivedOnView('Credits');
 

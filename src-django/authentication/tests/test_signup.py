@@ -28,8 +28,8 @@ class SignupTest(TestCase):
             'username': 'admin',
             'email': 'admin@admin.com',
             'password1': 'admin',
-            'password2': 'admin',
-            'accept_tos': True
+            'password2': 'admin'
+            # 'accept_tos': True
         }
 
     def test_new_user_can_signup(self):
