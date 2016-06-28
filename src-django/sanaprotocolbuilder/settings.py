@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_nose',                  # Better test framework/runner
     'corsheaders',                  # Cross-origin resource sharing
     'django_extensions',            # Adds some useful dev commands for convenience
+    'rest_hooks',                   # Adds web hooks
 
     # Our apps
     'authentication.apps.AuthenticationConfig',
@@ -264,3 +265,13 @@ TEMPLATES = [
         },
     },
 ]
+
+# ------------------------------------------------------------------------------
+# Web Hooks
+# ------------------------------------------------------------------------------
+
+HOOK_EVENTS = {
+    'procedure.added': 'api.Procedure.created', # Web hook on Procedure Object? if we find it
+    'procedure.changed': 'api.Procedure.updated+',
+    'procedure.removed': 'api.Procedure.deleted',
+}
