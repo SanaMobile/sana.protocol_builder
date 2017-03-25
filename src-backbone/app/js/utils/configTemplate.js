@@ -10,6 +10,8 @@ module.exports = {
 
     API_BASE: '<%= API_BASE %>',
 
+    HUB_API_URL: '<%= HUB_API_URL %>',
+
     LOCALES_SUPPORTED: [
         {
             code: 'en',

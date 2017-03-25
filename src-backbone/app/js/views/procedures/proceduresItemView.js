@@ -19,7 +19,21 @@ module.exports = Marionette.ItemView.extend({
 
     _onDownloadProcedure: function(event) {
         event.preventDefault();
-        this.model.generate();
+        let title = this.model.get('title');
+        this.model.generate(
+            function onGenerateSuccess(data, status, jqXHR) {
+                const filename = title + '.xml';
+                Helpers.downloadXMLFile(data, filename);
+            },
+            function onGenerateError(jqXHR, textStatus, errorThrown) {
+                console.warn('Failed to generate Procedure', textStatus);
+                App().RootView.showNotification({
+                    title: i18n.t('Failed to generate Procedure'),
+                    desc: i18n.t(jqXHR.responseText),
+                }, {
+                    isTranslated: true
+                });
+            });
     },
 
     _onDeleteProcedure: function(event) {
