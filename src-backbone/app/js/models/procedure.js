@@ -128,24 +128,13 @@ let Procedure = Backbone.Model.extend({
         });
     },
 
-    generate: function() {
+    generate: function(onSuccess, onError) {
         const title = this.get('title');
         $.ajax({
             type: 'GET',
             url: this.url() + '/generate',
-            success: function onGenerateSuccess(data, status, jqXHR) {
-                const filename = title + '.xml';
-                Helpers.downloadXMLFile(data, filename);
-            },
-            error: function onGenerateError(jqXHR, textStatus, errorThrown) {
-                console.warn('Failed to generate Procedure', textStatus);
-                App().RootView.showNotification({
-                    title: i18n.t('Failed to generate Procedure', { procedureTitle: title }),
-                    desc: i18n.t(jqXHR.responseText),
-                }, {
-                    isTranslated: true
-                });
-            },
+            success: onSuccess,
+            error: onError,
         });
     },
 

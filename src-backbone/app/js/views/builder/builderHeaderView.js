@@ -1,6 +1,7 @@
 const Config  = require('utils/config');
 const Helpers = require('utils/helpers');
 const App     = require('utils/sanaAppInstance');
+const HubApi  = require('utils/hubApi');
 
 
 module.exports = Marionette.ItemView.extend({
@@ -11,7 +12,8 @@ module.exports = Marionette.ItemView.extend({
         titleField: 'input#change-title',
         authorField: 'input#change-author',
         downloadButton: 'a#download-btn',
-        saveButton: 'a#save-btn'
+        saveButton: 'a#save-btn',
+        publishButton: 'a#publish-btn',
     },
 
     events: {
@@ -19,6 +21,7 @@ module.exports = Marionette.ItemView.extend({
         'keyup @ui.authorField': '_save',
         'click @ui.downloadButton': '_download',
         'click @ui.saveButton':  '_saveProcedure',
+        'click @ui.publishButton':  '_publishProcedure',
     },
 
     modelEvents: {
@@ -37,6 +40,12 @@ module.exports = Marionette.ItemView.extend({
                 element.debounceSave();
             });
         });
+    },
+
+    _publishProcedure: function() {
+        let hubApi = new HubApi();
+        this._saveProcedure();
+        hubApi.publish(this.model);
     },
 
     _renderOnce: _.once(function() {
