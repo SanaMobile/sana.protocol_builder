@@ -22,7 +22,8 @@ install:
   - pip install --requirement src-django/requirements.txt
 
   # Node tools
-  - npm set progress=false
+  - npm set spin=false
+  - npm config set loglevel=silent
   - npm install --global gulp
   - npm install --global jshint
   - npm install --global browserify
