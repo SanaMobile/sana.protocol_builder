@@ -65,6 +65,7 @@
     "intl-locales-supported": "^1.0.0",
     "jquery": "~2.1.4",
     "jquery-ui": "^1.10.5",
+    "jquery-ui-sortable-npm": "^1.0.0",
     "moment": "^2.11.2",
     "underscore": "~1.8.3"
   }
