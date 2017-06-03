@@ -281,7 +281,6 @@ class ConceptViewSet(viewsets.ModelViewSet):
                 destination.write(chunk)
 
         try:
-            print "made it here"
             copy_mapping = CopyMapping(
                 models.Concept,
                 file_path,
@@ -290,7 +289,6 @@ class ConceptViewSet(viewsets.ModelViewSet):
             copy_mapping.save()
         except (ValueError, DatabaseError):
             expected_columns = ', '.join(ConceptViewSet.CSV_COLUMN_MAPPING.keys())
-
             return JsonResponse(
                 status=status.HTTP_400_BAD_REQUEST,
                 data={
