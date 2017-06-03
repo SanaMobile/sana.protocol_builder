@@ -30,6 +30,7 @@ module.exports = Marionette.LayoutView.extend({
 
     events: {
         'click a#new-procedure-btn': '_createNewProcedure',
+        'click a#import-procedure-btn': '_importProcedure',
         'keyup @ui.procedureFilterInput': '_filterProcedures',
 
         'click a#sort-by-title': '_changeSortKey',
@@ -91,6 +92,10 @@ module.exports = Marionette.LayoutView.extend({
                 App().RootView.showNotification('Failed to create Procedure!');
             },
         });
+    },
+
+    _importProcedure: function(event) {
+
     },
 
     _filterProcedures: function(event) {
