@@ -7,10 +7,12 @@
         <div class="col-lg-12">
             <header id="procedures-list-heading">
                 <h2>{{ i18n "My Procedures" }}</h2>
-                <a href="" id="import-procedure-btn" class="btn btn-success">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{ i18n "Import a procedure" }}
+                <a id="import-procedure-btn" class="btn btn-success">
+                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>{{ i18n "Import a procedure" }}
                 </a>
-                <a href="" id="new-procedure-btn" class="btn btn-success">
+                <input type="file" id="procedure-file-input" name="files[]">
+
+                <a id="new-procedure-btn" class="btn btn-success">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>{{ i18n "Create a new procedure" }}
                 </a>
             </header>

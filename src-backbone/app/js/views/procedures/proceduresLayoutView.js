@@ -22,6 +22,7 @@ module.exports = Marionette.LayoutView.extend({
     ui: {
         procedureFilterInput: 'input#procedure-filter',
         sortToolbarDropdown: '#procedure-list-toolbar ul.dropdown-menu',
+        procedureFileInput: 'input#procedure-file-input',
     },
 
     regions: {
@@ -31,6 +32,7 @@ module.exports = Marionette.LayoutView.extend({
     events: {
         'click a#new-procedure-btn': '_createNewProcedure',
         'click a#import-procedure-btn': '_importProcedure',
+        'change input#procedure-file-input': '_readInputFile',
         'keyup @ui.procedureFilterInput': '_filterProcedures',
 
         'click a#sort-by-title': '_changeSortKey',
@@ -79,8 +81,6 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     _createNewProcedure: function (event) {
-        event.preventDefault();
-
         let procedure = new Procedure(); // Does not need to set 'collection' option because it already has a urlRoot property
         procedure.save({}, {
             success: function() {
@@ -95,7 +95,25 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     _importProcedure: function(event) {
+        this.ui.procedureFileInput.click();
+    },
 
+    _readInputFile: function(event) {
+        console.log(event.target.files);
+
+        if (event.target.files.length <= 0) {
+            return;
+        }
+
+        var file = event.target.files[0];
+        var reader = new FileReader();
+        reader.onload = function() {
+            var xmlParser = new DOMParser();
+            console.log(reader.result);
+            console.log(xmlParser.parseFromString(reader.result, "text/xml"));
+        };
+
+        reader.readAsText(file, "UTF-8");
     },
 
     _filterProcedures: function(event) {
