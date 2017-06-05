@@ -98,7 +98,7 @@ class ElementCreator:
 
     @classmethod
     def _parse_concept(cls, concept_name):
-        return Concept.objects.get(name=concept_name)
+        return Concept.objects.filter(name=concept_name)[0]
 
 
 class ShowIfCreator:
