@@ -256,13 +256,13 @@ class ElementViewSet(viewsets.ModelViewSet):
 class ConceptViewSet(viewsets.ModelViewSet):
     CSV_COLUMN_MAPPING = {
         "created": "created",
-        "last_modified": "modified",
+        "last_modified": "last_modified",
         "uuid": "uuid",
         "name": "name",
         "display_name": "display_name",
         "description": "description",
-        "data_type": "datatype",
-        "mime_type": "mimetype",
+        "data_type": "data_type",
+        "mime_type": "mime_type",
         "constraint": "constraint"
     }
 
@@ -312,6 +312,33 @@ class ConceptViewSet(viewsets.ModelViewSet):
 
         return JsonResponse({
             'success': True,
+        })
+
+    @list_route(methods=['POST'])
+    def json_add(self, request):
+        try:
+            new_concept = Concept(
+                name=request.POST.name,
+                display_name=request.POST.display_name,
+                description=request.POST.description,
+                data_type=request.POST.data_type,
+                mime_type=request.POST.mime_type,
+                constraint=request.POST.constraint
+            )
+
+            new_concept.save()
+
+        except (ValueError, DatabaseError):
+            return JsonResponse(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    'success': False,
+                    'errors': ['Concept has improper fields.']
+                }
+            )
+
+        return JsonResponse({
+            'success': True
         })
 
 
