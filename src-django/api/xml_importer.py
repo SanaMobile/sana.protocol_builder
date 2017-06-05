@@ -98,7 +98,12 @@ class ElementCreator:
 
     @classmethod
     def _parse_concept(cls, concept_name):
-        return Concept.objects.filter(name=concept_name)[0]
+        concepts = Concept.objects.filter(name=concept_name)
+
+        if not concepts:
+            raise ValueError('No concept named "{}"'.format(concept_name))
+
+        return concepts[0]
 
 
 class ShowIfCreator:
