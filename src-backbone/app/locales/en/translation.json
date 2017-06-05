@@ -157,6 +157,7 @@
     "Your session is invalid!": "Your session is invalid!",
     "Please login again.": "Please login again.",
     "Failed to generate Procedure": "Failed to generate Procedure \"{{ procedureTitle }}\"",
+    "Failed to import Procedure from": "Failed to import Procedure from \"{{ fileName }}\"",
 
     // Concepts
     "CSV Imported Successfuly": "CSV Imported Successfuly",

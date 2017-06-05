@@ -107,13 +107,40 @@ module.exports = Marionette.LayoutView.extend({
 
         var file = event.target.files[0];
         var reader = new FileReader();
-        reader.onload = function() {
-            var xmlParser = new DOMParser();
-            console.log(reader.result);
-            console.log(xmlParser.parseFromString(reader.result, "text/xml"));
-        };
+        reader.onload = (function() {
+            this._uploadToServer(file.name, reader.result);
+        }).bind(this);
 
         reader.readAsText(file, "UTF-8");
+
+        event.target.value = null;
+    },
+
+    _uploadToServer: function(filename, filecontent) {
+        $.ajax({
+            type: 'POST',
+            url: '/api/procedures/import_from_xml',
+            data: {
+                'filename': filename, 
+                'filecontent': filecontent
+            },
+            dataType: "text",
+            success: function onGenerateSuccess(data, status, jqXHR) {
+                Backbone.history.loadUrl(Backbone.history.fragment);
+                App().RootView.showNotification({
+                    title: i18n.t('Success!'),
+                    desc: i18n.t('Imported procedure from ' + filename),
+                    alertType: 'success',
+                });
+            },
+            error: function onGenerateError(jqXHR, textStatus, errorThrown) {
+                console.warn('Failed to import Procedure from ' + filename, textStatus);
+                App().RootView.showNotification({
+                    title: i18n.t('Failed to import Procedure from', {fileName: filename}),
+                    desc: jqXHR.responseText,
+                });
+            },
+        });
     },
 
     _filterProcedures: function(event) {
