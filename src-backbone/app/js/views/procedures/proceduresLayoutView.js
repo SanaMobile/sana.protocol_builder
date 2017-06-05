@@ -99,8 +99,6 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     _readInputFile: function(event) {
-        console.log(event.target.files);
-
         if (event.target.files.length <= 0) {
             return;
         }
