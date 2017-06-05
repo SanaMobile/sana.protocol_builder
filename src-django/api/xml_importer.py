@@ -1,8 +1,7 @@
-
 from django.db import transaction
 from xml.etree import ElementTree
 
-from api.models import Concept, Element, Page, Procedure
+from api.models import Concept, Element, Page, Procedure, ShowIf
 
 import json
 import uuid
@@ -31,7 +30,10 @@ class ProcedureCreator:
     def create_from(cls, owner, procedure_node):
         fields_dict = AttributeExtractor.extract(procedure_node, cls._ATTRIBUTES)
         fields_dict['owner'] = owner
-        fields_dict['uuid'] = cls._parse_uuid(fields_dict['uuid'])
+
+        if 'uuid' in fields_dict:
+            fields_dict['uuid'] = cls._parse_uuid(fields_dict['uuid'])
+
         return Procedure(**fields_dict)
 
     @classmethod
@@ -99,6 +101,55 @@ class ElementCreator:
         return Concept.objects.get(name=concept_name)
 
 
+class ShowIfCreator:
+    ELEMENT_NAME = 'ShowIf'
+    _CRITERIA_ELEMENT_NAME = 'Criteria'
+    _CRITERIA_ATTR = {
+        'type': 'node_type',
+        'id': 'criteria_element',
+        'value': 'value',
+    }
+
+    @classmethod
+    def create_from(cls, showif_node, page_id, element_id_map):
+        conditions = cls._parse_conditions(showif_node[0], element_id_map)
+
+        fields_dict = {
+            'page_id': page_id,
+            'conditions': json.dumps(conditions)
+        }
+        return ShowIf(**fields_dict)
+
+    @classmethod
+    def _parse_conditions(cls, node, element_id_map):
+        if node.tag == cls._CRITERIA_ELEMENT_NAME:
+            criteria_dict = AttributeExtractor.extract(node, cls._CRITERIA_ATTR)
+
+            if criteria_dict['node_type'] not in ShowIf.CRITERIA_TYPES:
+                raise ValueError(
+                    'Invalid criteria type "{0}"'.format(criteria_dict['node_type'])
+                )
+
+            prev_id = criteria_dict['criteria_element']
+            criteria_dict['criteria_element'] = element_id_map[prev_id]
+
+            return criteria_dict
+        elif node.tag.upper() in ShowIf.LOGICAL_TYPES:
+            logical_dict = {
+                'node_type': node.tag.upper(),
+                'children': []
+            }
+
+            for child in node:
+                logical_dict['children'].append(cls._parse_conditions(child, element_id_map))
+
+            return logical_dict
+        else:
+            raise ValueError(
+                'Invalid logical type "{0}"'.format(node.tag.upper())
+            )
+
+
 class ProtocolImporter:
     @classmethod
     def from_xml(cls, owner, xml_str):
@@ -119,20 +170,33 @@ class ProtocolImporter:
 
     @classmethod
     def _import_pages(cls, procedure_node, procedure_id):
+        element_id_map = {}
         display_index = 0
         for page_node in procedure_node.findall(PageCreator.ELEMENT_NAME):
             page_model = PageCreator.create_from(procedure_id, display_index)
             page_model.save()
 
-            cls._import_elements(page_node, page_model.id)
+            cls._import_showif(page_node, page_model.id, element_id_map)
+            cls._import_elements(page_node, page_model.id, element_id_map)
 
             display_index += 1
 
     @classmethod
-    def _import_elements(cls, page_node, page_id):
+    def _import_showif(cls, page_node, page_id, element_id_map):
+        showif_node = page_node.find(ShowIfCreator.ELEMENT_NAME)
+        if showif_node is not None:
+            showif_model = ShowIfCreator.create_from(showif_node, page_id, element_id_map)
+            showif_model.save()
+
+    @classmethod
+    def _import_elements(cls, page_node, page_id, element_id_map):
         display_index = 0
         for element_node in page_node.findall(ElementCreator.ELEMENT_NAME):
             element_model = ElementCreator.create_from(element_node, page_id, display_index)
             element_model.save()
+
+            # update the element_id_map
+            prev_id = element_node.attrib['id']
+            element_id_map[prev_id] = element_model.id
 
             display_index += 1
