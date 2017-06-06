@@ -7,15 +7,13 @@ import json
 import uuid
 
 
-class AttributeExtractor:
-    @staticmethod
-    def extract(element, attributes):
-        extracted_dict = {}
-        for attr_name, field_name in attributes.iteritems():
-            if attr_name in element.attrib:
-                extracted_dict[field_name] = element.attrib[attr_name]
+def extract_attributes(element, attributes):
+    extracted_dict = {}
+    for attr_name, field_name in attributes.iteritems():
+        if attr_name in element.attrib:
+            extracted_dict[field_name] = element.attrib[attr_name]
 
-        return extracted_dict
+    return extracted_dict
 
 
 class ProcedureCreator:
@@ -28,7 +26,7 @@ class ProcedureCreator:
 
     @classmethod
     def create_from(cls, owner, procedure_node):
-        fields_dict = AttributeExtractor.extract(procedure_node, cls._ATTRIBUTES)
+        fields_dict = extract_attributes(procedure_node, cls._ATTRIBUTES)
         fields_dict['owner'] = owner
 
         if 'uuid' in fields_dict:
@@ -70,7 +68,7 @@ class ElementCreator:
 
     @classmethod
     def create_from(cls, element_node, page_id, display_index):
-        fields_dict = AttributeExtractor.extract(element_node, cls._ATTRIBUTES)
+        fields_dict = extract_attributes(element_node, cls._ATTRIBUTES)
         fields_dict['page_id'] = page_id
         fields_dict['display_index'] = display_index
 
@@ -128,7 +126,7 @@ class ShowIfCreator:
     @classmethod
     def _parse_conditions(cls, node, element_id_map):
         if node.tag == cls._CRITERIA_ELEMENT_NAME:
-            criteria_dict = AttributeExtractor.extract(node, cls._CRITERIA_ATTR)
+            criteria_dict = extract_attributes(node, cls._CRITERIA_ATTR)
 
             if criteria_dict['node_type'] not in ShowIf.CRITERIA_TYPES:
                 raise ValueError(

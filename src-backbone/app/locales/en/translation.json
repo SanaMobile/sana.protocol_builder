@@ -142,6 +142,9 @@
     "true": "true",
     "false": "false",
 
+    "Success!": "Success!",
+    "Imported procedure from": "Imported procedure from {{ fileName }}",
+
     // Notifications
     "An unknown error has occurred!": "An unknown error has occurred!",
     "Please try again later.": "Please try again later.",

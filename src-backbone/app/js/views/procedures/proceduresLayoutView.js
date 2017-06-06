@@ -103,7 +103,7 @@ module.exports = Marionette.LayoutView.extend({
             return;
         }
 
-        var file = event.target.files[0];
+        const file = event.target.files[0];
         var reader = new FileReader();
         reader.onload = (function() {
             this._uploadToServer(file.name, reader.result);
@@ -127,7 +127,7 @@ module.exports = Marionette.LayoutView.extend({
                 Backbone.history.loadUrl(Backbone.history.fragment);
                 App().RootView.showNotification({
                     title: i18n.t('Success!'),
-                    desc: i18n.t('Imported procedure from ' + filename),
+                    desc: i18n.t('Imported procedure from', {fileName: filename}),
                     alertType: 'success',
                 });
             },
