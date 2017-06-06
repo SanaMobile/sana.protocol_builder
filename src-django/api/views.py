@@ -7,6 +7,8 @@ from django.db.utils import DatabaseError
 from postgres_copy import CopyMapping
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.cache import cache
+
+from api.xml_importer import ProtocolImporter
 from generator import ProtocolBuilder
 from mailer import templater, tasks
 import models
@@ -43,6 +45,15 @@ class ProcedureViewSet(viewsets.ModelViewSet):
         response['Content-Disposition'] = 'attachment; filename="procedure.xml"'
 
         return response
+
+    @list_route(methods=['POST'])
+    def import_from_xml(self, request):
+        try:
+            ProtocolImporter.from_xml(request.user, request.data['filecontent'])
+        except Exception as e:
+            return HttpResponseBadRequest(str(e))
+
+        return HttpResponse(status=status.HTTP_200_OK)
 
 
 class UserViewSet(viewsets.ModelViewSet):

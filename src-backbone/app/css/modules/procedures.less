@@ -78,12 +78,16 @@ header#procedures-list-heading{
         margin: 30px 0;
     }
 
+    a#import-procedure-btn{
+        margin: 30px 0 0 10px;
+    }
+
     h2{
         line-height: 40px;
         float: left;
     }
 
-    a#new-procedure-btn{
+    a#new-procedure-btn, a#import-procedure-btn{
         float: right;
         font-weight: bold;
         display: block;
@@ -92,13 +96,17 @@ header#procedures-list-heading{
         padding: 0 20px;
     }
 
+    input#procedure-file-input{
+        display: none;
+    }
+
     @media (max-width: 767px) {
         h2{
             float: none;
             margin: 30px 0 0;
         }
 
-        a#new-procedure-btn{
+        a#new-procedure-btn, a#import-procedure-btn{
             float: none;
             margin: 15px 0 30px;
         }
