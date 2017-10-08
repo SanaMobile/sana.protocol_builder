@@ -149,6 +149,82 @@ let Procedure = Backbone.Model.extend({
         });
     },
 
+    _preprocessNodes(pages) {
+        const nodes = [];
+        const pageElementIndexToNodeIndex = new Map();
+        const elementIdToNodeIndex = new Map();
+
+        pages.forEach((page, i) => {
+            const elements = page.elements.models;
+            elements.forEach((element, j) => {
+                nodes.push({
+                    label: element.get('question'),
+                    page: i
+                });
+                pageElementIndexToNodeIndex.set(`${i},${j}`, nodes.length - 1);
+                elementIdToNodeIndex.set(element.id, nodes.length - 1);
+
+                if (j === 0) {
+                    pageElementIndexToNodeIndex.set(`start${i}`, nodes.length - 1);
+                }
+            });
+        });
+
+        return { nodes, pageElementIndexToNodeIndex, elementIdToNodeIndex };
+    },
+
+    generateGraph() {
+        const pages = this.pages;
+
+        if (pages.length > 0) {
+            const { nodes, pageElementIndexToNodeIndex, elementIdToNodeIndex } = this._preprocessNodes(pages);
+
+            const linearEdges = [];
+            for (let i = 1; i < nodes.length; i++) {
+                linearEdges.push([i - 1, i]);
+            }
+
+            const conditionalEdges = [];
+            for (let i = 1; i < pages.length; i++) {
+                const page = pages.at(i);
+
+                const dependencies = this._getDependencies(page);
+                const pageIndex = pageElementIndexToNodeIndex.get(`start${i}`);
+
+                dependencies.forEach(id => {
+                    const dependencyIndex = elementIdToNodeIndex.get(id);
+                    conditionalEdges.push([pageIndex, dependencyIndex]);
+                });
+            }
+
+            return { nodes, linearEdges, conditionalEdges };
+        }
+        else {
+            return { nodes: [], linearEdges: [], conditionalEdges: [] };
+        }
+    },
+
+    _getDependencies(page) {
+        const criteriaElements = new Set();
+
+        const recursiveGetCriteriaElement = (node) => {
+            const criteriaElement = node.get('criteria_element');
+            if (criteriaElement && criteriaElement > 0) {
+                criteriaElements.add(criteriaElement);
+            }
+
+            const children = node.childrenNodes.models;
+            children.forEach(recursiveGetCriteriaElement);
+        };
+
+        const showIfs = page.showIfs.models;
+        showIfs.forEach(showIf => {
+            const { rootConditionalNode } = showIf;
+            recursiveGetCriteriaElement(rootConditionalNode);
+        });
+
+        return criteriaElements;
+    },
 });
 
 Procedure.ACTIVE_PAGE_CHANGE_EVENT = ACTIVE_PAGE_CHANGE_EVENT;

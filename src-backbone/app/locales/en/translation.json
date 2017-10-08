@@ -48,6 +48,7 @@
     "Concepts": "Concepts",
     "Help": "Help",
     "My Procedures": "My Procedures",
+    "Import a procedure": "Import a procedure",
     "Create a new procedure": "Create a new procedure",
     "Options": "Options",
     "Sort by Title": "Sort by Title",
@@ -119,6 +120,8 @@
     "Delete this choice": "Delete this choice",
     "Click here to set this choice as a default answer": "Click here to set this choice as a default answer",
     "Click here to remove this choice as a default answer": "Click here to remove this choice as a default answer",
+    "Flowchart - Solid arrows represent the next question in sequential order. Dashed arrows represent a condition depending on a previous question.":
+        "Flowchart - Solid arrows represent the next question in sequential order. Dashed arrows represent a condition depending on a previous question.",
 
     "Greater Than": "Greater Than",
     "Less Than": "Less Than",
@@ -141,6 +144,9 @@
     "true": "true",
     "false": "false",
 
+    "Success!": "Success!",
+    "Imported procedure from": "Imported procedure from {{ fileName }}",
+
     // Notifications
     "An unknown error has occurred!": "An unknown error has occurred!",
     "Please try again later.": "Please try again later.",
@@ -156,6 +162,7 @@
     "Your session is invalid!": "Your session is invalid!",
     "Please login again.": "Please login again.",
     "Failed to generate Procedure": "Failed to generate Procedure \"{{ procedureTitle }}\"",
+    "Failed to import Procedure from": "Failed to import Procedure from \"{{ fileName }}\"",
 
     // Concepts
     "CSV Imported Successfuly": "CSV Imported Successfuly",

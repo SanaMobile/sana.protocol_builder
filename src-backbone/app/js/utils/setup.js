@@ -8,10 +8,11 @@ module.exports = {
         // Loads libraries into global namespace
         global.$ = global.jQuery = require('jquery');
         global.moment = require('moment');
-        require('jquery-ui/sortable');
+        require('jquery-ui-sortable-npm');
         require('bootstrap');
         require('bootstrap-datepicker');
         require('bootstrap-select');
+        global.vis = require('vis');
 
         global._ = require('underscore');
         global.Backbone = require('backbone');

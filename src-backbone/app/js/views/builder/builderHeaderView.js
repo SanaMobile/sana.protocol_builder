@@ -2,6 +2,8 @@ const Config  = require('utils/config');
 const Helpers = require('utils/helpers');
 const App     = require('utils/sanaAppInstance');
 
+const ModalLayoutView = require('views/common/modalLayoutView');
+const FlowchartView = require('./flowchartView');
 
 module.exports = Marionette.ItemView.extend({
 
@@ -11,7 +13,8 @@ module.exports = Marionette.ItemView.extend({
         titleField: 'input#change-title',
         authorField: 'input#change-author',
         downloadButton: 'a#download-btn',
-        saveButton: 'a#save-btn'
+        saveButton: 'a#save-btn',
+        visualizeButton: 'a#visualize-btn',
     },
 
     events: {
@@ -19,6 +22,7 @@ module.exports = Marionette.ItemView.extend({
         'keyup @ui.authorField': '_save',
         'click @ui.downloadButton': '_download',
         'click @ui.saveButton':  '_saveProcedure',
+        'click @ui.visualizeButton': '_visualize',
     },
 
     modelEvents: {
@@ -66,4 +70,87 @@ module.exports = Marionette.ItemView.extend({
         });
     },
 
+    _visualize: function() {
+        console.log('visualizing');
+
+        const modalView = new ModalLayoutView({
+            title: i18n.t(
+                'Flowchart - Solid arrows represent the next question in sequential order. ' +
+                'Dashed arrows represent a condition depending on a previous question.'
+            ),
+            bodyView: new FlowchartView(this.model),
+        });
+        App().RootView.showModal(modalView);
+
+
+        const { nodes, linearEdges, conditionalEdges } = this.model.generateGraph();
+
+        const visNodes = new vis.DataSet(
+            [
+                {
+                    id: -1,
+                    label: 'Start',
+                    shape: 'box',
+                    group: -1,
+                    widthConstraint: { maximum: 150 }
+                },
+                ...nodes.map((node, index) => (
+                    {
+                        id: index,
+                        label: node.label,
+                        shape: 'box',
+                        group: node.page,
+                        widthConstraint: { maximum: 150 }
+                    }
+                )),
+                {
+                    id: -2,
+                    label: 'End',
+                    shape: 'box',
+                    group: -2,
+                    widthConstraint: { maximum: 150 }
+                },
+            ]
+        );
+
+        const edges = [
+            ...linearEdges.map(([node1, node2]) => ({
+                from: node1,
+                to: node2,
+                arrows: 'to',
+            })),
+            ...conditionalEdges.map(([node1, node2]) => ({
+                from: node1,
+                to: node2,
+                arrows: 'to',
+                dashes: true
+            })),
+            {
+                from: -1,
+                to: 0,
+                arrows: 'to'
+            },
+            {
+                from: nodes.length - 1,
+                to: -2,
+                arrows: 'to'
+            },
+        ];
+
+        const visEdges = new vis.DataSet(edges);
+
+        const container = document.getElementById('flowchart');
+        const data = {
+            nodes: visNodes,
+            edges: visEdges
+        };
+        const options = {};
+        const network = new vis.Network(container, data, options);
+
+        const resizer = () => {
+            network.fit();
+            network.off('afterDrawing', resizer);
+        };
+        network.on('afterDrawing', resizer);
+    }
 });
