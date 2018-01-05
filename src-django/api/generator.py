@@ -202,7 +202,6 @@ class ConditionNodeGenerator:
             return self.generate_logical_tree(parent, node)
 
     def get_etree_node(self, parent, condition_node):
-        print condition_node
         if condition_node['node_type'] in ShowIf.LOGICAL_TYPES:
             self.generator = LogicalNodeGenerator(condition_node, self.page)
         else:

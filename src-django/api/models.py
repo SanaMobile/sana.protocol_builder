@@ -44,7 +44,7 @@ class Concept(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, null=False, blank=False, editable=False)
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
-    name = models.CharField(max_length=255, null=False, blank=False)
+    name = models.CharField(max_length=255, null=False, blank=False, unique=True)
     display_name = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(null=True, blank=True)
     data_type = models.CharField(max_length=16, choices=TYPES, null=True, blank=True)

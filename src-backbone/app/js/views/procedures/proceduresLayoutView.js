@@ -22,6 +22,7 @@ module.exports = Marionette.LayoutView.extend({
     ui: {
         procedureFilterInput: 'input#procedure-filter',
         sortToolbarDropdown: '#procedure-list-toolbar ul.dropdown-menu',
+        procedureFileInput: 'input#procedure-file-input',
     },
 
     regions: {
@@ -30,6 +31,8 @@ module.exports = Marionette.LayoutView.extend({
 
     events: {
         'click a#new-procedure-btn': '_createNewProcedure',
+        'click a#import-procedure-btn': '_importProcedure',
+        'change input#procedure-file-input': '_readInputFile',
         'keyup @ui.procedureFilterInput': '_filterProcedures',
 
         'click a#sort-by-title': '_changeSortKey',
@@ -78,8 +81,6 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     _createNewProcedure: function (event) {
-        event.preventDefault();
-
         let procedure = new Procedure(); // Does not need to set 'collection' option because it already has a urlRoot property
         procedure.save({}, {
             success: function() {
@@ -89,6 +90,53 @@ module.exports = Marionette.LayoutView.extend({
             error: function() {
                 console.warn('Failed to create Procedure!');
                 App().RootView.showNotification('Failed to create Procedure!');
+            },
+        });
+    },
+
+    _importProcedure: function(event) {
+        this.ui.procedureFileInput.click();
+    },
+
+    _readInputFile: function(event) {
+        if (event.target.files.length <= 0) {
+            return;
+        }
+
+        const file = event.target.files[0];
+        var reader = new FileReader();
+        reader.onload = (function() {
+            this._uploadToServer(file.name, reader.result);
+        }).bind(this);
+
+        reader.readAsText(file, "UTF-8");
+
+        event.target.value = null;
+    },
+
+    _uploadToServer: function(filename, filecontent) {
+        $.ajax({
+            type: 'POST',
+            url: '/api/procedures/import_from_xml',
+            data: {
+                'filename': filename, 
+                'filecontent': filecontent
+            },
+            dataType: "text",
+            success: function onGenerateSuccess(data, status, jqXHR) {
+                Backbone.history.loadUrl(Backbone.history.fragment);
+                App().RootView.showNotification({
+                    title: i18n.t('Success!'),
+                    desc: i18n.t('Imported procedure from', {fileName: filename}),
+                    alertType: 'success',
+                });
+            },
+            error: function onGenerateError(jqXHR, textStatus, errorThrown) {
+                console.warn('Failed to import Procedure from ' + filename, textStatus);
+                App().RootView.showNotification({
+                    title: i18n.t('Failed to import Procedure from', {fileName: filename}),
+                    desc: jqXHR.responseText,
+                });
             },
         });
     },
