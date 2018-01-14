@@ -341,6 +341,24 @@ class ConceptViewSet(viewsets.ModelViewSet):
             'success': True
         })
 
+    @detail_route(methods=['GET'])
+    def get_elements(self, request, pk=None):
+        try:
+            elements=models.Element.objects.filter(concept__id__exact=pk)
+        except (ValueError, DatabaseError):
+            return JsonResponse(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    'success': False,
+                    'errors': ['Invalid uuid']
+                }
+            )
+
+        return JsonResponse({
+            'success': True,
+            'elements': elements
+        })
+
 
 class ShowIfViewSet(viewsets.ModelViewSet):
     model = models.ShowIf
