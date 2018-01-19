@@ -87,7 +87,7 @@ class Element(models.Model):
     display_index = models.PositiveIntegerField()
     element_type = models.CharField(max_length=12, choices=TYPES)
     choices = models.TextField(null=True, blank=True)
-    concept = models.ForeignKey(Concept, null=True, related_name='elements')
+    concept = models.ForeignKey(Concept, null=True, related_name='elements', on_delete=models.CASCADE)
     question = models.TextField(null=True, blank=True)
     answer = models.TextField(null=True, blank=True)
 
@@ -97,7 +97,7 @@ class Element(models.Model):
     action = models.TextField(null=True, blank=True)
     mime_type = models.CharField(max_length=128, null=True, blank=True)
 
-    page = models.ForeignKey(Page, related_name='elements', on_delete=models.CASCADE)
+    page = models.ForeignKey(Page, related_name='elements', null=True, on_delete=models.CASCADE)
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
