@@ -7,11 +7,21 @@
         <label for="change-author">{{ i18n "Author" }}</label>
         <input type="text" title="{{ i18n "Change the author(s) of this procedure" }}" name="change-author" id="change-author" class="form-control" value="{{ author }}">
     </div>
+    <div class="group">
+        <label for="select-version">{{ i18n "Version" }}</label>
+        <select title="{{ i18n "Select the version of this procedure" }}" name="select-version" id="select-version">
+            <option value="{{ version }}">{{ version }}</option>
+        </select>
+    </div>
 </div>
 <div class="meta" id="button-container">
     <a id="save-btn" class="btn btn-success">
         <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
         {{ i18n "Save Changes" }}
+    </a>
+    <a id="save-version-btn" class=btn btn-success">
+        <span class="glyphicon glyphicon-floppy-disc" aria-hidden="true"></span>
+        {{ i18n "Save New Version" }}
     </a>
     <a id="download-btn" class="btn btn-default">
         <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>

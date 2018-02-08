@@ -18,6 +18,7 @@ let Procedure = Backbone.Model.extend({
         return {
             'title': i18n.t('Untitled Procedure'),
             'author': user.get('first_name') + ' ' + user.get('last_name'),
+            'version': 1,
         };
     },
 

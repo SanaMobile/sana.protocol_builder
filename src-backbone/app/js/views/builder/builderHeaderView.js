@@ -2,6 +2,8 @@ const Config  = require('utils/config');
 const Helpers = require('utils/helpers');
 const App     = require('utils/sanaAppInstance');
 
+let Procedure  = require('models/procedure');
+let Page = require('models/page');
 
 module.exports = Marionette.ItemView.extend({
 
@@ -10,8 +12,10 @@ module.exports = Marionette.ItemView.extend({
     ui: {
         titleField: 'input#change-title',
         authorField: 'input#change-author',
+        versionSelector: 'select#select-version',
         downloadButton: 'a#download-btn',
-        saveButton: 'a#save-btn'
+        saveButton: 'a#save-btn',
+        saveVersionButton: 'a#save-version-btn',
     },
 
     events: {
@@ -19,6 +23,7 @@ module.exports = Marionette.ItemView.extend({
         'keyup @ui.authorField': '_save',
         'click @ui.downloadButton': '_download',
         'click @ui.saveButton':  '_saveProcedure',
+        'click @ui.saveVersionButton': '_saveNewProcedureVersion',
     },
 
     modelEvents: {
@@ -35,6 +40,50 @@ module.exports = Marionette.ItemView.extend({
         this.model.pages.forEach(function(page) {
             page.elements.forEach(function(element) {
                 element.debounceSave();
+            });
+        });
+    },
+
+    _saveNewProcedureVersion: function() {
+        const nextVersion = this.model.get('version') + 1;
+        let procedure = new Procedure({
+            uuid: this.model.get('uuid'),
+            version: nextVersion,
+            title: this.model.get('title'),
+            author: this.model.get('author'),
+            owner: this.model.get('owner'),
+        });
+
+        procedure.save({}, {
+            success: function() {
+                console.info('Created new version for procedure', procedure.id);
+
+                // TODO, update the current procedure view to this new version.
+            },
+            error: function() {
+                console.warn('Failed to create Procedure!');
+                App().RootView.showNotification('Failed to create Procedure!');
+            },
+        });
+
+        // Save the new copies of pages
+        this.model.pages.forEach(function(page) {
+            let copyPage = new Page({
+                display_index: page.get('display_index'),
+                procedure: procedure.get('id'),
+                elements: page.get('elements'),
+                show_if: page.get('show_if'),
+            });
+
+            page.save({}, {
+                success: function success() {
+                    console.info('Created Page', page.get('id'));
+                    procedure.pages.add(copyPage);
+                },
+                error: function error() {
+                    console.warn('Failed to create Page', page.get('id'));
+                    App().RootView.showNotification('Failed to create Page!');
+                }
             });
         });
     },
