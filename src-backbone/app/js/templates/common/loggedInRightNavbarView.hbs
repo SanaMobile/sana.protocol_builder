@@ -2,6 +2,7 @@
 
 <ul class="nav navbar-nav ">
     {{#if is_superuser }}
+       <li><a href="/{{ currentLanguage }}/concepts/manager">{{ i18n "Concepts Manager" }}</a></li>
 	   <li><a href="/{{ currentLanguage }}/concepts/uploader">{{ i18n "Upload Concept Dictionary" }}</a></li>
     {{/if}}
     <li><a href="/{{ currentLanguage }}/account">{{ i18n "Account Settings" }}</a></li>
