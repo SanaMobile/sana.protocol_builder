@@ -5,6 +5,9 @@ const Helpers              = require('utils/helpers');
 const ConceptsLayout       = require('views/concepts/conceptsLayoutView');
 const ConceptsUploaderView = require('views/concepts/conceptsUploaderView');
 
+// Concepts Manager
+const ConceptsManagerLayout = require('views/concepts/conceptsManagerLayoutView');
+
 module.exports = Marionette.Controller.extend({
 
     routeUploader: function () {
@@ -35,6 +38,11 @@ module.exports = Marionette.Controller.extend({
             Helpers.navigateToDefaultLoggedIn();
             return;
         }
+
         Helpers.arrivedOnView('Concepts Manager');
+
+        let conceptsManagerView = new ConceptsManagerLayout();
+        App().RootView.clearNotifications(); // Clear login errors
+        App().RootView.switchMainView(conceptsManagerView, 'conceptsManager');
     }
 });
