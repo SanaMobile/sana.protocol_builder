@@ -4,12 +4,13 @@ const ConceptsCollection = require('collections/concepts');
 
 const RightNavbarView = require('views/common/rightNavbarView');
 const ConceptListView = require('./conceptsManagerListView');
+const ConceptDetailsView = require('./conceptsManagerDetailsLayoutView');
 
 module.exports = Marionette.LayoutView.extend({
     template: require('templates/concepts/conceptsManagerLayoutView'),
 
     regions: {
-        pageList: 'section#pages-list div.collection-view',
+        conceptsList: 'section#concepts-list div.collection-view',
         pageDetails: 'section#page-details',
     },
 
@@ -20,7 +21,8 @@ module.exports = Marionette.LayoutView.extend({
 
     onBeforeShow: function() {
         App().RootView.switchNavbar(new RightNavbarView());
-        this.showChildView('pageList', new ConceptListView({collection: this.concepts}));
+        this.showChildView('conceptsList', new ConceptListView({collection: this.concepts}));
+        this.showChildView('pageDetails', new ConceptDetailsView());
     },
 
 });

@@ -2,7 +2,7 @@
 module.exports = Marionette.CollectionView.extend({
 
     tagName: 'ul',
-    className: 'pages-list',
+    className: 'concepts-list',
     childView: require('./conceptsManagerListItemView'),
 
     // behaviors: {
