@@ -135,7 +135,8 @@ class ProcedureSerializer(serializers.ModelSerializer):
             'uuid',
             'owner',
             'last_modified',
-            'created'
+            'created',
+            'version'
         )
 
 

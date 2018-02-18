@@ -11,9 +11,11 @@ class Procedure(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    version = models.PositiveIntegerField(default=0)
 
     class Meta():
         app_label = 'api'
+        unique_together = (('uuid','version'))
 
 
 class Page(models.Model):
