@@ -30,7 +30,7 @@ module.exports = Marionette.LayoutView.extend({
     onBeforeShow: function() {
         App().RootView.switchNavbar(new RightNavbarView());
         this.showChildView('conceptsList', new ConceptListView({collection: this.concepts}));
-        this.showChildView('pageDetails', new ConceptDetailsView());
+        this.showChildView('pageDetails', new ConceptDetailsView({collection: this.concepts}));
     },
 
     _onKeyUpInput: function(event) {

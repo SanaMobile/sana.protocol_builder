@@ -11,17 +11,8 @@ module.exports = Marionette.ItemView.extend({
         'popoverHandle': 'span.shown-conditionally'
     },
 
-    events: {
-        'click a.delete': '_onDeleteConcept',
-        'click a.page': '_onSelectConcept',
+    triggers: {
+        'click a.concept': 'concept:select',
+        'click a.delete': 'concept:delete',
     },
-
-    _onDeleteConcept: function(event) {
-
-    },
-
-    _onSelectConcept: function(event) {
-
-    },
-
 });
