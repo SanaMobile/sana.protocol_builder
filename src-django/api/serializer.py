@@ -207,6 +207,9 @@ class ProcedureDetailSerializer(ProcedureSerializer):
 
 
 class ConceptSerializer(serializers.ModelSerializer):
+    elements = AbstractElementSerializer(many=True, read_only=True)
+    id = serializers.IntegerField(read_only=False, required=False)
+
     class Meta:
         model = models.Concept
         fields = (
