@@ -87,7 +87,7 @@ class Element(models.Model):
     display_index = models.PositiveIntegerField()
     element_type = models.CharField(max_length=12, choices=TYPES)
     choices = models.TextField(null=True, blank=True)
-    concept = models.ForeignKey(Concept, null=True, related_name='elements', on_delete=models.CASCADE)
+    concept = models.ForeignKey(Concept, null=True, related_name='elements')
     question = models.TextField(null=True, blank=True)
     answer = models.TextField(null=True, blank=True)
 
@@ -97,7 +97,7 @@ class Element(models.Model):
     action = models.TextField(null=True, blank=True)
     mime_type = models.CharField(max_length=128, null=True, blank=True)
 
-    page = models.ForeignKey(Page, related_name='elements', null=True, on_delete=models.CASCADE)
+    page = models.ForeignKey(Page, related_name='elements', on_delete=models.CASCADE)
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -110,6 +110,59 @@ class Element(models.Model):
 
         self.page.last_modified = self.last_modified
         self.page.save()
+
+    class Meta:
+        app_label = 'api'
+        ordering = ['page', 'display_index']
+
+class AbstractElement(models.Model):
+    TYPES = (
+        ('DATE', 'DATE'),
+        ('ENTRY', 'ENTRY'),
+        ('SELECT', 'SELECT'),
+        ('MULTI_SELECT', 'MULTI_SELECT'),
+        ('RADIO', 'RADIO'),
+        ('PICTURE', 'PICTURE'),
+        ('PLUGIN', 'PLUGIN'),
+        ('ENTRY_PLUGIN', 'ENTRY_PLUGIN')
+    )
+
+    CHOICE_TYPES = (
+        'SELECT',
+        'MULTI_SELECT',
+        'RADIO'
+    )
+
+    PLUGIN_TYPES = (
+        'PLUGIN',
+        'ENTRY_PLUGIN'
+    )
+
+    display_index = models.PositiveIntegerField()
+    element_type = models.CharField(max_length=12, choices=TYPES)
+    choices = models.TextField(null=True, blank=True)
+    concept = models.ForeignKey(Concept, related_name='elements', on_delete=models.CASCADE)
+    question = models.TextField(null=True, blank=True)
+    answer = models.TextField(null=True, blank=True)
+
+    required = models.BooleanField(default=False)
+    image = models.TextField(null=True, blank=True)
+    audio = models.TextField(null=True, blank=True)
+    action = models.TextField(null=True, blank=True)
+    mime_type = models.CharField(max_length=128, null=True, blank=True)
+
+    last_modified = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def save(self, **kwargs):
+        if self.element_type:
+            if (self.element_type, self.element_type) not in self.TYPES:
+                raise IntegrityError('Invalid element type')
+
+        super(AbstractElement, self).save()
+
+        self.concept.last_modified = self.last_modified
+        self.concept.save()
 
     class Meta:
         app_label = 'api'

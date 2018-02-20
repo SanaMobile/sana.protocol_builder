@@ -252,6 +252,14 @@ class ElementViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return models.Element.objects.filter(page__procedure__owner_id__exact=user.id)
 
+class AbstractElementViewSet(viewsets.ModelViewSet):
+    model = models.AbstractElement
+    serializer_class = serializer.AbstractElementSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return models.AbstractElement.objects.filter(page__procedure__owner_id__exact=user.id)
+
 
 class ConceptViewSet(viewsets.ModelViewSet):
     CSV_COLUMN_MAPPING = {

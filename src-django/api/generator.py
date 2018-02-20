@@ -1,6 +1,6 @@
 from xml.etree import ElementTree
 from xml.dom import minidom
-from models import Procedure, Element, ShowIf
+from models import Procedure, Element, AbstractElement, ShowIf
 import json
 
 
@@ -95,6 +95,72 @@ class ElementGenerator:
             props['mime_type'] = self.element.mime_type
 
         if self.element.element_type in Element.CHOICE_TYPES:
+            props['choices'] = self.__parse_choices()
+
+        return props
+
+    def __parse_choices(self):
+        return self.__parse(self.element.choices)
+
+    def __parse_answers(self):
+        return self.__parse(self.element.answer)
+
+    def __parse(self, field):
+        item_list = [item.replace(',', '&comma;') for item in json.loads(field)]
+
+        return ','.join(item_list)
+
+    def generate(self, parent):
+        props = self.__get_properties()
+        return ElementTree.SubElement(parent, self.name, props)
+
+class AbstractElementGenerator:
+    def __init__(self, element):
+        self.name = 'AbstractElement'
+        self.element = element
+
+        if not self.element.concept:
+            raise_error_on_page('Element has no concept', self.element.page)
+
+        if not self.element.question:
+            raise_error_on_page('Element has no question', self.element.page)
+
+        if self.element.answer is None:
+            raise_error_on_page('Element has no answer', self.element.page)
+
+        if self.element.element_type in AbstractElement.CHOICE_TYPES and not self.element.choices:
+            raise_error_on_page('Element has no choices', self.element.page)
+
+        if self.element.element_type in AbstractElement.PLUGIN_TYPES:
+            if not self.element.action:
+                raise_error_on_page('Element needs action', self.element.page)
+
+            if not self.element.mime_type:
+                raise_error_on_page('Element needs mime_type', self.element.page)
+
+    def __get_properties(self):
+        props = {
+            'type': self.element.element_type,
+            'id': str(self.element.pk),
+            'concept': self.element.concept.name,
+            'question': self.element.question,
+            'answer': self.__parse_answers()
+        }
+
+        if self.element.required:
+            props['required'] = str(self.element.required).lower()
+
+        if self.element.image:
+            props['image'] = self.element.image
+
+        if self.element.audio:
+            props['audio'] = self.element.audio
+
+        if self.element.element_type in AbstractElement.PLUGIN_TYPES:
+            props['action'] = self.element.action
+            props['mime_type'] = self.element.mime_type
+
+        if self.element.element_type in AbstractElement.CHOICE_TYPES:
             props['choices'] = self.__parse_choices()
 
         return props
