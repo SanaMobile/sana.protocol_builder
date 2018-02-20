@@ -14,6 +14,14 @@ module.exports = Marionette.LayoutView.extend({
         pageDetails: 'section#page-details',
     },
 
+    ui: {
+        'searchField': 'input#search-field',
+    },
+
+    events: {
+        'keyup @ui.searchField': '_onKeyUpInput',
+    },
+
     initialize: function(options) {
         this.concepts = new ConceptsCollection();
         // console.log(this.concepts);
@@ -23,6 +31,11 @@ module.exports = Marionette.LayoutView.extend({
         App().RootView.switchNavbar(new RightNavbarView());
         this.showChildView('conceptsList', new ConceptListView({collection: this.concepts}));
         this.showChildView('pageDetails', new ConceptDetailsView());
+    },
+
+    _onKeyUpInput: function(event) {
+        this.concepts.query = event.target.value;
+        this.concepts.fetch();
     },
 
 });

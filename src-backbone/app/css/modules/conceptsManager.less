@@ -42,33 +42,17 @@ header#concepts-manager-header{
   padding-bottom: 20px;
   position: relative;
 
-  div.meta{
+  h1{
+    background-image: url('/img/logo.png');
+    background-size: 30px 30px;
+    background-repeat: no-repeat;
+    background-position: 0 center;
     float: left;
-
-    div.group{
-      .clearfix;
-      margin: 10px 0;
-
-      @label-width: 60px;
-
-      label{
-        float: left;
-        line-height: 30px;
-        margin: 0;
-        width: @label-width; height: 30px;
-
-        font-size: 11px;
-        text-transform: uppercase;
-      }
-
-      input{
-        float: left;
-        box-sizing: border-box;
-        padding: 4px;
-        display: block;
-        width: @builder-page-tile-width - @label-width; height: 30px;
-      }
-    }
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 60px;
+    margin: 0;
+    padding-left: 40px;
   }
 
   div#button-container{

@@ -7,30 +7,20 @@ module.exports = Marionette.ItemView.extend({
     tagName: 'li',
     className: 'concept',
 
-    // ui: {
-    //     'concept': 'td.concept',
-    // },
-
-    //     className: 'page',
-
     ui: {
         'popoverHandle': 'span.shown-conditionally'
     },
 
-    // events: {
-    //     'click a.delete': '_onDeletePage',
-    //     'click a.page': '_onSelectPage',
-    // },
-
-    regions: {
-        // 'conditions': 'ul.conditions',
+    events: {
+        'click a.delete': '_onDeleteConcept',
+        'click a.page': '_onSelectConcept',
     },
 
-    // events: {
-    //     'click @ui.concept': '_onClickConcept',
-    // },
+    _onDeleteConcept: function(event) {
 
-    _onClickConcept: function(event) {
+    },
+
+    _onSelectConcept: function(event) {
 
     },
 
