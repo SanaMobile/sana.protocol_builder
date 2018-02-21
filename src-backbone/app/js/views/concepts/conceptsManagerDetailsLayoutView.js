@@ -1,6 +1,6 @@
 const Concepts = require('collections/concepts');
 
-const ElementsEditor = require('views/builder/pageDetails/pageElements/elementsCompositeView');
+const ElementsEditor = require('./conceptsManagerElementCompositeView');
 
 module.exports = Marionette.LayoutView.extend({
 
@@ -33,16 +33,14 @@ module.exports = Marionette.LayoutView.extend({
         });
     },
 
-    onBeforeShow: function() {
-        // console.log("HHIHI");
-        // this.showChildView('elementsEditor', new ElementsEditor());
-    },
-
     onRender: function() {
-        if (this.collection.getActiveConcept()) {
+        const activeConcept = this.collection.getActiveConcept();
+        if (activeConcept) {
             this.$el.show();
+            this.showChildView('elementsEditor', new ElementsEditor({model: activeConcept}));
         } else {
             this.$el.hide();
+            this.getRegion('elementsEditor').reset();
         }
     },
 
