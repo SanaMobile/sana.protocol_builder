@@ -207,7 +207,7 @@ class ProcedureDetailSerializer(ProcedureSerializer):
 
 
 class ConceptSerializer(serializers.ModelSerializer):
-    elements = AbstractElementSerializer(many=True, read_only=True)
+    abstractelements = AbstractElementSerializer(many=True, read_only=True)
     id = serializers.IntegerField(read_only=False, required=False)
 
     class Meta:
@@ -218,6 +218,7 @@ class ConceptSerializer(serializers.ModelSerializer):
             'created',
             'last_modified',
             'name',
+            'abstractelements',
             'display_name',
             'description',
             'data_type',

@@ -141,7 +141,7 @@ class AbstractElement(models.Model):
     display_index = models.PositiveIntegerField()
     element_type = models.CharField(max_length=12, choices=TYPES)
     choices = models.TextField(null=True, blank=True)
-    concept = models.ForeignKey(Concept, related_name='elements', on_delete=models.CASCADE)
+    concept = models.ForeignKey(Concept, related_name='abstractelements', on_delete=models.CASCADE)
     question = models.TextField(null=True, blank=True)
     answer = models.TextField(null=True, blank=True)
 
@@ -166,7 +166,7 @@ class AbstractElement(models.Model):
 
     class Meta:
         app_label = 'api'
-        ordering = ['page', 'display_index']
+        ordering = ['concept', 'display_index']
 
 
 class ShowIf(models.Model):
