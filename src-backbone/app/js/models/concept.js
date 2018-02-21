@@ -35,7 +35,7 @@ module.exports = Backbone.Model.extend({
             response.last_modified = new Date(Date.parse(response.last_modified));
         }
 
-        this.elements.reset(response.elements, { parse: true });
+        this.elements.reset(response.abstractelements, { parse: true });
         delete response.elements;
 
         return response;
