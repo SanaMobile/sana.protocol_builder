@@ -258,7 +258,7 @@ class AbstractElementViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return models.AbstractElement.objects.filter(page__procedure__owner_id__exact=user.id)
+        return models.AbstractElement.objects
 
 
 class ConceptViewSet(viewsets.ModelViewSet):
