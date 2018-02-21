@@ -54,6 +54,17 @@ class ElementFactory(factory.django.DjangoModelFactory):
     page = factory.SubFactory(PageFactory)
 
 
+class AbstractElementFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.AbstractElement
+
+    display_index = 0
+    element_type = 'ENTRY'
+    concept = factory.SubFactory(ConceptFactory)
+    question = 'Where does it hurt?'
+    answer = '[]'
+
+
 class ChoiceElementFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Element
