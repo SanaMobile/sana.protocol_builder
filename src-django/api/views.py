@@ -352,7 +352,7 @@ class ConceptViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['GET'])
     def get_elements(self, request, pk=None):
         try:
-            elements=models.Element.objects.filter(concept__id__exact=pk)
+            elements=serializer.AbstractElementSerializer(models.Element.objects.filter(concept__id__exact=pk), many=True).data
         except (ValueError, DatabaseError):
             return JsonResponse(
                 status=status.HTTP_400_BAD_REQUEST,
