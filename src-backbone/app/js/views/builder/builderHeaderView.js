@@ -109,6 +109,8 @@ module.exports = Marionette.LayoutView.extend({
         //             text: procedureV.version
         //         }));
         // }
+        this.ui.versionSelector.find('option').remove();
+
         let self = this;
         this.procedures.each(function(procedure) {
             var isSelected = false;
