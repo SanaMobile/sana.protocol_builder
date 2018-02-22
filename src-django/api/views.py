@@ -28,9 +28,15 @@ class ProcedureViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.is_authenticated():
-            return models.Procedure.objects.filter(owner=user)
+            uuid = self.request.GET.get('uuid')
+            if uuid:
+                return models.Procedure.objects.filter(uuid=uuid)
+            return models.Procedure.objects
         else:  
             # TODO Security: Allow any user (even unauthenticated) to get procedures
+            uuid = self.request.GET.get('uuid')
+            if uuid:
+                return models.Procedure.objects.filter(uuid=uuid)
             return models.Procedure.objects
 
     def get_serializer_class(self):
@@ -72,6 +78,21 @@ class ProcedureViewSet(viewsets.ModelViewSet):
 
         return HttpResponse(status=status.HTTP_200_OK)
 
+    @list_route(methods=['GET'])
+    def latest_versions(self, request):
+        user = self.request.user
+        max_versions = models.Procedure.objects.raw(
+            '''
+            SELECT a.* 
+            FROM api_procedure as a 
+                LEFT JOIN api_procedure as b 
+                ON a.uuid = b.uuid AND a.version < b.version 
+            WHERE b.version IS NULL
+            '''
+        )
+        serialized = serializer.ProcedureSerializer(max_versions, many=True)
+        response = Response(serialized.data)
+        return response
 
 class UserViewSet(viewsets.ModelViewSet):
     model = User
