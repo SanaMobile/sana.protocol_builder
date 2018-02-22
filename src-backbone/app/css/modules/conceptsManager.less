@@ -1,0 +1,79 @@
+@import url(utils/constants.less);
+@import url(utils/helpers.less);
+
+
+//-----------------------------------------------------------------------------
+// Main editor
+//-----------------------------------------------------------------------------
+
+@pages-list-width: @builder-page-tile-width + @container-side-padding + @column-margin;
+
+body.builder{
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGM6AwAA0gDPuMu6oQAAAABJRU5ErkJggg==);
+  background-repeat: repeat-y;
+  background-position: @pages-list-width 0;
+  min-width: 1300px;
+}
+
+div#concepts-manager-main{
+  .clearfix;
+
+  section#concepts-list{
+    box-sizing: border-box;
+    float: left;
+    width: @pages-list-width;
+  }
+
+  section#page-details{
+    float: left;
+    box-sizing: border-box;
+    width: ~'calc(100%' - @pages-list-width ~')';
+  }
+}
+
+//-----------------------------------------------------------------------------
+// Meta data header
+//-----------------------------------------------------------------------------
+
+header#concepts-manager-header{
+  background: #fff;
+  border-bottom: 1px solid @grey-border;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  position: relative;
+
+  h1{
+    background-image: url('/img/logo.png');
+    background-size: 30px 30px;
+    background-repeat: no-repeat;
+    background-position: 0 center;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 60px;
+    margin: 0;
+    padding-left: 40px;
+  }
+
+  div#button-container{
+    margin-top: -20px;
+    position: absolute;
+    top:50%;
+    right: @container-side-padding;
+
+    a.btn{
+      float: left;
+      font-weight: bold;
+      height: 40px;
+      line-height: 40px;
+      padding: 0 20px;
+
+      margin-right: @column-margin;
+      &:last-child{
+        margin-right: 0;
+      }
+    }
+
+  }
+
+}

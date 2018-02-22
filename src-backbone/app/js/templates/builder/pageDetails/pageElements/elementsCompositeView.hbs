@@ -1,5 +1,9 @@
-<h1>{{ i18n "Elements on this page" }}</h1>
+<h1>{{ titleText }}</h1>
 
 <ul id="elements-list"></ul>
+
+{{#if canImportFromConcept}}
+<a id="import-from-concept-btn" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>{{ i18n "Import From Concept" }}</a>
+{{/if}}
 
 <a id="create-new-element-btn" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>{{ i18n "Create New Element" }}</a>

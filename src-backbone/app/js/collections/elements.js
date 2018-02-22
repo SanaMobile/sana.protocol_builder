@@ -8,8 +8,8 @@ module.exports = Backbone.Collection.extend({
     model: Element,
 
     constructor: function(models, options) {
-        this.parentPage = options.parentPage;
-        delete options.parentPage;
+        // this.parentPage = options.parentPage;
+        // delete options.parentPage;
 
         this.comparator = 'display_index';
         this.on(REORDERED_ELEMENTS_EVENT, function() {

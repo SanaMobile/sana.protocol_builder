@@ -1,7 +1,7 @@
 from django.db import transaction
 from xml.etree import ElementTree
 
-from api.models import Concept, Element, Page, Procedure, ShowIf
+from api.models import Concept, Element, AbstractElement, Page, Procedure, ShowIf
 
 import json
 import uuid
@@ -103,6 +103,57 @@ class ElementCreator:
 
         return concepts[0]
 
+class AbstractElementCreator:
+    ELEMENT_NAME = 'AbstractElement'
+    _ATTRIBUTES = {
+        'type': 'element_type',
+        'concept': 'concept',
+        'question': 'question',
+        'answer': 'answer',
+        'required': 'required',
+        'image': 'image',
+        'audio': 'audio',
+        'action': 'action',
+        'mime_type': 'mime_type',
+        'choices': 'choices',
+    }
+
+    @classmethod
+    def create_from(cls, element_node, page_id, display_index):
+        fields_dict = extract_attributes(element_node, cls._ATTRIBUTES)
+        fields_dict['page_id'] = page_id
+        fields_dict['display_index'] = display_index
+
+        fields_dict['concept'] = cls._parse_concept(fields_dict['concept'])
+
+        fields_dict['answer'] = cls._parse_csv(fields_dict['answer'])
+        if 'choices' in fields_dict:
+            fields_dict['choices'] = cls._parse_csv(fields_dict['choices'])
+
+        if 'required' in fields_dict:
+            fields_dict['required'] = cls._parse_bool(fields_dict['required'])
+
+        return Element(**fields_dict)
+
+    @classmethod
+    def _parse_csv(cls, csv):
+        parsed_items = csv.split(',')
+        unescaped_list = [item.replace('&comma;', ',') for item in parsed_items]
+
+        return json.dumps(unescaped_list)
+
+    @classmethod
+    def _parse_bool(cls, bool_str):
+        return bool_str == 'true'
+
+    @classmethod
+    def _parse_concept(cls, concept_name):
+        concepts = Concept.objects.filter(name=concept_name)
+
+        if not concepts:
+            raise ValueError('No concept named "{}"'.format(concept_name))
+
+        return concepts[0]
 
 class ShowIfCreator:
     ELEMENT_NAME = 'ShowIf'

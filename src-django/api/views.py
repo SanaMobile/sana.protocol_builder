@@ -290,6 +290,14 @@ class ElementViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return models.Element.objects.filter(page__procedure__owner_id__exact=user.id)
 
+class AbstractElementViewSet(viewsets.ModelViewSet):
+    model = models.AbstractElement
+    serializer_class = serializer.AbstractElementSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return models.AbstractElement.objects
+
 
 class ConceptViewSet(viewsets.ModelViewSet):
     CSV_COLUMN_MAPPING = {
@@ -378,6 +386,43 @@ class ConceptViewSet(viewsets.ModelViewSet):
         return JsonResponse({
             'success': True
         })
+
+    @detail_route(methods=['GET'])
+    def get_elements(self, request, pk=None):
+        try:
+            elements=serializer.AbstractElementSerializer(models.Element.objects.filter(concept__id__exact=pk), many=True).data
+        except (ValueError, DatabaseError):
+            return JsonResponse(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    'success': False,
+                    'errors': ['Invalid uuid']
+                }
+            )
+
+        return JsonResponse({
+            'success': True,
+            'elements': elements
+        })
+
+    @list_route(methods=['PATCH'])
+    def partial_bulk_update(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        if not request.body:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(
+            instance=queryset,
+            data=json.loads(request.body),
+            many=True,
+            partial=True
+        )
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
 
 
 class ShowIfViewSet(viewsets.ModelViewSet):
