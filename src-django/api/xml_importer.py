@@ -156,7 +156,7 @@ class ShowIfCreator:
 class ProtocolImporter:
     @classmethod
     def from_xml(cls, owner, xml_str):
-        root = ElementTree.fromstring(xml_str)
+        root = ElementTree.fromstring(xml_str.encode('utf-8'))
         with transaction.atomic():
             cls._import_procedure(owner, root)
 
