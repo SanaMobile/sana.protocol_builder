@@ -55,6 +55,7 @@
     "bootstrap-datepicker": "^1.6.0",
     "bootstrap-select": "^1.10.0",
     "colors": "^1.1.2",
+    "flowchart.js": "^1.8.0",
     "handlebars": "^4.0.4",
     "handlebars-intl": "^1.1.1",
     "i18next": "~2.0.23",
