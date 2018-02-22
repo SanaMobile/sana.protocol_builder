@@ -1,7 +1,6 @@
 const App     = require('utils/sanaAppInstance');
 const Helpers = require('utils/helpers');
 
-
 module.exports = Marionette.ItemView.extend({
 
     template: require('templates/procedures/proceduresItemView'),
@@ -11,6 +10,7 @@ module.exports = Marionette.ItemView.extend({
     events: {
         'click a.download': '_onDownloadProcedure',
         'click a.delete': '_onDeleteProcedure',
+        'click a.push': '_onPushProcedure',
     },
 
     onRender: function() {
@@ -41,6 +41,36 @@ module.exports = Marionette.ItemView.extend({
                     el.fadeIn();
                 },
             });
+        });
+    },
+
+    _onPushProcedure: function(event) {
+        event.preventDefault();
+        let self = this;
+        let id = self.model.get('id');
+
+        // Call the django api
+        $.ajax({
+            type: 'POST',
+            url: '/api/procedures/push_to_devices',
+            data: {
+                'id': id,
+            },
+            dataType: "text",
+            success: function onGenerateSuccess(data, status, jqXHR) {
+                App().RootView.showNotification({
+                    title: i18n.t('Success!'),
+                    desc: i18n.t('Pushed procedure ', {id: id}),
+                    alertType: 'success',
+                });
+            },
+            error: function onGenerateError(jqXHR, textStatus, errorThrown) {
+                console.warn('Failed to push procedure ' + id, textStatus);
+                App().RootView.showNotification({
+                    title: i18n.t('Failed to push procedure ', {id: id}),
+                    desc: jqXHR.responseText,
+                });
+            },
         });
     },
 

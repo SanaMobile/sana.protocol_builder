@@ -86,7 +86,7 @@ class ElementCreator:
     @classmethod
     def _parse_csv(cls, csv):
         parsed_items = csv.split(',')
-        unescaped_list = [item.replace('&comma;', ',') for item in parsed_items]
+        unescaped_list = [item.replace('&semi&', ';') for item in parsed_items]
 
         return json.dumps(unescaped_list)
 

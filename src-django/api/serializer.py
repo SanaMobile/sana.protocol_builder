@@ -164,3 +164,13 @@ class ConceptSerializer(serializers.ModelSerializer):
             'mime_type',
             'constraint'
         )
+
+
+class DeviceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Device
+        fields = (
+            'id',
+            'registration_id',
+            'created',
+        )

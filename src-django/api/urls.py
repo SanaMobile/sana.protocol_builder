@@ -11,6 +11,7 @@ router.register(r'concepts', views.ConceptViewSet, base_name='concept')
 router.register(r'conditionals', views.ShowIfViewSet, base_name='conditional')
 router.register(r'users', views.UserViewSet, base_name='user')
 router.register(r'passwords', views.UserPasswordViewSet, base_name='password')
+router.register(r'devices', views.DeviceViewSet, base_name='device')
 
 urlpatterns = [
     url(r'^', include(router.urls))

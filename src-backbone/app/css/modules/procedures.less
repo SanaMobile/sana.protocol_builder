@@ -242,7 +242,11 @@ section#procedures-list{
                 top: @tile-padding;
                 width: @icon-size; height: @icon-size;
 
-                &.download{
+                &.push {
+                    right: @tile-padding + @icon-size + @icon-margin + @icon-size + @icon-margin;
+                }
+
+                &.download {
                     right: @tile-padding + @icon-size + @icon-margin;
                 }
 

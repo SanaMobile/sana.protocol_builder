@@ -197,7 +197,7 @@ class ElementGeneratorTest(TestCase):
         self.element_etree_element = self.generator.generate(ElementTree.Element('test'))
 
         assert_true('choices' in self.element_etree_element.attrib)
-        assert_equals(self.element_etree_element.attrib['choices'], 'left,right,center&comma;')
+        assert_equals(self.element_etree_element.attrib['choices'], 'left,right,center&semi&')
 
     def test_element_has_no_required(self):
         assert_false('required' in self.attribs)

@@ -142,3 +142,11 @@ class ShowIf(models.Model):
 
     class Meta:
         app_label = 'api'
+
+
+class Device(models.Model):
+    registration_id = models.CharField(max_length=255, blank=False)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = 'api'

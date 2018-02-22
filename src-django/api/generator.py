@@ -106,9 +106,9 @@ class ElementGenerator:
         return self.__parse(self.element.answer)
 
     def __parse(self, field):
-        item_list = [item.replace(',', '&comma;') for item in json.loads(field)]
+        item_list = [item.replace(';', '&semi&') for item in json.loads(field)]
 
-        return ','.join(item_list)
+        return ';'.join(item_list)
 
     def generate(self, parent):
         props = self.__get_properties()
@@ -225,8 +225,9 @@ class ProtocolBuilder:
         except Procedure.DoesNotExist:
             raise ValueError('Invalid procedure id')
 
-        if procedure.owner != owner:
-            raise ValueError('Invalid owner')
+        # TODO Security issue: Allow any user (even unauthenticated) to access any procedure
+        # if procedure.owner != owner:
+        #     raise ValueError('Invalid owner')
 
         procedure_etree_element = ProcedureGenerator(procedure).generate()
 
