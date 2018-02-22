@@ -51,7 +51,6 @@ module.exports = Backbone.Model.extend({
 
         let element = new AbstractElement({
             display_index: position,
-            question: this.get('description'),
             concept: this.get('id'),
             element_type: type,
         });

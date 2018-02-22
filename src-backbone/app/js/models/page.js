@@ -102,6 +102,13 @@ module.exports = Backbone.Model.extend({
     // View events
     //--------------------------------------------------------------------------
 
+    importElementsFromConcept: function(concept) {
+        let self = this;
+        concept.elements.each(function(abstractElement) {
+            self._createFromAbstractElement(abstractElement);
+        });
+    },
+
     createNewElement: function(concept, type) {
         let position = 0;
         if (!_.isEmpty(this.elements.models)) {
@@ -109,14 +116,40 @@ module.exports = Backbone.Model.extend({
             position = lastElement.get('display_index') + 1;
         }
 
+        let conceptId = null;
+        if (concept) {
+            conceptId = concept.get('id');
+        }
+
         let element = new Element({
             display_index: position,
             page: this.get('id'),
-            question: concept.get('description'),
-            concept: concept.get('id'),
+            // question: concept.get('description'),
+            concept: conceptId,
             element_type: type,
         });
 
+        this._saveElement(element);
+    },
+
+    _createFromAbstractElement: function(abstractElement) {
+        let position = 0;
+        if (!_.isEmpty(this.elements.models)) {
+            let lastElement = _.max(this.elements.models, element => element.get('display_index'));
+            position = lastElement.get('display_index') + 1;
+        }
+
+        let json = abstractElement.toJSON();
+        json.display_index = position;
+        json.page = this.get('id');
+        delete json.id;
+
+        const element = new Element(json);
+
+        this._saveElement(element);
+    },
+
+    _saveElement: function(element) {
         let self = this;
         element.save({}, {
             beforeSend: function() {

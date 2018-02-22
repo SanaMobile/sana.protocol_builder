@@ -1,7 +1,4 @@
 const App = require('utils/sanaAppInstance');
-const ElementTypePickerView = require('views/builder/pageDetails/pageElements/elementTypePickerView');
-const ModalLayoutView = require('views/common/modalLayoutView');
-
 
 module.exports = Marionette.ItemView.extend({
 
@@ -24,14 +21,8 @@ module.exports = Marionette.ItemView.extend({
     _onClickConcept: function(event) {
         event.preventDefault();
 
-        var modalView = new ModalLayoutView({
-            title: i18n.t('Choose Element Type'),
-            bodyView: new ElementTypePickerView({
-                page: this.page,
-                concept: this.model,
-            }),
-        });
-        App().RootView.showModal(modalView);
+        this.page.importElementsFromConcept(this.model);
+        App().RootView.modal.hideModal();
     },
 
 });
