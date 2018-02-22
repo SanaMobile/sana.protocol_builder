@@ -48,7 +48,7 @@ module.exports = Marionette.LayoutView.extend({
 
     onBeforeShow: function() {
         App().RootView.switchNavbar(new NavbarView({ model: this.model }));
-        this.showChildView('metaData', new MetaDataView({ model: this.model }));
+        // this.showChildView('metaData', new MetaDataView({ model: this.model }));
         this.showChildView('pageList', new PageListCollectionView({ collection: this.model.pages }));
         this.showChildView('pageDetails', new PageDetailsLayoutView({ model: this.model }));
     },
@@ -66,6 +66,7 @@ module.exports = Marionette.LayoutView.extend({
             },
             success: function() {
                 console.info('Fetched Procedure', procedureId);
+                self.showChildView('metaData', new MetaDataView({ model: self.model }));
             },
             error: function() {
                 console.warn('Failed to fetch Procedure', procedureId);

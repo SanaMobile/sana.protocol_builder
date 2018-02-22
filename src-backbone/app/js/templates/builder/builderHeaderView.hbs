@@ -10,8 +10,13 @@
     <div class="group">
         <label for="select-version">{{ i18n "Version" }}</label>
         <select title="{{ i18n "Select the version of this procedure" }}" name="select-version" id="select-version">
-            <option value="{{ version }}">{{ version }}</option>
+            <!-- {{#each versionElements}}
+            <option value="{{ attributes.id }}">
+                {{ attributes.version }}
+            </option>
+            {{/each}} -->
         </select>
+        <!-- <section id="procedures-version-list"></section> -->
     </div>
 </div>
 <div class="meta" id="button-container">
@@ -19,9 +24,9 @@
         <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
         {{ i18n "Save Changes" }}
     </a>
-    <a id="save-version-btn" class=btn btn-success">
-        <span class="glyphicon glyphicon-floppy-disc" aria-hidden="true"></span>
-        {{ i18n "Save New Version" }}
+    <a id="save-version-btn" class="btn btn-success">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        {{ i18n "Start New Version" }}
     </a>
     <a id="download-btn" class="btn btn-default">
         <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>

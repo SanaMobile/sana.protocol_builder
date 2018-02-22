@@ -5,14 +5,23 @@ module.exports = Backbone.Collection.extend({
 
     model: Procedure,
 
-    url: '/api/procedures/latest_versions',
+    // url: '/api/procedures?only_return_id=true',
+    url: function() {
+        return '/api/procedures?only_return_id=true&uuid=' + this.uuid;
+    },
     // url: '/api/procedures?only_return_id=true&uuid=0a86b599-a1a7-47d5-a66d-ad810660003d',
     // url: '/api/procedures/version_list?only_return_id=true&uuid="0a86b599-a1a7-47d5-a66d-ad810660003d"',
 
+    initialize: function (models, options) {
+        this.uuid = options.uuid;
+    },
+
     constructor: function(models, options) {
         this.setAscOrder(false);
-        this.setComparatorKey('last_modified');
+        this.setComparatorKey('version');
         this.comparator = this._comparator;
+
+        // this.uuid = options.uuid;
 
         Backbone.Collection.prototype.constructor.call(this, models, options);
     },

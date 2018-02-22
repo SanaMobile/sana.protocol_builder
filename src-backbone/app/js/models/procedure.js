@@ -150,6 +150,46 @@ let Procedure = Backbone.Model.extend({
         });
     },
 
+    getAllVersions: function() {
+        // WTF do i do here???
+        // return $.ajax({
+        //     type: 'GET',
+        //     url: this.url() + '?only_return_id=true&uuid='+this.get('uuid'),
+        //     success: function( data ) {
+        //         return data;
+        //     },
+        // });
+        var x = Backbone.Collection.extend({
+            model: Procedure,
+            url: '/api/procedures?only_return_id=true&uuid=0a86b599-a1a7-47d5-a66d-ad810660003d',
+        });
+
+        var y = new x();    
+        y.fetch({reset:true});
+
+        return y;
+    },
+
+    getVersionCollection: function() {
+        // WTF do i do here???
+        // return $.ajax({
+        //     type: 'GET',
+        //     url: this.url() + '?only_return_id=true&uuid='+this.get('uuid'),
+        //     success: function( data ) {
+        //         return data;
+        //     },
+        // });
+        console.log('asdf');
+        var x = Backbone.Collection.extend({
+            model: Procedure,
+            url: '/api/procedures?only_return_id=true&uuid=' + this.get('uuid'),
+        });
+
+        var y = new x();
+
+        return y;
+    },
+
 });
 
 Procedure.ACTIVE_PAGE_CHANGE_EVENT = ACTIVE_PAGE_CHANGE_EVENT;

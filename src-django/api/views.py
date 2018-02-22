@@ -23,6 +23,10 @@ class ProcedureViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        # results = models.Procedure.objects.filter(owner=user).filter(uuid="0a86b599-a1a7-47d5-a66d-ad810660003d")
+        uuid = self.request.GET.get('uuid')
+        if uuid:
+            return models.Procedure.objects.filter(owner=user).filter(uuid=uuid)
         return models.Procedure.objects.filter(owner=user)
 
     def get_serializer_class(self):
@@ -54,6 +58,22 @@ class ProcedureViewSet(viewsets.ModelViewSet):
             return HttpResponseBadRequest(str(e))
 
         return HttpResponse(status=status.HTTP_200_OK)
+
+    @list_route(methods=['GET'])
+    def latest_versions(self, request):
+        user = self.request.user
+        max_versions = models.Procedure.objects.raw(
+            '''
+            SELECT a.* 
+            FROM api_procedure as a 
+                LEFT JOIN api_procedure as b 
+                ON a.uuid = b.uuid AND a.version < b.version 
+            WHERE b.version IS NULL
+            '''
+        )
+        serialized = serializer.ProcedureSerializer(max_versions, many=True)
+        response = Response(serialized.data)
+        return response
 
 
 class UserViewSet(viewsets.ModelViewSet):

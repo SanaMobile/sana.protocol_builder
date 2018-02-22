@@ -98,6 +98,7 @@ module.exports = Backbone.Model.extend({
 
     _debounceSave: function(attributes, options = {}) {
         let self = this;
+        // TODO, call success, beforeSend, and eror in options in logSaveOptions callbacks.
         let logSaveOptions = {
             beforeSend: function() {
                 console.info('Saving Element', self.get('id'));
@@ -110,8 +111,8 @@ module.exports = Backbone.Model.extend({
             },
         };
 
-        $.extend(options, logSaveOptions);
-        this.save(attributes, options);
+        $.extend(logSaveOptions, options);
+        this.save(attributes, logSaveOptions);
     },
 
 });
