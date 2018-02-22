@@ -1,3 +1,6 @@
+const App = require('utils/sanaAppInstance');
+const Config  = require('utils/config');
+
 const Concepts = require('collections/concepts');
 
 const ElementsEditor = require('./conceptsManagerElementCompositeView');
@@ -5,6 +8,16 @@ const ElementsEditor = require('./conceptsManagerElementCompositeView');
 module.exports = Marionette.LayoutView.extend({
 
     template: require('templates/concepts/conceptsManagerDetailsLayoutView'),
+
+    ui: {
+        displayName: 'input#concept-name',
+        description: 'input#concept-description',
+    },
+
+    events: {
+        'keyup @ui.displayName': '_save',
+        'keyup @ui.description': '_save',
+    },
 
     regions: {
         elementsEditor: 'section#elements',
@@ -50,4 +63,20 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
 
+    _save: _.debounce(function() {
+        this._saveToServer();
+    }, Config.INPUT_DELAY_BEFORE_SAVE),
+
+    _saveToServer: function() {
+        const activeConcept = this.collection.getActiveConcept();
+        activeConcept.save({
+            display_name: this.ui.displayName.val(),
+            description: this.ui.description.val(),
+        }, {
+            error: function(model, response, options) {
+                console.warn('Failed to save Concept:', response.responseJSON);
+                App().RootView.showNotification('Failed to save display name and description!');
+            },
+        });
+    },
 });

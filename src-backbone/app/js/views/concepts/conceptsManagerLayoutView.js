@@ -1,5 +1,6 @@
 const App = require('utils/sanaAppInstance');
 
+
 const ConceptsCollection = require('collections/concepts');
 
 const RightNavbarView = require('views/common/rightNavbarView');
