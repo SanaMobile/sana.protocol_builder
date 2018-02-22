@@ -14,7 +14,7 @@ module.exports = Marionette.ItemView.extend({
 
     _onCreateNewElement: function(event) {
         let elementType = $(event.target).attr('data-element-type');
-        this.concept.createNewElement(this.concept, elementType);
+        this.concept.createNewElement(elementType);
         App().RootView.modal.hideModal();
     },
 

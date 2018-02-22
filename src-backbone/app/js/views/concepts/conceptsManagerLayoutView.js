@@ -20,11 +20,11 @@ module.exports = Marionette.LayoutView.extend({
 
     events: {
         'keyup @ui.searchField': '_onKeyUpInput',
+        'click a#create-new-concept-btn': '_onCreateNewConcept',
     },
 
-    initialize: function(options) {
+    initialize: function() {
         this.concepts = new ConceptsCollection();
-        // console.log(this.concepts);
     },
 
     onBeforeShow: function() {
@@ -36,6 +36,10 @@ module.exports = Marionette.LayoutView.extend({
     _onKeyUpInput: function(event) {
         this.concepts.query = event.target.value;
         this.concepts.fetch();
+    },
+
+    _onCreateNewConcept: function(event) {
+        this.concepts.createNewConcept();
     },
 
 });

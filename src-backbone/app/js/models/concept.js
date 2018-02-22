@@ -11,6 +11,7 @@ module.exports = Backbone.Model.extend({
     constructor: function(attributes, options = {}) {
         // See model/procedure.js for explaination
         this.elements = new AbstractElementCollection(null, null);
+        this.selected = false;
 
         // Propagate AJAX events from child to this model so that the status bar can be notified
         this.listenTo(this.elements, 'add', function(model, collection, options) {
@@ -41,7 +42,7 @@ module.exports = Backbone.Model.extend({
         return response;
     },
 
-    createNewElement: function(concept, type) {
+    createNewElement: function(type) {
         let position = 0;
         if (!_.isEmpty(this.elements.models)) {
             let lastElement = _.max(this.elements.models, element => element.get('display_index'));
@@ -50,8 +51,8 @@ module.exports = Backbone.Model.extend({
 
         let element = new AbstractElement({
             display_index: position,
-            question: concept.get('description'),
-            concept: concept.get('id'),
+            question: this.get('description'),
+            concept: this.get('id'),
             element_type: type,
         });
 
@@ -71,5 +72,13 @@ module.exports = Backbone.Model.extend({
             },
         });
     },
+
+    isSelected: function() {
+        return this.selected;
+    },
+
+    setSelected: function(selected) {
+        this.selected = selected;
+    }
 
 });

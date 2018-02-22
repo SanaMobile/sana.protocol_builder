@@ -51,7 +51,13 @@ module.exports = Marionette.LayoutView.extend({
         }
 
         if (activePage) {
-            this.showChildView('elementsEditor', new ElementsEditor({ model: activePage }));
+            this.showChildView(
+                'elementsEditor',
+                new ElementsEditor({
+                    model: activePage,
+                    titleText: i18n.t('Elements on this page'),
+                })
+            );
         } else {
             this.getRegion('elementsEditor').reset();
         }

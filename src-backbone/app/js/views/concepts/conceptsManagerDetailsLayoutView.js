@@ -37,7 +37,13 @@ module.exports = Marionette.LayoutView.extend({
         const activeConcept = this.collection.getActiveConcept();
         if (activeConcept) {
             this.$el.show();
-            this.showChildView('elementsEditor', new ElementsEditor({model: activeConcept}));
+            this.showChildView(
+                'elementsEditor',
+                new ElementsEditor({
+                    model: activeConcept,
+                    titleText: 'Elements on this concept',
+                })
+            );
         } else {
             this.$el.hide();
             this.getRegion('elementsEditor').reset();

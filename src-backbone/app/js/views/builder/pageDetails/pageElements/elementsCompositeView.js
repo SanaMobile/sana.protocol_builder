@@ -15,12 +15,20 @@ module.exports = Marionette.CompositeView.extend({
         'click a#create-new-element-btn': '_onCreateNewElement',
     },
 
-    initialize: function() {
-        if (!this.model) {
+    templateHelpers: function() {
+        return {
+            titleText: this.titleText,
+            canImportFromConcept: true,
+        };
+    },
+
+    initialize: function(option) {
+        if (!option.model) {
             return;
         }
 
-        this.collection = this.model.elements;
+        this.titleText = option.titleText;
+        this.collection = option.model.elements;
     },
 
     _onCreateNewElement: function(event) {
