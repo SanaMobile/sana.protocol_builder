@@ -103,9 +103,16 @@ module.exports = Backbone.Model.extend({
     //--------------------------------------------------------------------------
 
     importElementsFromConcept: function(concept) {
+        let position = 0;
+        if (!_.isEmpty(this.elements.models)) {
+            let lastElement = _.max(this.elements.models, element => element.get('display_index'));
+            position = lastElement.get('display_index') + 1;
+        }
+
         let self = this;
         concept.elements.each(function(abstractElement) {
-            self._createFromAbstractElement(abstractElement);
+            self._createFromAbstractElement(abstractElement, position);
+            position += 1;
         });
     },
 
@@ -132,13 +139,7 @@ module.exports = Backbone.Model.extend({
         this._saveElement(element);
     },
 
-    _createFromAbstractElement: function(abstractElement) {
-        let position = 0;
-        if (!_.isEmpty(this.elements.models)) {
-            let lastElement = _.max(this.elements.models, element => element.get('display_index'));
-            position = lastElement.get('display_index') + 1;
-        }
-
+    _createFromAbstractElement: function(abstractElement, position) {
         let json = abstractElement.toJSON();
         json.display_index = position;
         json.page = this.get('id');
