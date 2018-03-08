@@ -62,6 +62,18 @@ class Concept(models.Model):
     class Meta:
         app_label = 'api'
 
+class Subroutine(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, null=False, blank=False, editable=False)
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=255, null=False, blank=False)
+    display_name = models.CharField(max_length=255, null=False, blank=False)
+    description = models.TextField(null=True, blank=True)
+
+    class Meta:
+        app_label = 'api'
+        ordering = ['last_modified']
+
 
 class Element(models.Model):
     TYPES = (
@@ -143,7 +155,8 @@ class AbstractElement(models.Model):
     display_index = models.PositiveIntegerField()
     element_type = models.CharField(max_length=12, choices=TYPES)
     choices = models.TextField(null=True, blank=True)
-    concept = models.ForeignKey(Concept, related_name='abstractelements', on_delete=models.CASCADE)
+    concept = models.ForeignKey(Concept, related_name='abstractelement', unique=True, on_delete=models.CASCADE)
+    subroutine = models.ForeignKey(Subroutine, related_name='abstractelements', null=True, on_delete=models.CASCADE)
     question = models.TextField(null=True, blank=True)
     answer = models.TextField(null=True, blank=True)
 
@@ -164,6 +177,8 @@ class AbstractElement(models.Model):
         super(AbstractElement, self).save()
 
         self.concept.last_modified = self.last_modified
+        if (self.subroutine):
+            self.subroutine.last_modified = self.last_modified
         self.concept.save()
 
     class Meta:

@@ -108,6 +108,7 @@ class AbstractElementCreator:
     _ATTRIBUTES = {
         'type': 'element_type',
         'concept': 'concept',
+        'subroutine': 'subroutine',
         'question': 'question',
         'answer': 'answer',
         'required': 'required',
