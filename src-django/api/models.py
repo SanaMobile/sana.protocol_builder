@@ -101,7 +101,7 @@ class Element(models.Model):
     display_index = models.PositiveIntegerField()
     element_type = models.CharField(max_length=12, choices=TYPES)
     choices = models.TextField(null=True, blank=True)
-    concept = models.ForeignKey(Concept, null=True, related_name='elements')
+    concept = models.ForeignKey(Concept, null=True, related_name='elements') #unused
     question = models.TextField(null=True, blank=True)
     answer = models.TextField(null=True, blank=True)
 
@@ -155,8 +155,8 @@ class AbstractElement(models.Model):
     display_index = models.PositiveIntegerField()
     element_type = models.CharField(max_length=12, choices=TYPES)
     choices = models.TextField(null=True, blank=True)
-    concept = models.ForeignKey(Concept, related_name='abstractelement', unique=True, on_delete=models.CASCADE)
-    subroutine = models.ForeignKey(Subroutine, related_name='abstractelements', null=True, on_delete=models.CASCADE)
+    concept = models.ForeignKey(Concept, related_name='abstractelement', null=True, on_delete=models.CASCADE)
+    subroutine = models.ForeignKey(Subroutine, related_name='abstractelements', null=True)
     question = models.TextField(null=True, blank=True)
     answer = models.TextField(null=True, blank=True)
 
