@@ -76,7 +76,7 @@ class ProcedureViewSet(viewsets.ModelViewSet):
         try:
             procedure_id = request.data['id']
 
-            procedure = Procedure.objects.get(id=procedure_id)
+            procedure = models.Procedure.objects.get(id=procedure_id)
             if not procedure:
                 raise KeyError('Procedure with id {} not found!'.format(procedure_id))
 

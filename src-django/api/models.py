@@ -18,10 +18,10 @@ class Procedure(models.Model):
         unique_together = (('uuid','version'))
 
     def validate(self):
-        if len(self.pages) == 0:
+        if self.pages.count() == 0:
             raise IndexError('Procedure {} does not have any pages!'.format(self.id))
 
-        for page in self.pages:
+        for page in self.pages.all():
             page.validate()
 
 
@@ -42,7 +42,7 @@ class Page(models.Model):
         ordering = ['procedure', 'display_index']
 
     def validate(self):
-        if len(self.elements) == 0:
+        if self.elements.count() == 0:
             raise IndexError('Page {} does not have any elements!'.format(self.display_index))
 
 
