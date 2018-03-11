@@ -74,7 +74,15 @@ class ProcedureViewSet(viewsets.ModelViewSet):
     @list_route(methods=['POST'])
     def push_to_devices(self, request):
         try:
-            protocol_pusher.push_procedure_to_devices(request.user, request.data['id'])
+            procedure_id = request.data['id']
+
+            procedure = Procedure.objects.get(id=procedure_id)
+            if not procedure:
+                raise KeyError('Procedure with id {} not found!'.format(procedure_id))
+
+            procedure.validate() # throws exception if invalid
+
+            protocol_pusher.push_procedure_to_devices(request.user, procedure_id)
         except Exception as e:
             return HttpResponseBadRequest(str(e))
 
