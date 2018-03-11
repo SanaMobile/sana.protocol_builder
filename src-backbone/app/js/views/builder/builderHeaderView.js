@@ -346,7 +346,7 @@ module.exports = Marionette.LayoutView.extend({
                 });
             },
         });
-    }
+    },
 
     _visualize: function() {
         console.log('visualizing');
