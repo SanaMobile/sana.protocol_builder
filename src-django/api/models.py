@@ -17,6 +17,13 @@ class Procedure(models.Model):
         app_label = 'api'
         unique_together = (('uuid','version'))
 
+    def validate(self):
+        if len(self.pages) == 0:
+            raise IndexError('Procedure {} does not have any pages!'.format(self.id))
+
+        for page in self.pages:
+            page.validate()
+
 
 class Page(models.Model):
     display_index = models.PositiveIntegerField()
@@ -33,6 +40,10 @@ class Page(models.Model):
     class Meta:
         app_label = 'api'
         ordering = ['procedure', 'display_index']
+
+    def validate(self):
+        if len(self.elements) == 0:
+            raise IndexError('Page {} does not have any elements!'.format(self.display_index))
 
 
 class Concept(models.Model):
