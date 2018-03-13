@@ -7,13 +7,13 @@ module.exports = Backbone.Collection.extend({
 
     // url: '/api/procedures?only_return_id=true',
     url: function() {
-        return '/api/procedures?only_return_id=true&uuid=' + this.uuid;
+        return '/api/procedures/get_versions?id=' + this.id + '&only_return_id=true';
     },
     // url: '/api/procedures?only_return_id=true&uuid=0a86b599-a1a7-47d5-a66d-ad810660003d',
     // url: '/api/procedures/version_list?only_return_id=true&uuid="0a86b599-a1a7-47d5-a66d-ad810660003d"',
 
     initialize: function (models, options) {
-        this.uuid = options.uuid;
+        this.id = options.id;
     },
 
     constructor: function(models, options) {

@@ -100,7 +100,7 @@ module.exports = Marionette.LayoutView.extend({
         // });
         // this.procedures = y;
         // this.procedures = this.model.getAllVersions();
-        this.procedures = new ProcedureVersions(null, {uuid: this.model.get('uuid')});
+        this.procedures = new ProcedureVersions(null, {id: this.model.get('id')});
         // this.procedures = this.model.getVersionCollection();
         console.log('know');
         console.log(this.procedures);
@@ -194,93 +194,116 @@ module.exports = Marionette.LayoutView.extend({
 
     _saveNewProcedureVersion: function() {
         const nextVersion = this.latestVersion + 1;
-        console.log('heyheyhey');
-        console.log(this.model.get('id'));
-        let procedure = new Procedure({
-            uuid: this.model.get('uuid'),
-            version: nextVersion,
-            title: this.model.get('title'),
-            author: this.model.get('author'),
-            owner: this.model.get('owner'),
+        // console.log('heyheyhey');
+        // console.log(this.model.get('id'));
+        // let procedure = new Procedure({
+        //     uuid: this.model.get('uuid'),
+        //     version: nextVersion,
+        //     title: this.model.get('title'),
+        //     author: this.model.get('author'),
+        //     owner: this.model.get('owner'),
+        // });
+
+        // Call the django api
+        $.ajax({
+            type: 'POST',
+            url: '/api/procedures/create_new_version',
+            data: {
+                'id': this.model.get('id'),
+                'latestVersion': this.latestVersion
+            },
+            dataType: "text",
+            success: function onGenerateSuccess(data, status, jqXHR) {
+                console.log("T_T2");
+                const newVersionId = JSON.parse(data).id;
+                Backbone.history.navigate('procedures/' + newVersionId, {trigger: true});
+            },
+            error: function onGenerateError(jqXHR, textStatus, errorThrown) {
+                // console.warn('Failed to push procedure ' + id, textStatus);
+                // App().RootView.showNotification({
+                //     title: i18n.t('Failed to push procedure ', {id: id}),
+                //     desc: jqXHR.responseText,
+                console.log("why no work");
+            },
         });
 
-        let self = this;
-        let pageCount = self.model.pages.length;
+        // let self = this;
+        // let pageCount = self.model.pages.length;
 
-        procedure.save({}, {
-            success: function(data) {
-                console.info('Created new version for procedure', procedure.id);
-                let newProcedureId = data.id;
+        // procedure.save({}, {
+        //     success: function(data) {
+        //         console.info('Created new version for procedure', procedure.id);
+        //         let newProcedureId = data.id;
 
-                if (pageCount === 0) {
-                    // Load procedureId
-                    Backbone.history.navigate('procedures/' + newProcedureId, {trigger: true});
-                }
+        //         if (pageCount === 0) {
+        //             // Load procedureId
+        //             Backbone.history.navigate('procedures/' + newProcedureId, {trigger: true});
+        //         }
 
-                // Save the new copies of pages
-                self.model.pages.forEach(function(page) {
-                    console.log(procedure.get('id'));
-                    let copyPage = new Page({
-                        display_index: page.get('display_index'),
-                        procedure: newProcedureId,
-                        show_if: page.get('show_if'),
-                    });
+        //         // Save the new copies of pages
+        //         self.model.pages.forEach(function(page) {
+        //             console.log(procedure.get('id'));
+        //             let copyPage = new Page({
+        //                 display_index: page.get('display_index'),
+        //                 procedure: newProcedureId,
+        //                 show_if: page.get('show_if'),
+        //             });
 
-                    let elementCount = page.elements.length;
+        //             let elementCount = page.elements.length;
 
-                    copyPage.save({}, {
-                        success: function (data) {
-                            console.info('Created Page', page.get('id'));
-                            // Don't think this is needed so commenting out
-                            // procedure.pages.add(copyPage);
-                            let newPageId = data.id;
+        //             copyPage.save({}, {
+        //                 success: function (data) {
+        //                     console.info('Created Page', page.get('id'));
+        //                     // Don't think this is needed so commenting out
+        //                     // procedure.pages.add(copyPage);
+        //                     let newPageId = data.id;
 
                             
-                            if (elementCount === 0) {
-                                pageCount--;
-                                if (pageCount === 0) {
-                                    // load it in.
-                                    Backbone.history.navigate('procedures/' + newProcedureId, {trigger: true});
+        //                     if (elementCount === 0) {
+        //                         pageCount--;
+        //                         if (pageCount === 0) {
+        //                             // load it in.
+        //                             Backbone.history.navigate('procedures/' + newProcedureId, {trigger: true});
 
-                                }
-                            }
+        //                         }
+        //                     }
 
-                            page.elements.forEach(function(element) {
-                                let copyElement = new Element({
-                                    display_index: element.get('display_index'),
-                                    page: newPageId,
-                                    question: element.get('question'),
-                                    concept: element.get('concept'),
-                                    element_type: element.get('element_type'),
-                                });
-                                copyElement.debounceSave({}, {
-                                    success: function() {
-                                        elementCount--;
-                                        if (elementCount === 0) {
-                                            pageCount--;
-                                            if (pageCount === 0) {
-                                                // load it in...
-                                                Backbone.history.navigate('procedures/' + newProcedureId, {trigger: true});
-                                            }
-                                        }
-                                    },
-                                });
-                            });
+        //                     page.elements.forEach(function(element) {
+        //                         let copyElement = new Element({
+        //                             display_index: element.get('display_index'),
+        //                             page: newPageId,
+        //                             question: element.get('question'),
+        //                             concept: element.get('concept'),
+        //                             element_type: element.get('element_type'),
+        //                         });
+        //                         copyElement.debounceSave({}, {
+        //                             success: function() {
+        //                                 elementCount--;
+        //                                 if (elementCount === 0) {
+        //                                     pageCount--;
+        //                                     if (pageCount === 0) {
+        //                                         // load it in...
+        //                                         Backbone.history.navigate('procedures/' + newProcedureId, {trigger: true});
+        //                                     }
+        //                                 }
+        //                             },
+        //                         });
+        //                     });
 
-                        },
-                        error: function error() {
-                            console.warn('Failed to create Page', page.get('id'));
-                            App().RootView.showNotification('Failed to create Page!');
-                        }
-                    });
-                });
+        //                 },
+        //                 error: function error() {
+        //                     console.warn('Failed to create Page', page.get('id'));
+        //                     App().RootView.showNotification('Failed to create Page!');
+        //                 }
+        //             });
+        //         });
 
-            },
-            error: function() {
-                console.warn('Failed to create Procedure!');
-                App().RootView.showNotification('Failed to create Procedure!');
-            },
-        });
+        //     },
+        //     error: function() {
+        //         console.warn('Failed to create Procedure!');
+        //         App().RootView.showNotification('Failed to create Procedure!');
+        //     },
+        // });
 
 
 

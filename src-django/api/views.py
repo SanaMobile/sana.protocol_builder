@@ -19,6 +19,7 @@ import os
 import serializer
 import uuid
 
+from copy import deepcopy
 
 class ProcedureViewSet(viewsets.ModelViewSet):
     model = models.Procedure
@@ -30,6 +31,38 @@ class ProcedureViewSet(viewsets.ModelViewSet):
             return models.Procedure.objects.filter(owner=user, uuid=uuid)
         else:
             return models.Procedure.objects.filter(owner=user)
+
+    # @detail_route(methods=['GET'])
+    # def versions(self, request, pk=None):
+    #     procedure_id = pk
+    #     if procedure_id is None:
+    #         return HttpResponseBadRequest('No procedure id given!')
+
+    #     user = self.request.user
+    #     procedure = models.Procedure.objects.get(id=procedure_id)
+
+    #     version_list = [
+    #         {'id': proc.id, 'version': proc.version}
+    #         for proc in models.Procedure.objects.filter(owner=user, uuid=procedure.uuid)
+    #     ]
+
+    #     return HttpResponse(json.dumps(version_list), content_type'application/json')
+
+    @list_route(methods=['GET'])
+    def get_versions(self, request):
+        user = self.request.user
+
+        procedure_id = self.request.GET.get('id')
+
+        procedure = models.Procedure.objects.get(id=procedure_id)
+
+        versions = models.Procedure.objects.filter(owner=user, uuid=procedure.uuid)
+
+        serialized = serializer.ProcedureSerializer(versions, many=True)
+        response = Response(serialized.data)
+        return response
+
+
 
     def get_serializer_class(self):
         request_flag = 'only_return_id'
@@ -118,6 +151,29 @@ class ProcedureViewSet(viewsets.ModelViewSet):
         serialized = serializer.ProcedureSerializer(max_versions, many=True)
         response = Response(serialized.data)
         return response
+
+    @list_route(methods=['POST'])
+    def create_new_version(self, request):
+        # try:
+        procedure_id = request.data['id']
+        latest_version = request.data['latestVersion']
+
+        procedure = models.Procedure.objects.get(id=procedure_id)
+        if not procedure:
+            raise KeyError('Procedure with id {} not found!'.format(procedure_id))
+
+        # procedure.validate() # throws exception if invalid
+
+        new_procedure_id = procedure.deepcopy(int(latest_version))
+
+        response_data = {
+            'id': new_procedure_id
+        }
+
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        # except Exception as e:
+        #     return HttpResponseBadRequest(str(e))
 
 class UserViewSet(viewsets.ModelViewSet):
     model = User

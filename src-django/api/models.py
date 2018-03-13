@@ -1,8 +1,9 @@
+from copy import deepcopy
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 import uuid
-
 
 class Procedure(models.Model):
     title = models.CharField(max_length=255, blank=True)
@@ -11,7 +12,7 @@ class Procedure(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
-    version = models.PositiveIntegerField(default=0)
+    version = models.PositiveIntegerField(default=1)
 
     class Meta():
         app_label = 'api'
@@ -24,6 +25,20 @@ class Procedure(models.Model):
         for page in self.pages.all():
             page.validate()
 
+    def deepcopy(self, latest_version):
+        copy = deepcopy(self)
+        copy.id = None
+        copy.created = None
+        copy.last_modified = None
+        copy.version = int(latest_version) + 1
+        copy.save()
+
+        new_id = copy.id
+
+        for page in self.pages.all():
+            page.deepcopy(new_id)
+
+        return new_id
 
 class Page(models.Model):
     display_index = models.PositiveIntegerField()
@@ -44,6 +59,22 @@ class Page(models.Model):
     def validate(self):
         if self.elements.count() == 0:
             raise IndexError('Page {} does not have any elements!'.format(self.display_index))
+
+    def deepcopy(self, new_procedure_id):
+        copy = deepcopy(self)
+        copy.id = None
+        copy.created = None
+        copy.last_modified = None
+        copy.procedure_id = new_procedure_id
+        copy.save()
+
+        new_page_id = copy.id
+
+        for element in self.elements.all():
+            element.deepcopy(new_page_id)
+
+        for show_if in self.show_if.all():
+            show_if.deepcopy(new_page_id)
 
 
 class Concept(models.Model):
@@ -114,6 +145,10 @@ class Element(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        app_label = 'api'
+        ordering = ['page', 'display_index']
+
     def save(self, **kwargs):
         if self.element_type:
             if (self.element_type, self.element_type) not in self.TYPES:
@@ -122,11 +157,16 @@ class Element(models.Model):
         super(Element, self).save()
 
         self.page.last_modified = self.last_modified
-        self.page.save()
+        self.page.save()    
 
-    class Meta:
-        app_label = 'api'
-        ordering = ['page', 'display_index']
+    def deepcopy(self, new_page_id):
+        copy = deepcopy(self)
+        copy.id = None
+        copy.last_modified = None
+        copy.created = None
+        copy.page_id = new_page_id
+        copy.save()
+
 
 class AbstractElement(models.Model):
     TYPES = (
@@ -200,14 +240,22 @@ class ShowIf(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     conditions = models.TextField()
 
+    class Meta:
+        app_label = 'api'
+
     def save(self, **kwargs):
         super(ShowIf, self).save()
 
         self.page.last_modified = self.last_modified
         self.page.save()
 
-    class Meta:
-        app_label = 'api'
+    def deepcopy(self, new_page_id):
+        copy = deepcopy(self)
+        copy.id = None
+        copy.page_id = new_page_id
+        copy.last_modified = None
+        copy.created = None
+        copy.save()
 
 
 class Device(models.Model):
