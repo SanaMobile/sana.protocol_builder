@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
-from rest_framework import viewsets, status, filters
+from rest_framework import viewsets, status, filters, mixins
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.permissions import AllowAny
@@ -22,24 +22,14 @@ import uuid
 
 class ProcedureViewSet(viewsets.ModelViewSet):
     model = models.Procedure
-    # TODO Security: Allow any user (even unauthenticated) to get procedures
-    permission_classes = (AllowAny,)
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_authenticated():
-            uuid = self.request.GET.get('uuid')
-            if uuid:
-                return models.Procedure.objects.filter(owner=user, uuid=uuid)
-            else:
-                return models.Procedure.objects.filter(owner=user)
-        else:  
-            # TODO Security: Allow any user (even unauthenticated) to get procedures
-            uuid = self.request.GET.get('uuid')
-            if uuid:
-                return models.Procedure.objects.filter(uuid=uuid)
-            else:
-                return models.Procedure.objects
+        uuid = self.request.GET.get('uuid')
+        if uuid:
+            return models.Procedure.objects.filter(owner=user, uuid=uuid)
+        else:
+            return models.Procedure.objects.filter(owner=user)
 
     def get_serializer_class(self):
         request_flag = 'only_return_id'
@@ -87,6 +77,30 @@ class ProcedureViewSet(viewsets.ModelViewSet):
             return HttpResponseBadRequest(str(e))
 
         return HttpResponse(status=status.HTTP_200_OK)
+
+    @detail_route(methods=['get'], permission_classes=[AllowAny], url_path='fetch')
+    def fetch_procedure_after_push(self, request, pk=None):
+        """
+        Mobile device calls this route after getting a push update message to fetch
+        the procedure that was pushed.
+        """
+        if pk is None:
+            return HttpResponseBadRequest('No procedure id provided!')
+
+        secret_key = request.GET.get('secret')
+        if not secret_key or models.PushEvent.objects.filter(secret_key=secret_key, procedure_id=pk).count() == 0:
+            return HttpResponseBadRequest('Authentication failure!')
+
+        try:
+            protocol = ProtocolBuilder.generate(request.user, pk)
+        except ValueError as e:
+            return HttpResponseBadRequest(str(e))
+
+        response = HttpResponse(protocol, content_type='application/xml')
+        response['Content-Disposition'] = 'attachment; filename="procedure.xml"'
+
+        return response
+
 
     @list_route(methods=['GET'])
     def latest_versions(self, request):
@@ -445,9 +459,13 @@ class ShowIfViewSet(viewsets.ModelViewSet):
         return models.ShowIf.objects.filter(page__procedure__owner_id__exact=user.id)
 
 
-class DeviceViewSet(viewsets.ModelViewSet):
-    # TODO Security: Allow any user (even unauthenticated) to register their device
-    permission_classes = (AllowAny,)
+class DeviceViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """
+    Endpoint only allows POST requests to register new devices.
+    Note: registering a device does not require authentication, 
+    anyone can register their device.
+    """
     model = models.Device
     serializer_class = serializer.DeviceSerializer
     queryset = models.Device.objects.all()
+    permission_classes = (AllowAny,)
