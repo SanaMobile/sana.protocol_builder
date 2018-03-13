@@ -24,7 +24,7 @@ class ProcedureGenerator:
             'title': self.procedure.title,
             'author': self.procedure.author,
             'uuid': str(self.procedure.uuid),
-            'version': str(self.procedure.last_modified)
+            'version': str(self.procedure.version)
         }
 
         return props

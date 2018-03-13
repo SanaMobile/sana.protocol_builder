@@ -44,6 +44,7 @@ module.exports = Marionette.LayoutView.extend({
          * @returns {string} single string with newline characters
          */
         const splitStringIntoLines = (str, l) => {
+            if (!str) return '';
             const strs = [];
             while (str.length > l) {
                 let pos = str.substring(0, l).lastIndexOf(' ');
@@ -58,6 +59,7 @@ module.exports = Marionette.LayoutView.extend({
             return strs.join('\n');
         };
         const lineLength = 30;
+        const conditionalLineLength = 20;
 
 
         const pages = this.model.pages.filter(page => page.elements.models.length > 0);
@@ -69,19 +71,23 @@ module.exports = Marionette.LayoutView.extend({
             if (page.showIfs.length > 0) {
                 const rootConditionalNode = page.showIfs.at(0).rootConditionalNode;
                 const condition = getFirstCondition(rootConditionalNode);
-                nodes.push(`showIf${pageIndex}=>condition: ${splitStringIntoLines(condition, lineLength)}...`);
+                const text = splitStringIntoLines(condition, conditionalLineLength) || '[empty]';
+                nodes.push(`showIf${pageIndex}(align-next=no)=>condition: ${text}...`);
             }
             page.elements.models.forEach((element, elementIndex) => {
-                nodes.push(`node${pageIndex},${elementIndex}=>operation: ${splitStringIntoLines(element.get('question'), lineLength)}`);
+                const text = splitStringIntoLines(element.get('question'), lineLength) || '[empty]';
+                nodes.push(`node${pageIndex},${elementIndex}(align-next=no)=>operation: ${text}`);
             });
         });
         nodes.push('e=>end: End');
 
         const edges = [];
         pages.forEach((page, pageIndex) => {
+            const isConditional = page.showIfs.length > 0;
+
             // edge between start node and first node
             if (pageIndex === 0) {
-                if (page.showIfs.length > 0) {
+                if (isConditional) {
                     edges.push(`st->showIf0`);
                 } else {
                     edges.push(`st->node0,0`);
@@ -102,7 +108,7 @@ module.exports = Marionette.LayoutView.extend({
             }
 
             // if current page is conditional
-            if (page.showIfs.length > 0) {
+            if (isConditional) {
                 // yes branch goes to first element in page
                 edges.push(`showIf${pageIndex}(yes, right)->node${pageIndex},0`);
                 // no branch goes to start of next page
@@ -113,12 +119,17 @@ module.exports = Marionette.LayoutView.extend({
             elements.forEach((element, elementIndex) => {
                 // not last element in page
                 if (elementIndex < elements.length - 1) {
-                    edges.push(`node${pageIndex},${elementIndex}->node${pageIndex},${elementIndex + 1}`);
+                    const direction = isConditional ? '(right)' : '(bottom)';
+                    edges.push(`node${pageIndex},${elementIndex}${direction}->node${pageIndex},${elementIndex + 1}`);
                 } else {
-                    edges.push(`node${pageIndex},${elementIndex}->${nextPageStart}`);
+                    edges.push(`node${pageIndex},${elementIndex}(bottom)->${nextPageStart}`);
                 }
             });
         });
+
+        if (edges.length === 0) {
+            edges.push('st->e');
+        }
 
         const lines = [...nodes, '', ...edges].join('\n');
         const diagram = FlowchartJS.parse(lines);

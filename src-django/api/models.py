@@ -17,6 +17,13 @@ class Procedure(models.Model):
         app_label = 'api'
         unique_together = (('uuid','version'))
 
+    def validate(self):
+        if self.pages.count() == 0:
+            raise IndexError('Procedure {} does not have any pages!'.format(self.id))
+
+        for page in self.pages.all():
+            page.validate()
+
 
 class Page(models.Model):
     display_index = models.PositiveIntegerField()
@@ -33,6 +40,10 @@ class Page(models.Model):
     class Meta:
         app_label = 'api'
         ordering = ['procedure', 'display_index']
+
+    def validate(self):
+        if self.elements.count() == 0:
+            raise IndexError('Page {} does not have any elements!'.format(self.display_index))
 
 
 class Concept(models.Model):
@@ -220,3 +231,13 @@ class Device(models.Model):
 
     class Meta:
         app_label = 'api'
+
+
+class PushEvent(models.Model):
+    procedure = models.ForeignKey(Procedure, related_name='push_event', on_delete=models.CASCADE)    
+    secret_key = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = 'api'
+

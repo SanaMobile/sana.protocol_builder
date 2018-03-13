@@ -1,7 +1,9 @@
+import os
+
 from django.db import transaction
 from pyfcm import FCMNotification
 
-from api.models import Device
+from api.models import Device, PushEvent
 
 
 def push_procedure_to_devices(owner, procedure_id):
@@ -10,11 +12,15 @@ def push_procedure_to_devices(owner, procedure_id):
         api_key="FILL API KEY HERE"
     )
 
+    secret_key = os.urandom(32).encode('hex')
+    PushEvent.objects.create(procedure_id=procedure_id, secret_key=secret_key)
+
     # create a data message
     data_message = {
         "type": "newProcedure",
         "procedureId": procedure_id,
-        "fetchUrl": "/api/procedures/{}/generate".format(procedure_id),
+        "secretKey": secret_key,
+        "fetchUrl": "/api/procedures/{}/fetch?secret={}".format(procedure_id, secret_key),
     }
 
     registration_ids = Device.objects.all().values_list('registration_id', flat=True)
