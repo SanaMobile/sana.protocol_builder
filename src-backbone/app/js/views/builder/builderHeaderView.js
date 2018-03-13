@@ -209,8 +209,7 @@ module.exports = Marionette.LayoutView.extend({
             type: 'POST',
             url: '/api/procedures/create_new_version',
             data: {
-                'id': this.model.get('id'),
-                'latestVersion': this.latestVersion
+                'id': this.model.get('id')
             },
             dataType: "text",
             success: function onGenerateSuccess(data, status, jqXHR) {

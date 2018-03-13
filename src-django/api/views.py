@@ -8,6 +8,7 @@ from django.db.utils import DatabaseError
 from postgres_copy import CopyMapping
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.cache import cache
+from django.db.models import Max
 
 from api.xml_importer import ProtocolImporter
 from api import protocol_pusher
@@ -156,9 +157,12 @@ class ProcedureViewSet(viewsets.ModelViewSet):
     def create_new_version(self, request):
         # try:
         procedure_id = request.data['id']
-        latest_version = request.data['latestVersion']
 
         procedure = models.Procedure.objects.get(id=procedure_id)
+
+        print(models.Procedure.objects.filter(uuid=procedure.uuid).aggregate(Max('version')))
+        latest_version = models.Procedure.objects.filter(uuid=procedure.uuid).aggregate(Max('version'))['version__max']
+
         if not procedure:
             raise KeyError('Procedure with id {} not found!'.format(procedure_id))
 
