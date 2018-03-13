@@ -9,6 +9,7 @@ let AuthRouter = require('routers/authRouter');
 let InfoRouter = require('routers/infoRouter');
 let ProceduresRouter = require('routers/proceduresRouter');
 let ConceptsRouter = require('routers/conceptsRouter');
+let SubroutinesRouter = require('routers/subroutinesRouter');
 
 let Session = require('models/session');
 let Helpers = require('utils/helpers');
@@ -220,6 +221,7 @@ module.exports = Marionette.Application.extend({
         this.routers.infoRouter = new InfoRouter();
         this.routers.proceduresRouter = new ProceduresRouter();
         this.routers.conceptsRouter = new ConceptsRouter();
+        this.routers.subroutinesRouter = new SubroutinesRouter();
     },
 
 });
