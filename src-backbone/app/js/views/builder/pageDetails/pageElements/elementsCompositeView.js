@@ -2,8 +2,10 @@ const App = require('utils/sanaAppInstance');
 const Config = require('utils/config');
 
 const ConceptSearchModalView = require('views/builder/pageDetails/pageElements/concepts/conceptSearchModalView');
+
+const SubroutineSearchModalView = require('views/builder/pageDetails/pageElements/subroutines/subroutineSearchModalView');
+
 const ElementTypePickerView = require('./elementTypePickerView');
-const ModalLayoutView = require('views/common/modalLayoutView');
 
 const ElementModalLayoutView = require('views/common/elementModalLayoutView');
 
@@ -18,12 +20,14 @@ module.exports = Marionette.CompositeView.extend({
     events: {
         'click a#create-new-element-btn': '_onCreateNewElement',
         'click a#import-from-concept-btn': '_importFromConcept',
+        'click a#import-from-subroutine-btn': '_importFromSubroutine',
     },
 
     templateHelpers: function() {
         return {
             titleText: this.titleText,
             canImportFromConcept: true,
+            canImportFromSubroutine: true,
         };
     },
 
@@ -51,13 +55,25 @@ module.exports = Marionette.CompositeView.extend({
     _importFromConcept: function(event) {
         event.preventDefault();
 
-        var modalView = new ModalLayoutView({
+        var modalView = new ElementModalLayoutView({
             title: i18n.t('Choose Element Type'),
             bodyView: new ConceptSearchModalView({
                 page: this.model,
             }),
         });
         App().RootView.showModal(modalView);
-    }
+    },
+
+    _importFromSubroutine: function(event) {
+        event.preventDefault();
+
+        var modalView = new ElementModalLayoutView({
+            title: i18n.t('Choose Element Type'),
+            bodyView: new SubroutineSearchModalView({
+                page: this.model,
+            }),
+        });
+        App().RootView.showModal(modalView);
+    },
 
 });

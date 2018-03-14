@@ -18,6 +18,7 @@ module.exports = Marionette.CompositeView.extend({
         return {
             titleText: this.titleText,
             canImportFromConcept: false,
+            canImportFromSubroutine: false,
         };
     },
 

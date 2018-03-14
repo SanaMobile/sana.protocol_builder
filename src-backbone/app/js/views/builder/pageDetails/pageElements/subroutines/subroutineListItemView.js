@@ -2,23 +2,23 @@ const App = require('utils/sanaAppInstance');
 
 module.exports = Marionette.ItemView.extend({
 
-    template: require('templates/builder/pageDetails/pageElements/concepts/conceptListItemView'),
+    template: require('templates/builder/pageDetails/pageElements/subroutines/subroutineListItemView'),
 
     tagName: 'tr',
 
     ui: {
-        'concept': 'td.concept',
+        'subroutine': 'td.subroutine',
     },
 
     events: {
-        'click @ui.concept': '_onClickConcept',
+        'click @ui.subroutine': '_onClickSubroutine',
     },
 
     initialize: function(options) {
         this.page = options.page;
     },
 
-    _onClickConcept: function(event) {
+    _onClickSubroutine: function(event) {
         event.preventDefault();
 
         this.page.importElementsFromAbstractElementsCollection(this.model.elements);
