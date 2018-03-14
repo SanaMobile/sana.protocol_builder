@@ -13,9 +13,6 @@ module.exports = Marionette.CollectionView.extend({
 
     initialize: function() {
         this.prevSelectedView = null;
-        // this.collection.on(Subroutines.ACTIVE_SUBROUTINE_CHANGE_EVENT, function(subroutine) {
-        //     self.render();
-        // });
     },
 
     _onDeleteSubroutine: function(childView) {
@@ -60,5 +57,4 @@ module.exports = Marionette.CollectionView.extend({
 
         this.prevSelectedView = childView;
     },
-
 });

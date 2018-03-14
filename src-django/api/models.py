@@ -83,8 +83,6 @@ class Subroutine(models.Model):
 
     class Meta:
         app_label = 'api'
-        ordering = ['last_modified']
-
 
 class Element(models.Model):
     TYPES = (
@@ -167,7 +165,7 @@ class AbstractElement(models.Model):
     element_type = models.CharField(max_length=12, choices=TYPES)
     choices = models.TextField(null=True, blank=True)
     concept = models.ForeignKey(Concept, related_name='abstractelement', null=True, on_delete=models.CASCADE)
-    subroutine = models.ForeignKey(Subroutine, related_name='abstractelements', null=True)
+    subroutine = models.ForeignKey(Subroutine, related_name='abstractelements', null=True, on_delete=models.CASCADE)
     question = models.TextField(null=True, blank=True)
     answer = models.TextField(null=True, blank=True)
 
@@ -187,14 +185,18 @@ class AbstractElement(models.Model):
 
         super(AbstractElement, self).save()
 
-        self.concept.last_modified = self.last_modified
+        if self.concept:
+            self.concept.last_modified = self.last_modified
+            self.concept.save()
+
         if (self.subroutine):
             self.subroutine.last_modified = self.last_modified
-        self.concept.save()
+            self.subroutine.save()
+        
 
     class Meta:
         app_label = 'api'
-        ordering = ['concept', 'display_index']
+        ordering = ['concept', 'subroutine', 'display_index']
 
 
 class ShowIf(models.Model):

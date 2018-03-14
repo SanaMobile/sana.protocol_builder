@@ -19,7 +19,7 @@ let Subroutines = Backbone.Collection.extend({
         return '/api/subroutines?search=' + this.query;
     },
 
-    createNewConcept: function() {
+    createNewSubroutine: function() {
         const subroutine = new Subroutine({
             name: 'default',
             display_name: 'default',
@@ -44,6 +44,8 @@ let Subroutines = Backbone.Collection.extend({
         if (this.activeSubroutine) {
             this.activeSubroutine.setSelected(false);
         }
+
+        console.log(subroutine);
 
         this.activeSubroutine = subroutine;
         this.activeSubroutine.setSelected(true);

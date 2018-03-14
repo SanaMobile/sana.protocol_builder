@@ -209,7 +209,7 @@ class ProcedureDetailSerializer(ProcedureSerializer):
 
 
 class ConceptSerializer(serializers.ModelSerializer):
-    abstractelement = AbstractElementSerializer(many=False, read_only=True)
+    abstractelement = AbstractElementSerializer(many=True, read_only=True)
     id = serializers.IntegerField(read_only=False, required=False)
 
     class Meta:
@@ -234,7 +234,7 @@ class SubroutineSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=False, required=False)
 
     class Meta:
-        model = models.Concept
+        model = models.Subroutine
         fields = (
             'id',
             'uuid',

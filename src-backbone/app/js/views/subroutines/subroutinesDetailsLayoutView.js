@@ -48,6 +48,7 @@ module.exports = Marionette.LayoutView.extend({
 
     onRender: function() {
         const activeSubroutine = this.collection.getActiveSubroutine();
+        console.log(activeSubroutine);
         if (activeSubroutine) {
             this.$el.show();
             this.showChildView(

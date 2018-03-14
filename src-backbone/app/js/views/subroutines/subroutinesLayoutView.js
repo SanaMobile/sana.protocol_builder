@@ -38,7 +38,7 @@ module.exports = Marionette.LayoutView.extend({
         this.subroutines.fetch();
     },
 
-    _onCreateNewConcept: function(event) {
+    _onCreateNewSubroutine: function(event) {
         this.subroutines.createNewSubroutine();
     },
 

@@ -35,7 +35,7 @@ module.exports = Marionette.CompositeView.extend({
 
         var modalView = new ModalLayoutView({
             title: i18n.t('New Abstract Element'),
-            bodyView: new ElementTypePicker({ concept: this.model }),
+            bodyView: new ElementTypePicker({ subroutine: this.model }),
         });
         App().RootView.showModal(modalView);
     },

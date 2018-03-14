@@ -20,8 +20,6 @@ module.exports = Marionette.Controller.extend({
 
         Helpers.arrivedOnView('Subroutines');
 
-        console.log("hihi");
-
         let subroutineView = new SubroutinesLayout();
         App().RootView.clearNotifications(); // Clear login errors
         App().RootView.switchMainView(subroutineView, 'subroutinesView');
