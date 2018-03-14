@@ -22,8 +22,8 @@ let Subroutines = Backbone.Collection.extend({
     createNewSubroutine: function() {
         const subroutine = new Subroutine({
             name: 'default',
-            display_name: 'default',
-            description: 'default',
+            display_name: 'Empty Subroutine',
+            description: '',
         });
 
         const self = this;

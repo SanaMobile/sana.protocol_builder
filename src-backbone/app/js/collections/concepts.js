@@ -22,8 +22,8 @@ let Concepts = Backbone.Collection.extend({
     createNewConcept: function() {
         const concept = new Concept({
             name: 'default',
-            display_name: 'default',
-            description: 'default',
+            display_name: 'Blank Concept',
+            description: '',
         });
 
         const self = this;
