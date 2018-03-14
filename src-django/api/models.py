@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 import uuid
+import json
 
 class Procedure(models.Model):
     title = models.CharField(max_length=255, blank=True)
@@ -35,8 +36,9 @@ class Procedure(models.Model):
 
         new_id = copy.id
 
+        element_map = {}
         for page in self.pages.all():
-            page.deepcopy(new_id)
+            page.deepcopy(new_id, element_map)
 
         return new_id
 
@@ -60,7 +62,7 @@ class Page(models.Model):
         if self.elements.count() == 0:
             raise IndexError('Page {} does not have any elements!'.format(self.display_index))
 
-    def deepcopy(self, new_procedure_id):
+    def deepcopy(self, new_procedure_id, element_map):
         copy = deepcopy(self)
         copy.id = None
         copy.created = None
@@ -70,11 +72,14 @@ class Page(models.Model):
 
         new_page_id = copy.id
 
-        for element in self.elements.all():
-            element.deepcopy(new_page_id)
-
         for show_if in self.show_if.all():
-            show_if.deepcopy(new_page_id)
+            show_if.deepcopy(new_page_id, element_map)
+
+        for element in self.elements.all():
+            temp_map = element.deepcopy(new_page_id)
+            element_map.update(temp_map)
+
+        return element_map
 
 
 class Concept(models.Model):
@@ -167,6 +172,10 @@ class Element(models.Model):
         copy.page_id = new_page_id
         copy.save()
 
+        return {
+            self.id: copy.id
+        }
+
 
 class AbstractElement(models.Model):
     TYPES = (
@@ -249,13 +258,28 @@ class ShowIf(models.Model):
         self.page.last_modified = self.last_modified
         self.page.save()
 
-    def deepcopy(self, new_page_id):
+    def deepcopy(self, new_page_id, element_map):
         copy = deepcopy(self)
         copy.id = None
         copy.page_id = new_page_id
         copy.last_modified = None
         copy.created = None
+        copy.conditions = self.deepcopy_conditions(element_map)
         copy.save()
+
+    def deepcopy_conditions(self, element_map):
+        conditions = json.loads(self.conditions)
+
+        def recurse(root):
+            if 'criteria_element' in root:
+                root['criteria_element'] = element_map[root['criteria_element']]
+
+            if 'children' in root:
+                for child in root['children']:
+                    recurse(child)
+
+        recurse(conditions)
+        return json.dumps(conditions)
 
 
 class Device(models.Model):
