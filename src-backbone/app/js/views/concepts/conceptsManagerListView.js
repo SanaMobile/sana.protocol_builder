@@ -13,9 +13,11 @@ module.exports = Marionette.CollectionView.extend({
 
     initialize: function() {
         this.prevSelectedView = null;
-        // this.collection.on(Concepts.ACTIVE_CONCEPT_CHANGE_EVENT, function(concept) {
-        //     self.render();
-        // });
+
+        let self = this;
+        this.collection.on(Concepts.ACTIVE_CONCEPT_CHANGE_EVENT, function(concept) {
+            self.render();
+        });
     },
 
     _onDeleteConcept: function(childView) {
@@ -42,23 +44,7 @@ module.exports = Marionette.CollectionView.extend({
     },
 
     _onSelectConcept: function(childView) {
-        console.log('concept selected: ' + childView.model.attributes.display_name);
-        if (childView === this.prevSelectedView) {
-            return;
-        }
-
         this.collection.setActiveConcept(childView.model);
-        if (this.prevSelectedView) {
-            try {
-                this.prevSelectedView.render();
-            } catch(err) {
-                // can be ignored
-            }
-
-        }
-        childView.render();
-
-        this.prevSelectedView = childView;
     },
 
 });

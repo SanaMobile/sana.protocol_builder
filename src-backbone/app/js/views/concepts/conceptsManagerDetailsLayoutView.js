@@ -41,7 +41,6 @@ module.exports = Marionette.LayoutView.extend({
         let self = this;
 
         this.collection.on(Concepts.ACTIVE_CONCEPT_CHANGE_EVENT, function(concept) {
-            console.log('re-rendering ..');
             self.render();
         });
     },
