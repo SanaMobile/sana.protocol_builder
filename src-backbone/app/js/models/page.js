@@ -102,7 +102,7 @@ module.exports = Backbone.Model.extend({
     // View events
     //--------------------------------------------------------------------------
 
-    importElementsFromConcept: function(concept) {
+    importElementsFromAbstractElementsCollection: function(aeCollection) {
         let position = 0;
         if (!_.isEmpty(this.elements.models)) {
             let lastElement = _.max(this.elements.models, element => element.get('display_index'));
@@ -110,7 +110,7 @@ module.exports = Backbone.Model.extend({
         }
 
         let self = this;
-        concept.elements.each(function(abstractElement) {
+        aeCollection.each(function(abstractElement) {
             self._createFromAbstractElement(abstractElement, position);
             position += 1;
         });

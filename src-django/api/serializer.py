@@ -75,6 +75,7 @@ class AbstractElementSerializer(serializers.ModelSerializer):
             'id',
             'display_index',
             'concept',
+            'subroutine',
             'question',
             'answer',
             'choices',
@@ -208,7 +209,7 @@ class ProcedureDetailSerializer(ProcedureSerializer):
 
 
 class ConceptSerializer(serializers.ModelSerializer):
-    abstractelements = AbstractElementSerializer(many=True, read_only=True)
+    abstractelement = AbstractElementSerializer(many=True, read_only=True)
     id = serializers.IntegerField(read_only=False, required=False)
 
     class Meta:
@@ -219,12 +220,30 @@ class ConceptSerializer(serializers.ModelSerializer):
             'created',
             'last_modified',
             'name',
-            'abstractelements',
+            'abstractelement',
             'display_name',
             'description',
             'data_type',
             'mime_type',
             'constraint'
+        )
+
+
+class SubroutineSerializer(serializers.ModelSerializer):
+    abstractelements = AbstractElementSerializer(many=True, read_only=True)
+    id = serializers.IntegerField(read_only=False, required=False)
+
+    class Meta:
+        model = models.Subroutine
+        fields = (
+            'id',
+            'uuid',
+            'created',
+            'last_modified',
+            'name',
+            'abstractelements',
+            'display_name',
+            'description',
         )
 
 

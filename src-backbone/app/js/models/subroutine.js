@@ -6,7 +6,7 @@ const AbstractElementCollection = require('collections/abstractElements');
 
 module.exports = Backbone.Model.extend({
 
-    urlRoot: '/api/concepts',
+    urlRoot: '/api/subroutines',
 
     constructor: function(attributes, options = {}) {
         // See model/procedure.js for explaination
@@ -36,7 +36,7 @@ module.exports = Backbone.Model.extend({
             response.last_modified = new Date(Date.parse(response.last_modified));
         }
 
-        this.elements.reset(response.abstractelement, { parse: true });
+        this.elements.reset(response.abstractelements, { parse: true });
         delete response.elements;
 
         return response;
@@ -51,7 +51,7 @@ module.exports = Backbone.Model.extend({
 
         let element = new AbstractElement({
             display_index: position,
-            concept: this.get('id'),
+            subroutine: this.get('id'),
             element_type: type,
         });
 

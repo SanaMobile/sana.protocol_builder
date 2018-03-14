@@ -34,8 +34,8 @@ let Concepts = Backbone.Collection.extend({
                 self.setActiveConcept(concept);
             },
             error: function() {
-                console.warn('Failed to create Concept', concept.get('id'));
-                App().RootView.showNotification('Failed to create Page!');
+                console.warn('Failed to create concept', concept.get('id'));
+                App().RootView.showNotification('Failed to create concept!');
             },
         });
     },

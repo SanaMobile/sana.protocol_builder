@@ -475,7 +475,76 @@ class ConceptViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['GET'])
     def get_elements(self, request, pk=None):
         try:
-            elements=serializer.AbstractElementSerializer(models.Element.objects.filter(concept__id__exact=pk), many=True).data
+            elements=serializer.AbstractElementSerializer(models.AbstractElement.objects.filter(concept__id__exact=pk), many=True).data
+        except (ValueError, DatabaseError):
+            return JsonResponse(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    'success': False,
+                    'errors': ['Invalid uuid']
+                }
+            )
+
+        return JsonResponse({
+            'success': True,
+            'elements': elements
+        })
+
+    @list_route(methods=['PATCH'])
+    def partial_bulk_update(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        if not request.body:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(
+            instance=queryset,
+            data=json.loads(request.body),
+            many=True,
+            partial=True
+        )
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
+
+class SubroutineViewSet(viewsets.ModelViewSet):
+
+    model = models.Subroutine
+    queryset = models.Subroutine.objects.all()
+    serializer_class = serializer.SubroutineSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('display_name', 'name')
+
+    @list_route(methods=['POST'])
+    def json_add(self, request):
+        try:
+            new_subroutine = Subroutine(
+                name=request.POST.name,
+                display_name=request.POST.display_name,
+                description=request.POST.description
+            )
+
+            new_subroutine.save()
+
+        except (ValueError, DatabaseError):
+            return JsonResponse(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    'success': False,
+                    'errors': ['Concept has improper fields.']
+                }
+            )
+
+        return JsonResponse({
+            'success': True
+        })
+
+    @detail_route(methods=['GET'])
+    def get_elements(self, request, pk=None):
+        try:
+            elements=serializer.AbstractElementSerializer(models.AbstractElement.objects.filter(concept__id__exact=pk), many=True).data
         except (ValueError, DatabaseError):
             return JsonResponse(
                 status=status.HTTP_400_BAD_REQUEST,

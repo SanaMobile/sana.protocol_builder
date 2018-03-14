@@ -1,7 +1,6 @@
 @import url(utils/constants.less);
 @import url(utils/helpers.less);
 
-
 @modal-max-height: 90vh;
 
 @concept-table-margin-top: 15px;
@@ -46,7 +45,30 @@ section#concept-table {
 
         }
     }
+}
 
+section#subroutine-table {
+    margin-top: @concept-table-margin-top;
+
+    table {
+        width: 100%;
+
+        tr {
+            td {
+                padding: @cell-padding;
+                border-radius: @cell-border-radius;
+                font-size: @concept-table-font-size;
+                color: @cell-text-color;
+                cursor: default;
+
+                &:hover {
+                    background-color: @cell-hover-background-color;
+                    color: @cell-hover-text-color;
+                }
+            }
+
+        }
+    }
 }
 
 #page-details{
