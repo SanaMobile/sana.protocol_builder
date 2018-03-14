@@ -8,13 +8,28 @@ module.exports = Marionette.ItemView.extend({
     tagName: 'option',
     className: 'procedure',
 
-    // events: {
-    //     'click a.download': '_onDownloadProcedure',
-    //     'click a.delete': '_onDeleteProcedure',
-    // },
+    // value: model.id,
+
+    ui: {
+        versionSelector: 'select#builder-select-version-view',
+    },
+
+    value: 5,
+
+    events: {
+        'change @ui.versionSelector': '_selectMyVersion',
+    },
+
+    initialize: function(options){
+        this.selectedVersion = options.selectedVersion;
+    },
 
     onRender: function() {
         this.$el.show();
+        this.$el.val(this.model.get('id'));
+        if (this.selectedVersion == this.model.get('id')) {
+            this.$el.attr("selected", "selected");
+        }
     },
 
     // _onDownloadProcedure: function(event) {
@@ -43,5 +58,9 @@ module.exports = Marionette.ItemView.extend({
     //         });
     //     });
     // },
+
+    _selectMyVersion: function(event) {
+        console.log("i cry");
+    },
 
 });

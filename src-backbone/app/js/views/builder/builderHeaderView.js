@@ -57,7 +57,7 @@ module.exports = Marionette.LayoutView.extend({
     ui: {
         titleField: 'input#change-title',
         authorField: 'input#change-author',
-        versionSelector: 'select#select-version',
+        versionSelector: 'select#builder-select-version-view',
         downloadButton: 'a#download-btn',
         pushButton: 'a#push-btn',
         saveButton: 'a#save-btn',
@@ -100,59 +100,62 @@ module.exports = Marionette.LayoutView.extend({
         // });
         // this.procedures = y;
         // this.procedures = this.model.getAllVersions();
-        this.procedures = new ProcedureVersions(null, {id: this.model.get('id')});
+        this.versions = new ProcedureVersions(null, {id: this.model.get('id')});
         // this.procedures = this.model.getVersionCollection();
         console.log('know');
-        console.log(this.procedures);
+        console.log(this.versions);
         console.log('mad');
     },
 
     _updateVersions: function() {
-        this.latestVersion = 0;
-        // for (var i in this.procedures) {
-        //     procedureV = this.procedures[i];
-        //         $('#select-version').append($('<option>', {
-        //             value: procedureV.id,
-        //             text: procedureV.version
-        //         }));
-        // }
-        this.ui.versionSelector.find('option').remove();
+        // this.latestVersion = 0;
+        // // for (var i in this.procedures) {
+        // //     procedureV = this.procedures[i];
+        // //         $('#select-version').append($('<option>', {
+        // //             value: procedureV.id,
+        // //             text: procedureV.version
+        // //         }));
+        // // }
+        // this.ui.versionSelector.find('option').remove();
 
-        let self = this;
-        this.procedures.each(function(procedure) {
-            var isSelected = false;
-            if (self.model.id == procedure.id) {
-                isSelected = true;
-            }
+        // let self = this;
+        // this.procedures.each(function(procedure) {
+        //     var isSelected = false;
+        //     if (self.model.id == procedure.id) {
+        //         isSelected = true;
+        //     }
 
-            if (procedure.attributes.version > self.latestVersion) {
-                self.latestVersion = procedure.attributes.version;
-            }
+        //     if (procedure.attributes.version > self.latestVersion) {
+        //         self.latestVersion = procedure.attributes.version;
+        //     }
 
-            self.ui.versionSelector.append($('<option>', {
-                // TODO: get the current language?
-                value: procedure.id,
-                text: procedure.attributes.version,
-                selected: isSelected
-            }));
-        });
-        console.log('weed13');
-        console.log(this.procedures);
+        //     self.ui.versionSelector.append($('<option>', {
+        //         // TODO: get the current language?
+        //         value: procedure.id,
+        //         text: procedure.attributes.version,
+        //         selected: isSelected
+        //     }));
+        // });
+        // console.log('weed13');
+        // console.log(this.procedures);
         // for (var i in this.procedures) {}
     },
 
     onBeforeShow: function() {
         // Procedures collection
-        // this._proceduresCollectionView = new BuilderVersionCollectionView({
-        //     collection: this.procedures,
-        // });
-        // this.showChildView('procedureVersionSelect', this._proceduresCollectionView);
+        this._versionCollection = new BuilderVersionCollectionView({
+            collection: this.versions,
+            selectedVersion: this.model.get('id'),
+        });
+        let selectedId = this.model.get('id');
+        let self = this;
+        this.showChildView('procedureVersionSelect', this._versionCollection);
         console.log('hey');
     },
 
     onAttach: function() {
         let self = this;
-        this.procedures.fetch({
+        this.versions.fetch({
             success: function() {
                 console.info('Fetched Procedures Versions');
                 console.log(self.procedures);
@@ -382,8 +385,8 @@ module.exports = Marionette.LayoutView.extend({
 
     _selectVersion: function() {
         console.log('war1');
-        console.log(this.ui.versionSelector.val());
-        Backbone.history.navigate('procedures/' + this.ui.versionSelector.val(), {trigger: true});
+        // console.log(this.ui.versionSelector.val());
+        Backbone.history.navigate('procedures/' + $("select#builder-select-version-view").val(), {trigger: true});
         // // App.Router().proceduresRouter
         // App.routers.proceduresRouter.navigate("procedures/40", {trigger: true});
     },
