@@ -1,5 +1,5 @@
 const App = require('utils/sanaAppInstance');
-const ModalLayoutView = require('views/common/modalLayoutView');
+const ElementModalLayoutView = require('views/common/elementModalLayoutView');
 
 const ElementTypePicker = require('./conceptsManagerElementTypePickerView');
 
@@ -33,7 +33,7 @@ module.exports = Marionette.CompositeView.extend({
     _onCreateNewElement: function(event) {
         event.preventDefault();
 
-        var modalView = new ModalLayoutView({
+        var modalView = new ElementModalLayoutView({
             title: i18n.t('New Abstract Element'),
             bodyView: new ElementTypePicker({ concept: this.model }),
         });

@@ -5,6 +5,8 @@ const ConceptSearchModalView = require('views/builder/pageDetails/pageElements/c
 const ElementTypePickerView = require('./elementTypePickerView');
 const ModalLayoutView = require('views/common/modalLayoutView');
 
+const ElementModalLayoutView = require('views/common/elementModalLayoutView');
+
 
 module.exports = Marionette.CompositeView.extend({
 
@@ -37,7 +39,7 @@ module.exports = Marionette.CompositeView.extend({
     _onCreateNewElement: function(event) {
         event.preventDefault();
 
-        var modalView = new ModalLayoutView({
+        var modalView = new ElementModalLayoutView({
             title: i18n.t('Choose Element Type'),
             bodyView: new ElementTypePickerView({
                 page: this.model,
