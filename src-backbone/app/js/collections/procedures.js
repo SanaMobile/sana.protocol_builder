@@ -5,7 +5,9 @@ module.exports = Backbone.Collection.extend({
 
     model: Procedure,
 
-    url: '/api/procedures?only_return_id=true',
+    url: '/api/procedures/latest_versions',
+    // url: '/api/procedures?only_return_id=true&uuid=0a86b599-a1a7-47d5-a66d-ad810660003d',
+    // url: '/api/procedures/version_list?only_return_id=true&uuid="0a86b599-a1a7-47d5-a66d-ad810660003d"',
 
     constructor: function(models, options) {
         this.setAscOrder(false);

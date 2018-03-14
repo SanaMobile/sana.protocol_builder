@@ -67,5 +67,14 @@ node_modules
 # Misc
 #-------------------------------------------------------------------------------
 
+# PyCharm
+.idea/
+
+# Redis
+*.rdb
+
 # OS X
 .DS_Store
+
+# Redis
+dump.rdb

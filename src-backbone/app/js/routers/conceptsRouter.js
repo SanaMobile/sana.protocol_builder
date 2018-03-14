@@ -10,6 +10,7 @@ module.exports = Marionette.AppRouter.extend({
 
     appRoutes: {
         'concepts/uploader': 'routeUploader',
+        'concepts/manager': 'routeManager',
     },
 
 });

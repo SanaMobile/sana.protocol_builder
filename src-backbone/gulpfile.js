@@ -91,7 +91,7 @@ gulp.task('js-config', function () {
     let rename = require('gulp-rename');
 
     let data = {
-        API_BASE: (Config.DEBUG ? 'http://localhost:8000'
+        API_BASE: (Config.DEBUG ? 'http://localhost:8000' // TODO hardcoded server URL
                                 : 'https://sanaprotocolbuilder.me'),
         DEBUG: Config.DEBUG,
     };

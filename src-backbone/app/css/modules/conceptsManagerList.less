@@ -1,0 +1,202 @@
+@import url(utils/constants.less);
+@import url(utils/helpers.less);
+
+
+@popover-width: 700px;
+
+
+section#concepts-list{
+
+  a#create-new-concept-btn{
+    display: block;
+    font-weight: bold;
+    margin: @column-margin;
+    padding: @column-margin;
+  }
+
+  ul.concepts-list{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li.ui-sortable-placeholder{
+      position: relative;
+
+      &:after{
+        background: @grey-bg;
+        content: '';
+        display: block;
+        position: absolute;
+        top: 5px; right: 5px; bottom: 5px; left: 5px;
+        border: 5px dashed @grey-border;
+      }
+    }
+
+    li.concept{
+      background: #fff;
+      cursor: pointer;
+      border-bottom: 1px solid @grey-border;
+      border-right: 1px solid @grey-border;
+      position: relative;
+
+      &.ui-sortable-helper{
+        cursor: move;
+        border: 1px solid @grey-border;
+        box-shadow: 0 0 20px @grey-border;
+      }
+
+      div.wrapper{
+        &.active{
+          background: @grey-bg-dark;
+        }
+
+        &.depended-upon{
+          background: @dependency-highlight;
+        }
+      }
+
+      &:hover{
+        div.wrapper{
+          background: @grey-bg;
+        }
+      }
+
+      span.label.shown-conditionally{
+        display: block;
+        line-height: 20px;
+        margin-bottom: 15px;
+      }
+
+      ul.conditions{
+        display: none;
+      }
+      div.popover{
+
+        width: auto;
+        max-width: @popover-width;
+
+        ul.children-nodes{
+          padding-left: 15px;
+        }
+
+        span{
+          margin: 0 3px;
+          padding: 2px;
+
+          &:first-child{
+            margin-left: 0;
+          }
+
+          &:last-child{
+            margin-right: 0;
+          }
+
+          &.element,
+          &.value{
+            background: @dependency-highlight;
+          }
+
+          &.logical-connective,
+          &.negation,
+          &.comparator{
+            background: @grey-bg-light;
+          }
+        }
+
+        &> ul{
+          width: @popover-width;
+
+          &> li{
+            list-style: none;
+          }
+        }
+      }
+
+      a.concept{
+        color: @black-text;
+        text-decoration: none;
+
+        display: block;
+        min-height: 50px;
+        padding: @column-margin;
+        padding-left: @container-side-padding;
+        padding-right: @column-margin * 2 + 20px;
+        width: 100%; height: 100%;
+
+        ul.element-preview{
+          list-style: none;
+          padding: 0;
+
+          li{
+            font-size: 15px;
+            line-height: 30px;
+            min-height: 30px;
+            padding-left: 25px;
+            position: relative;
+            text-overflow: ellipsis;
+            overflow: hidden;
+
+            &:before{
+              background-image: url('/img/elements/default.png');
+              background-repeat: no-repeat;
+              background-size: 100% 100%;
+
+              display: block;
+              content: '';
+              overflow: hidden;
+              position: absolute;
+              top: (30px - 16px) / 2; left: 2px;
+              width: 16px; height: 16px;
+            }
+            .icon(date);
+            .icon(entry);
+            .icon(select);
+            .icon(multi-select);
+            .icon(radio);
+            .icon(picture);
+            .icon(plugin);
+            .icon(entry-plugin);
+
+            &.empty{
+              font-style: italic;
+
+              &:before{
+                display: none;
+              }
+            }
+          }
+        }
+      }
+
+      div.handle{
+        background-image: url('/img/common-icons/drag-handle.png');
+        background-repeat: no-repeat;
+        background-position: center @column-margin;
+        cursor: move;
+        border-right: 1px solid @grey-border-light;
+        display: block;
+        position: absolute;
+        top: 0; left: 0;
+        width: @container-side-padding - @column-margin; height: 100%;
+
+        opacity: 0.5;
+        transition: 0.5s;
+
+        &:hover{
+          opacity: 1;
+        }
+      }
+
+      a.delete{
+        color: @grey-text;
+        cursor: pointer;
+        display: block;
+        line-height: 30px;
+        position: absolute;
+        text-align: center;
+        top: @column-margin; right: @column-margin;
+        width: 30px; height: 30px;
+      }
+    }
+  }
+}

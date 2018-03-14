@@ -1,12 +1,17 @@
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
-from rest_framework import viewsets, status, filters
+from rest_framework import viewsets, status, filters, mixins
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
+from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
 from django.db.utils import DatabaseError
 from postgres_copy import CopyMapping
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.cache import cache
+from django.db.models import Max
+
+from api.xml_importer import ProtocolImporter
+from api import protocol_pusher
 from generator import ProtocolBuilder
 from mailer import templater, tasks
 import models
@@ -15,13 +20,50 @@ import os
 import serializer
 import uuid
 
+from copy import deepcopy
 
 class ProcedureViewSet(viewsets.ModelViewSet):
     model = models.Procedure
 
     def get_queryset(self):
         user = self.request.user
-        return models.Procedure.objects.filter(owner=user)
+        uuid = self.request.GET.get('uuid')
+        if uuid:
+            return models.Procedure.objects.filter(owner=user, uuid=uuid)
+        else:
+            return models.Procedure.objects.filter(owner=user)
+
+    # @detail_route(methods=['GET'])
+    # def versions(self, request, pk=None):
+    #     procedure_id = pk
+    #     if procedure_id is None:
+    #         return HttpResponseBadRequest('No procedure id given!')
+
+    #     user = self.request.user
+    #     procedure = models.Procedure.objects.get(id=procedure_id)
+
+    #     version_list = [
+    #         {'id': proc.id, 'version': proc.version}
+    #         for proc in models.Procedure.objects.filter(owner=user, uuid=procedure.uuid)
+    #     ]
+
+    #     return HttpResponse(json.dumps(version_list), content_type'application/json')
+
+    @list_route(methods=['GET'])
+    def get_versions(self, request):
+        user = self.request.user
+
+        procedure_id = self.request.GET.get('id')
+
+        procedure = models.Procedure.objects.get(id=procedure_id)
+
+        versions = models.Procedure.objects.filter(owner=user, uuid=procedure.uuid)
+
+        serialized = serializer.ProcedureSerializer(versions, many=True)
+        response = Response(serialized.data)
+        return response
+
+
 
     def get_serializer_class(self):
         request_flag = 'only_return_id'
@@ -44,6 +86,98 @@ class ProcedureViewSet(viewsets.ModelViewSet):
 
         return response
 
+    @list_route(methods=['POST'])
+    def import_from_xml(self, request):
+        try:
+            ProtocolImporter.from_xml(request.user, request.data['filecontent'])
+        except Exception as e:
+            return HttpResponseBadRequest(str(e))
+
+        return HttpResponse(status=status.HTTP_200_OK)
+
+    @list_route(methods=['POST'])
+    def push_to_devices(self, request):
+        try:
+            procedure_id = request.data['id']
+
+            procedure = models.Procedure.objects.get(id=procedure_id)
+            if not procedure:
+                raise KeyError('Procedure with id {} not found!'.format(procedure_id))
+
+            procedure.validate() # throws exception if invalid
+
+            protocol_pusher.push_procedure_to_devices(request.user, procedure_id)
+        except Exception as e:
+            return HttpResponseBadRequest(str(e))
+
+        return HttpResponse(status=status.HTTP_200_OK)
+
+    @detail_route(methods=['get'], permission_classes=[AllowAny], url_path='fetch')
+    def fetch_procedure_after_push(self, request, pk=None):
+        """
+        Mobile device calls this route after getting a push update message to fetch
+        the procedure that was pushed.
+        """
+        if pk is None:
+            return HttpResponseBadRequest('No procedure id provided!')
+
+        secret_key = request.GET.get('secret')
+        if not secret_key or models.PushEvent.objects.filter(secret_key=secret_key, procedure_id=pk).count() == 0:
+            return HttpResponseBadRequest('Authentication failure!')
+
+        try:
+            protocol = ProtocolBuilder.generate(request.user, pk)
+        except ValueError as e:
+            return HttpResponseBadRequest(str(e))
+
+        response = HttpResponse(protocol, content_type='application/xml')
+        response['Content-Disposition'] = 'attachment; filename="procedure.xml"'
+
+        return response
+
+
+    @list_route(methods=['GET'])
+    def latest_versions(self, request):
+        user = self.request.user
+        max_versions = models.Procedure.objects.raw(
+            '''
+            SELECT a.* 
+            FROM api_procedure AS a 
+                LEFT JOIN api_procedure AS b 
+                ON a.uuid = b.uuid AND a.version < b.version 
+            WHERE b.version IS NULL AND a.owner_id = %s
+            ''',
+            [user.id]
+        )
+        serialized = serializer.ProcedureSerializer(max_versions, many=True)
+        response = Response(serialized.data)
+        return response
+
+    @list_route(methods=['POST'])
+    def create_new_version(self, request):
+        # try:
+        procedure_id = request.data['id']
+
+        procedure = models.Procedure.objects.get(id=procedure_id)
+
+        print(models.Procedure.objects.filter(uuid=procedure.uuid).aggregate(Max('version')))
+        latest_version = models.Procedure.objects.filter(uuid=procedure.uuid).aggregate(Max('version'))['version__max']
+
+        if not procedure:
+            raise KeyError('Procedure with id {} not found!'.format(procedure_id))
+
+        # procedure.validate() # throws exception if invalid
+
+        new_procedure_id = procedure.deepcopy(int(latest_version))
+
+        response_data = {
+            'id': new_procedure_id
+        }
+
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        # except Exception as e:
+        #     return HttpResponseBadRequest(str(e))
 
 class UserViewSet(viewsets.ModelViewSet):
     model = User
@@ -114,7 +248,7 @@ class UserPasswordViewSet(viewsets.GenericViewSet):
     serializer_class = serializer.UserSerializer
     authentication_classes = (())
     permission_classes = (())
-    PASSWORD_RESET_EXPIRY = 86400*2  # 2 days
+    PASSWORD_RESET_EXPIRY = 86400 * 2  # 2 days
 
     def error_response(self, response_status, msg):
         return JsonResponse(
@@ -241,17 +375,25 @@ class ElementViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return models.Element.objects.filter(page__procedure__owner_id__exact=user.id)
 
+class AbstractElementViewSet(viewsets.ModelViewSet):
+    model = models.AbstractElement
+    serializer_class = serializer.AbstractElementSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return models.AbstractElement.objects
+
 
 class ConceptViewSet(viewsets.ModelViewSet):
     CSV_COLUMN_MAPPING = {
         "created": "created",
-        "last_modified": "modified",
+        "last_modified": "last_modified",
         "uuid": "uuid",
         "name": "name",
         "display_name": "display_name",
         "description": "description",
-        "data_type": "datatype",
-        "mime_type": "mimetype",
+        "data_type": "data_type",
+        "mime_type": "mime_type",
         "constraint": "constraint"
     }
 
@@ -303,6 +445,139 @@ class ConceptViewSet(viewsets.ModelViewSet):
             'success': True,
         })
 
+    @list_route(methods=['POST'])
+    def json_add(self, request):
+        try:
+            new_concept = Concept(
+                name=request.POST.name,
+                display_name=request.POST.display_name,
+                description=request.POST.description,
+                data_type=request.POST.data_type,
+                mime_type=request.POST.mime_type,
+                constraint=request.POST.constraint
+            )
+
+            new_concept.save()
+
+        except (ValueError, DatabaseError):
+            return JsonResponse(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    'success': False,
+                    'errors': ['Concept has improper fields.']
+                }
+            )
+
+        return JsonResponse({
+            'success': True
+        })
+
+    @detail_route(methods=['GET'])
+    def get_elements(self, request, pk=None):
+        try:
+            elements=serializer.AbstractElementSerializer(models.AbstractElement.objects.filter(concept__id__exact=pk), many=True).data
+        except (ValueError, DatabaseError):
+            return JsonResponse(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    'success': False,
+                    'errors': ['Invalid uuid']
+                }
+            )
+
+        return JsonResponse({
+            'success': True,
+            'elements': elements
+        })
+
+    @list_route(methods=['PATCH'])
+    def partial_bulk_update(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        if not request.body:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(
+            instance=queryset,
+            data=json.loads(request.body),
+            many=True,
+            partial=True
+        )
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
+
+class SubroutineViewSet(viewsets.ModelViewSet):
+
+    model = models.Subroutine
+    queryset = models.Subroutine.objects.all()
+    serializer_class = serializer.SubroutineSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('display_name', 'name')
+
+    @list_route(methods=['POST'])
+    def json_add(self, request):
+        try:
+            new_subroutine = Subroutine(
+                name=request.POST.name,
+                display_name=request.POST.display_name,
+                description=request.POST.description
+            )
+
+            new_subroutine.save()
+
+        except (ValueError, DatabaseError):
+            return JsonResponse(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    'success': False,
+                    'errors': ['Concept has improper fields.']
+                }
+            )
+
+        return JsonResponse({
+            'success': True
+        })
+
+    @detail_route(methods=['GET'])
+    def get_elements(self, request, pk=None):
+        try:
+            elements=serializer.AbstractElementSerializer(models.AbstractElement.objects.filter(concept__id__exact=pk), many=True).data
+        except (ValueError, DatabaseError):
+            return JsonResponse(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={
+                    'success': False,
+                    'errors': ['Invalid uuid']
+                }
+            )
+
+        return JsonResponse({
+            'success': True,
+            'elements': elements
+        })
+
+    @list_route(methods=['PATCH'])
+    def partial_bulk_update(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        if not request.body:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(
+            instance=queryset,
+            data=json.loads(request.body),
+            many=True,
+            partial=True
+        )
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
+
 
 class ShowIfViewSet(viewsets.ModelViewSet):
     model = models.ShowIf
@@ -311,3 +586,15 @@ class ShowIfViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         return models.ShowIf.objects.filter(page__procedure__owner_id__exact=user.id)
+
+
+class DeviceViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """
+    Endpoint only allows POST requests to register new devices.
+    Note: registering a device does not require authentication, 
+    anyone can register their device.
+    """
+    model = models.Device
+    serializer_class = serializer.DeviceSerializer
+    queryset = models.Device.objects.all()
+    permission_classes = (AllowAny,)
