@@ -34,6 +34,14 @@ module.exports = Marionette.CompositeView.extend({
     _onCreateNewElement: function(event) {
         event.preventDefault();
 
+        if (this.collection.size() >= 1) {
+            App().RootView.showNotification({
+                title: i18n.t('Cannot add more than 1 element to a concept!'),
+            });
+
+            return;
+        }
+
         var modalView = new ElementModalLayoutView({
             title: i18n.t('New Abstract Element'),
             bodyView: new ElementTypePicker({ concept: this.model }),
