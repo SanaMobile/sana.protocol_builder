@@ -56,7 +56,7 @@ module.exports = Marionette.CompositeView.extend({
         event.preventDefault();
 
         var modalView = new ElementModalLayoutView({
-            title: i18n.t('Choose Element Type'),
+            title: i18n.t('Choose Concept'),
             bodyView: new ConceptSearchModalView({
                 page: this.model,
             }),
@@ -68,7 +68,7 @@ module.exports = Marionette.CompositeView.extend({
         event.preventDefault();
 
         var modalView = new ElementModalLayoutView({
-            title: i18n.t('Choose Element Type'),
+            title: i18n.t('Choose Subroutine'),
             bodyView: new SubroutineSearchModalView({
                 page: this.model,
             }),
