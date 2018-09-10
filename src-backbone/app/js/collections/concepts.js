@@ -29,7 +29,7 @@ let Concepts = Backbone.Collection.extend({
         const self = this;
         concept.save({}, {
             success: function() {
-                console.info('Created Cocnept', concept.get('id'));
+                console.info('Created Concept', concept.get('id'));
                 self.add(concept);
                 self.setActiveConcept(concept);
             },
