@@ -305,13 +305,3 @@ class Device(models.Model):
 
     class Meta:
         app_label = 'api'
-
-
-class PushEvent(models.Model):
-    procedure = models.ForeignKey(Procedure, related_name='push_event', on_delete=models.CASCADE)    
-    secret_key = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        app_label = 'api'
-

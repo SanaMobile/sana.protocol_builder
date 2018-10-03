@@ -11,7 +11,6 @@ from django.core.cache import cache
 from django.db.models import Max
 
 from api.xml_importer import ProtocolImporter
-from api import protocol_pusher
 from generator import ProtocolBuilder
 from mailer import templater, tasks
 import models
@@ -94,47 +93,6 @@ class ProcedureViewSet(viewsets.ModelViewSet):
             return HttpResponseBadRequest(str(e))
 
         return HttpResponse(status=status.HTTP_200_OK)
-
-    @list_route(methods=['POST'])
-    def push_to_devices(self, request):
-        try:
-            procedure_id = request.data['id']
-
-            procedure = models.Procedure.objects.get(id=procedure_id)
-            if not procedure:
-                raise KeyError('Procedure with id {} not found!'.format(procedure_id))
-
-            procedure.validate() # throws exception if invalid
-
-            protocol_pusher.push_procedure_to_devices(request.user, procedure_id)
-        except Exception as e:
-            return HttpResponseBadRequest(str(e))
-
-        return HttpResponse(status=status.HTTP_200_OK)
-
-    @detail_route(methods=['get'], permission_classes=[AllowAny], url_path='fetch')
-    def fetch_procedure_after_push(self, request, pk=None):
-        """
-        Mobile device calls this route after getting a push update message to fetch
-        the procedure that was pushed.
-        """
-        if pk is None:
-            return HttpResponseBadRequest('No procedure id provided!')
-
-        secret_key = request.GET.get('secret')
-        if not secret_key or models.PushEvent.objects.filter(secret_key=secret_key, procedure_id=pk).count() == 0:
-            return HttpResponseBadRequest('Authentication failure!')
-
-        try:
-            protocol = ProtocolBuilder.generate(request.user, pk)
-        except ValueError as e:
-            return HttpResponseBadRequest(str(e))
-
-        response = HttpResponse(protocol, content_type='application/xml')
-        response['Content-Disposition'] = 'attachment; filename="procedure.xml"'
-
-        return response
-
 
     @list_route(methods=['GET'])
     def latest_versions(self, request):
