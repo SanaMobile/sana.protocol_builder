@@ -245,13 +245,3 @@ class SubroutineSerializer(serializers.ModelSerializer):
             'display_name',
             'description',
         )
-
-
-class DeviceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Device
-        fields = (
-            'id',
-            'registration_id',
-            'created',
-        )

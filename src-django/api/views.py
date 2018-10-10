@@ -544,15 +544,3 @@ class ShowIfViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         return models.ShowIf.objects.filter(page__procedure__owner_id__exact=user.id)
-
-
-class DeviceViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    """
-    Endpoint only allows POST requests to register new devices.
-    Note: registering a device does not require authentication, 
-    anyone can register their device.
-    """
-    model = models.Device
-    serializer_class = serializer.DeviceSerializer
-    queryset = models.Device.objects.all()
-    permission_classes = (AllowAny,)

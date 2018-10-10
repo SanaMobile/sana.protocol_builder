@@ -297,11 +297,3 @@ class ShowIf(models.Model):
 
         recurse(conditions)
         return json.dumps(conditions)
-
-
-class Device(models.Model):
-    registration_id = models.CharField(max_length=255, blank=False)
-    created = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        app_label = 'api'
