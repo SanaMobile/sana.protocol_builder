@@ -22,7 +22,6 @@ module.exports = Marionette.LayoutView.extend({
         authorField: 'input#change-author',
         versionSelector: 'select#builder-select-version-view',
         downloadButton: 'a#download-btn',
-        pushButton: 'a#push-btn',
         saveButton: 'a#save-btn',
         visualizeButton: 'a#visualize-btn',
         saveVersionButton: 'a#save-version-btn',
@@ -32,7 +31,6 @@ module.exports = Marionette.LayoutView.extend({
         'keyup @ui.titleField': '_save',
         'keyup @ui.authorField': '_save',
         'click @ui.downloadButton': '_download',
-        'click @ui.pushButton': '_pushProcedure',
         'click @ui.saveButton':  '_saveProcedure',
         'click @ui.visualizeButton': '_visualize',
         'click @ui.saveVersionButton': '_saveNewProcedureVersion',
@@ -130,36 +128,6 @@ module.exports = Marionette.LayoutView.extend({
             Helpers.downloadXMLFile(data, filename);
         }, function onError(jqXHR, textStatus, errorThrown) {
             console.warn('Failed to generate Procedure', textStatus);
-        });
-    },
-
-    _pushProcedure: function(event) {
-        event.preventDefault();
-        const self = this;
-        const id = self.model.get('id');
-
-        // Call the django api
-        $.ajax({
-            type: 'POST',
-            url: '/api/procedures/push_to_devices',
-            data: {
-                'id': id,
-            },
-            dataType: "text",
-            success: function onGenerateSuccess(data, status, jqXHR) {
-                App().RootView.showNotification({
-                    title: i18n.t('Success!'),
-                    desc: i18n.t('Pushed procedure ', {id: id}),
-                    alertType: 'success',
-                });
-            },
-            error: function onGenerateError(jqXHR, textStatus, errorThrown) {
-                console.warn('Failed to push procedure ' + id, textStatus);
-                App().RootView.showNotification({
-                    title: i18n.t('Failed to push procedure ', {id: id}),
-                    desc: jqXHR.responseText,
-                });
-            },
         });
     },
 
