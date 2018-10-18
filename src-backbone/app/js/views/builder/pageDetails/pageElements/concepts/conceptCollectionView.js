@@ -4,6 +4,8 @@ module.exports = Marionette.CollectionView.extend({
 
     childView: require('./conceptListItemView'),
 
+    emptyView: require('./conceptCollectionEmptyView'),
+
     initialize: function(options) {
         this.page = options.page;
     },
