@@ -172,7 +172,7 @@ class Element(models.Model):
         super(Element, self).save()
 
         self.page.last_modified = self.last_modified
-        self.page.save()    
+        self.page.save()
 
     def deepcopy(self, new_page_id):
         copy = deepcopy(self)
@@ -297,3 +297,11 @@ class ShowIf(models.Model):
 
         recurse(conditions)
         return json.dumps(conditions)
+
+class MDSInstance(models.Model):
+    user = models.OneToOneField(User, related_name="mds_instance", on_delete=models.CASCADE)
+    api_url = models.TextField(null=True)
+    api_key = models.TextField(null=True)
+
+    class Meta:
+        app_label = 'api'
