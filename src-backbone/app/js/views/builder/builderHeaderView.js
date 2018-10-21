@@ -1,6 +1,7 @@
 const Config  = require('utils/config');
 const Helpers = require('utils/helpers');
 const App     = require('utils/sanaAppInstance');
+const PushToMDSUtils = require('utils/pushToMDSUtils');
 
 const ModalLayoutView = require('views/common/modalLayoutView');
 const FlowchartView = require('./flowchartView');
@@ -23,6 +24,7 @@ module.exports = Marionette.LayoutView.extend({
         versionSelector: 'select#builder-select-version-view',
         downloadButton: 'a#download-btn',
         saveButton: 'a#save-btn',
+        pushButton: 'a#push-btn',
         visualizeButton: 'a#visualize-btn',
         saveVersionButton: 'a#save-version-btn',
     },
@@ -32,6 +34,7 @@ module.exports = Marionette.LayoutView.extend({
         'keyup @ui.authorField': '_save',
         'click @ui.downloadButton': '_download',
         'click @ui.saveButton':  '_saveProcedure',
+        'click @ui.pushButton': '_pushToMDS',
         'click @ui.visualizeButton': '_visualize',
         'click @ui.saveVersionButton': '_saveNewProcedureVersion',
         'change @ui.versionSelector': '_selectVersion',
@@ -45,7 +48,7 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         procedureVersionSelect: 'section#procedures-version-list',
     },
-  
+
     initialize: function() {
         this.versions = new ProcedureVersions(null, {id: this.model.get('id')});
     },
@@ -129,6 +132,10 @@ module.exports = Marionette.LayoutView.extend({
         }, function onError(jqXHR, textStatus, errorThrown) {
             console.warn('Failed to generate Procedure', textStatus);
         });
+    },
+
+    _pushToMDS: function() {
+        PushToMDSUtils.pushToMDS(this.model.get('id'));
     },
 
     _visualize: function() {
