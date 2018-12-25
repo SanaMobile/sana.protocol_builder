@@ -14,6 +14,7 @@ describe("Signup View", function () {
             'routers/infoRouter': {},
             'routers/proceduresRouter': {},
             'routers/conceptsRouter': {},
+            'routers/subroutinesRouter': {},
             'utils/helpers': {},
         });
         app = new SanaApp();
