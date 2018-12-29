@@ -61,7 +61,7 @@ class ProcedureGeneratorTest(TestCase):
 
     def test_element_has_version_attrib(self):
         assert_true('version' in self.procedure_etree_element.attrib)
-        assert_equals(self.procedure_etree_element.attrib['version'], str(self.procedure.last_modified))
+        assert_equals(self.procedure_etree_element.attrib['version'], str(self.procedure.version))
 
     def test_element_has_uuid_attrib(self):
         assert_true('uuid' in self.procedure_etree_element.attrib)
