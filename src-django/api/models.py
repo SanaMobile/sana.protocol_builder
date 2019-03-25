@@ -153,6 +153,7 @@ class Element(models.Model):
     required = models.BooleanField(default=False)
     image = models.TextField(null=True, blank=True)
     audio = models.TextField(null=True, blank=True)
+    color = models.TextField(null=True, blank=True)
     action = models.TextField(null=True, blank=True)
     mime_type = models.CharField(max_length=128, null=True, blank=True)
 
@@ -221,6 +222,7 @@ class AbstractElement(models.Model):
     required = models.BooleanField(default=False)
     image = models.TextField(null=True, blank=True)
     audio = models.TextField(null=True, blank=True)
+    color = models.TextField(null=True, blank=True)
     action = models.TextField(null=True, blank=True)
     mime_type = models.CharField(max_length=128, null=True, blank=True)
 

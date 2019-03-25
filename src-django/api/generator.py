@@ -3,7 +3,6 @@ from xml.dom import minidom
 from models import Procedure, Element, AbstractElement, ShowIf
 import json
 
-
 def raise_error_on_page(error_string, page):
     raise ValueError('Error on page %d with display_index %d: %s' % (page.id, page.display_index, error_string))
 
@@ -53,8 +52,8 @@ class ElementGenerator:
         self.name = 'Element'
         self.element = element
 
-        if not self.element.concept:
-            raise_error_on_page('Element has no concept', self.element.page)
+        # if not self.element.concept:
+        #     raise_error_on_page('Element has no concept', self.element.page)
 
         if not self.element.question:
             raise_error_on_page('Element has no question', self.element.page)
@@ -76,7 +75,7 @@ class ElementGenerator:
         props = {
             'type': self.element.element_type,
             'id': str(self.element.pk),
-            'concept': self.element.concept.name,
+            'concept': "SHOULD_BE_FIXED",
             'question': self.element.question,
             'answer': self.__parse_answers()
         }
@@ -89,6 +88,9 @@ class ElementGenerator:
 
         if self.element.audio:
             props['audio'] = self.element.audio
+
+        if self.element.color:
+            props['color'] = self.element.color
 
         if self.element.element_type in Element.PLUGIN_TYPES:
             props['action'] = self.element.action
@@ -155,6 +157,9 @@ class AbstractElementGenerator:
 
         if self.element.audio:
             props['audio'] = self.element.audio
+
+        if self.element.color:
+            props['color'] = self.element.color
 
         if self.element.element_type in AbstractElement.PLUGIN_TYPES:
             props['action'] = self.element.action

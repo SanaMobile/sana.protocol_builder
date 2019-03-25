@@ -61,7 +61,10 @@ module.exports = Backbone.Model.extend({
             'page',
             'element_type',
             'question',
-            'required'
+            'required',
+            'color',
+            'audio',
+            'image'
         );
 
         if (this.isChoiceBased()) {

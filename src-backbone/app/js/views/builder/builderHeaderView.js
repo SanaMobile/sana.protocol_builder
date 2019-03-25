@@ -45,7 +45,7 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         procedureVersionSelect: 'section#procedures-version-list',
     },
-  
+
     initialize: function() {
         this.versions = new ProcedureVersions(null, {id: this.model.get('id')});
     },

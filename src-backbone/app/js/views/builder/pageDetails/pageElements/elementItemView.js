@@ -30,6 +30,7 @@ module.exports = Marionette.LayoutView.extend({
         'answer': 'input.answer',
         'image': 'input.image',
         'audio': 'input.audio',
+        'color': 'input.color',
     },
 
     events: {
@@ -40,7 +41,8 @@ module.exports = Marionette.LayoutView.extend({
         'keyup @ui.question': '_onFormUpdate',
         'change @ui.required': '_onFormUpdate',
         'keyup @ui.image': '_onFormUpdate',
-        'keyup @ui.audio': '_onFormUpdate'
+        'keyup @ui.audio': '_onFormUpdate',
+        'change @ui.color': '_onFormUpdate'
     },
 
     onBeforeShow: function() {
@@ -96,12 +98,14 @@ module.exports = Marionette.LayoutView.extend({
         const required = this.ui.required.is(':checked');
         const image = this.ui.image.val();
         const audio = this.ui.audio.val();
+        const color = this.ui.color.val();
 
         this.model.debounceSave({
             question: question,
             required: required,
             image: image,
             audio: audio,
+            color: color,
         });
     },
 

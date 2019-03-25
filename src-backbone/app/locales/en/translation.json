@@ -103,6 +103,7 @@
     "Required": "Required",
     "Image": "Image",
     "Audio": "Audio",
+    "Color": "Color",
     "Action": "Action",
     "MIME Type": "MIME Type",
     "Default Answer": "Default Answer",
