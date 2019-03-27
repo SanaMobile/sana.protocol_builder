@@ -53,9 +53,6 @@ class ElementGenerator:
         self.name = 'Element'
         self.element = element
 
-        if not self.element.concept:
-            raise_error_on_page('Element has no concept', self.element.page)
-
         if not self.element.question:
             raise_error_on_page('Element has no question', self.element.page)
 
@@ -76,10 +73,12 @@ class ElementGenerator:
         props = {
             'type': self.element.element_type,
             'id': str(self.element.pk),
-            'concept': self.element.concept.name,
             'question': self.element.question,
             'answer': self.__parse_answers()
         }
+
+        if self.element.concept:
+            props['concept'] = self.element.concept.name
 
         if self.element.required:
             props['required'] = str(self.element.required).lower()
@@ -119,9 +118,6 @@ class AbstractElementGenerator:
         self.name = 'AbstractElement'
         self.element = element
 
-        if not self.element.concept:
-            raise_error_on_page('Element has no concept', self.element.page)
-
         if not self.element.question:
             raise_error_on_page('Element has no question', self.element.page)
 
@@ -142,10 +138,12 @@ class AbstractElementGenerator:
         props = {
             'type': self.element.element_type,
             'id': str(self.element.pk),
-            'concept': self.element.concept.name,
             'question': self.element.question,
             'answer': self.__parse_answers()
         }
+
+        if self.element.concept:
+            props['concept'] = self.element.concept.name
 
         if self.element.required:
             props['required'] = str(self.element.required).lower()

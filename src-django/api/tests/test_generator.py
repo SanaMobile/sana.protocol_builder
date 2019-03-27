@@ -124,13 +124,13 @@ class ElementGeneratorTest(TestCase):
         assert_true('concept' in self.attribs)
         assert_equals(self.attribs['concept'], self.element.concept.name)
 
-    @raises(ValueError)
-    def test_error_if_no_concept(self):
+    def test_concept_optional(self):
         element = factories.ElementFactory(
             concept=None
         )
 
-        generators.ElementGenerator(element).generate(ElementTree.Element('test'))
+        element_etree = generators.ElementGenerator(element).generate(ElementTree.Element('test'))
+        assert_false('concept' in element_etree.attrib)
 
     def test_element_has_question(self):
         assert_true('question' in self.attribs)
