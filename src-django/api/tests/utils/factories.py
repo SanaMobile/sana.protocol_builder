@@ -98,3 +98,11 @@ class ShowIfFactory(factory.django.DjangoModelFactory):
 
     page = factory.SubFactory(PageFactory)
     conditions = ""
+
+
+class MDSInstanceFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.MDSInstance
+
+    api_url = 'https://www.yourMdsUrl.com/'
+    api_key = 'test_mds_api_key'

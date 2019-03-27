@@ -1,5 +1,6 @@
 const App     = require('utils/sanaAppInstance');
 const Helpers = require('utils/helpers');
+const PushToMDSUtils = require('utils/pushToMDSUtils');
 
 module.exports = Marionette.ItemView.extend({
 
@@ -9,6 +10,7 @@ module.exports = Marionette.ItemView.extend({
 
     events: {
         'click a.download': '_onDownloadProcedure',
+        'click a.push': '_pushToMDS',
         'click a.delete': '_onDeleteProcedure',
     },
 
@@ -19,6 +21,10 @@ module.exports = Marionette.ItemView.extend({
     _onDownloadProcedure: function(event) {
         event.preventDefault();
         this.model.generate();
+    },
+
+    _pushToMDS: function() {
+        PushToMDSUtils.pushToMDS(this.model.get('id'));
     },
 
     _onDeleteProcedure: function(event) {

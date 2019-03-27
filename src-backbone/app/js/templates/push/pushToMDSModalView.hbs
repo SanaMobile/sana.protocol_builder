@@ -1,0 +1,28 @@
+<div id="push-to-mds-modal">
+    <span class="heading">{{ headingText }}</span>
+
+    <form id="input-form">
+        <div class="input-section">
+            <span>{{ i18n "MDS URL" }}:</span>
+            <div class="form-group">
+                <input type="text" placeholder="{{ i18n "https://www.yourMdsUrl.com" }}" name="mds-url" id="mds-url" class="form-control" value="{{ url }}">
+            </div>
+        </div>
+
+        <div class="input-section">
+            <span>{{ i18n "MDS Authentication" }}:</span>
+            <div class="form-group">
+                <input type="text" placeholder="{{ i18n "MDS Username" }}" name="mds-username" id="mds-username" class="form-control" value="{{ username }}">
+            </div>
+            <div class="form-group">
+                <input type="password" placeholder="{{ i18n "MDS Password" }}" name="mds-password" id="mds-password" class="form-control" value="{{ password }}">
+            </div>
+        </div>
+
+        <span id="error-message"></span>
+
+        <div class="input-section" id="button-holder">
+            <a id="submit-btn" class="btn btn-success">{{ i18n "Submit" }}</a>
+        </div>
+    </form>
+</div>

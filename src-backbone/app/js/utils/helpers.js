@@ -85,4 +85,9 @@ module.exports = {
         element.click();
         document.body.removeChild(element);
     },
+
+    isValidUrl: function(url) {
+        const urlRegex = /(^(https?):\/\/\S+$)/;
+        return urlRegex.test(url);
+    },
 };

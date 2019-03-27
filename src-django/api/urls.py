@@ -13,6 +13,7 @@ router.register(r'conditionals', views.ShowIfViewSet, base_name='conditional')
 router.register(r'users', views.UserViewSet, base_name='user')
 router.register(r'passwords', views.UserPasswordViewSet, base_name='password')
 router.register(r'subroutines', views.SubroutineViewSet, base_name='subroutine')
+router.register(r'mdsInstance', views.MDSInstanceViewSet, base_name='mdsinstance')
 
 urlpatterns = [
     url(r'^', include(router.urls))
