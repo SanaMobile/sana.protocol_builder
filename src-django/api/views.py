@@ -2,7 +2,6 @@ from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from rest_framework import viewsets, status, filters, mixins
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
-from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
 from django.db.utils import DatabaseError
 from postgres_copy import CopyMapping
