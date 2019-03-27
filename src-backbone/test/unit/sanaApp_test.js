@@ -19,6 +19,7 @@ describe('SanaApp', function() {
                 'routers/infoRouter': {},
                 'routers/proceduresRouter': {},
                 'routers/conceptsRouter': {},
+                'routers/subroutinesRouter': {},
                 'utils/helpers': helpers,
             });
             app = new SanaApp();
@@ -72,6 +73,7 @@ describe('SanaApp', function() {
                 'routers/infoRouter': {},
                 'routers/proceduresRouter': {},
                 'routers/conceptsRouter': {},
+                'routers/subroutinesRouter': {},
                 'utils/helpers': {},
             });
             app = new SanaApp();

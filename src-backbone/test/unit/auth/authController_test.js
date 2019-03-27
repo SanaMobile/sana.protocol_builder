@@ -49,6 +49,7 @@ describe('Auth Controller', function() {
             'routers/infoRouter': {},
             'routers/proceduresRouter': {},
             'routers/conceptsRouter': {},
+            'routers/subroutinesRouter': {},
             'utils/helpers': helpers,
         });
         app = new SanaApp();
